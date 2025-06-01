@@ -1,0 +1,87 @@
+2025-05-31 10:24:13 | INFO     | aih.utils.database:_initialize_database:121 - Database initialized successfully
+2025-05-31 10:29:21 | INFO     | aih.utils.database:_initialize_database:121 - Database initialized successfully
+2025-05-31 10:34:29 | INFO     | aih.utils.database:_initialize_database:121 - Database initialized successfully
+2025-05-31 10:34:29 | INFO     | aih.utils.database:save_artifact:178 - Saved artifact manual_20250531_103429
+2025-05-31 10:34:29 | INFO     | __main__:add_url:164 - Manual URL added: manual_20250531_103429 - https://www.axios.com/2025/05/28/ai-jobs-white-collar-unemployment-anthropic
+2025-05-31 10:34:29 | INFO     | aih.utils.database:_initialize_database:121 - Database initialized successfully
+2025-05-31 10:43:13 | INFO     | aih.utils.database:_initialize_database:121 - Database initialized successfully
+2025-05-31 10:43:47 | INFO     | aih.utils.database:_initialize_database:121 - Database initialized successfully
+2025-05-31 10:43:47 | INFO     | aih.utils.database:_initialize_database:121 - Database initialized successfully
+2025-05-31 11:00:52 | INFO     | aih.utils.database:_initialize_database:121 - Database initialized successfully
+2025-05-31 11:00:54 | INFO     | aih.utils.database:_initialize_database:121 - Database initialized successfully
+2025-05-31 11:01:05 | INFO     | aih.utils.database:_initialize_database:121 - Database initialized successfully
+2025-05-31 11:01:05 | ERROR    | __main__:process_pipeline:214 - Error in process pipeline: 'DatabaseManager' object has no attribute 'get_recent_artifacts'
+2025-05-31 11:01:05 | INFO     | aih.utils.database:_initialize_database:121 - Database initialized successfully
+2025-05-31 11:03:15 | INFO     | aih.utils.database:_initialize_database:121 - Database initialized successfully
+2025-05-31 11:04:26 | INFO     | aih.utils.database:_initialize_database:121 - Database initialized successfully
+2025-05-31 11:08:23 | INFO     | aih.utils.database:_initialize_database:121 - Database initialized successfully
+2025-05-31 11:14:10 | INFO     | aih.utils.database:_initialize_database:121 - Database initialized successfully
+2025-05-31 11:15:38 | INFO     | aih.utils.database:_initialize_database:121 - Database initialized successfully
+2025-05-31 12:05:12 | INFO     | aih.utils.database:_initialize_database:121 - Database initialized successfully
+2025-05-31 12:05:52 | INFO     | aih.utils.database:_initialize_database:121 - Database initialized successfully
+2025-05-31 12:10:18 | INFO     | aih.utils.database:_initialize_database:121 - Database initialized successfully
+2025-05-31 12:10:23 | INFO     | aih.utils.database:_initialize_database:121 - Database initialized successfully
+2025-05-31 12:10:28 | INFO     | aih.utils.database:_initialize_database:121 - Database initialized successfully
+2025-05-31 12:10:38 | INFO     | aih.utils.database:_initialize_database:121 - Database initialized successfully
+2025-05-31 12:11:07 | INFO     | aih.utils.database:_initialize_database:121 - Database initialized successfully
+2025-05-31 12:11:08 | INFO     | aih.chat.rag_chat:__init__:55 - RAG Chat System initialized with model: claude-3-5-sonnet-20241022
+2025-05-31 12:11:48 | INFO     | aih.utils.database:_initialize_database:121 - Database initialized successfully
+2025-05-31 12:11:48 | INFO     | aih.chat.rag_chat:__init__:55 - RAG Chat System initialized with model: claude-3-5-sonnet-20241022
+2025-05-31 12:11:48 | INFO     | aih.chat.rag_chat:chat:241 - Processing chat query: What are the new jobs being created? What tasks are these new jobs expected to do? How many of them ...
+2025-05-31 12:11:48 | ERROR    | aih.chat.rag_chat:generate_response:227 - Error generating response: Error code: 401 - {'type': 'error', 'error': {'type': 'authentication_error', 'message': 'invalid x-api-key'}}
+2025-05-31 12:18:48 | INFO     | aih.utils.database:_initialize_database:121 - Database initialized successfully
+2025-05-31 12:18:48 | INFO     | aih.chat.rag_chat:__init__:55 - RAG Chat System initialized with model: claude-3-5-sonnet-20241022
+2025-05-31 12:19:27 | INFO     | aih.utils.database:_initialize_database:121 - Database initialized successfully
+2025-05-31 12:19:27 | INFO     | aih.chat.rag_chat:__init__:55 - RAG Chat System initialized with model: claude-3-5-sonnet-20241022
+2025-05-31 12:19:27 | INFO     | aih.chat.rag_chat:chat:241 - Processing chat query: What new jobs are being created by AI and what are the new tasks that people will need to know how t...
+2025-05-31 12:19:27 | ERROR    | aih.chat.rag_chat:generate_response:227 - Error generating response: Error code: 401 - {'type': 'error', 'error': {'type': 'authentication_error', 'message': 'invalid x-api-key'}}
+2025-05-31 12:21:01 | INFO     | aih.utils.database:_initialize_database:121 - Database initialized successfully
+2025-05-31 12:21:01 | INFO     | aih.chat.rag_chat:__init__:55 - RAG Chat System initialized with model: claude-3-5-sonnet-20241022
+2025-05-31 12:21:30 | INFO     | aih.utils.database:_initialize_database:121 - Database initialized successfully
+2025-05-31 12:21:30 | INFO     | aih.chat.rag_chat:__init__:55 - RAG Chat System initialized with model: gpt-4
+2025-05-31 12:21:30 | INFO     | aih.chat.rag_chat:chat:241 - Processing chat query: What jobs are being created by AI and what tasks do people need to know how to do to get those jobs?...
+2025-05-31 12:21:31 | ERROR    | aih.chat.rag_chat:generate_response:227 - Error generating response: Error code: 401 - {'error': {'message': 'Incorrect API key provided: your_ope************here. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_api_key'}}
+2025-05-31 12:24:13 | INFO     | aih.utils.database:_initialize_database:121 - Database initialized successfully
+2025-05-31 12:24:13 | INFO     | aih.chat.rag_chat:__init__:55 - RAG Chat System initialized with model: claude-3-5-sonnet-20241022
+2025-05-31 12:25:01 | INFO     | aih.utils.database:_initialize_database:121 - Database initialized successfully
+2025-05-31 12:25:01 | INFO     | aih.chat.rag_chat:__init__:55 - RAG Chat System initialized with model: claude-3-5-sonnet-20241022
+2025-05-31 12:25:01 | INFO     | aih.chat.rag_chat:chat:241 - Processing chat query: What new jobs will be created by AI and what tasks do people need to know how to do to do to get tho...
+2025-05-31 12:25:01 | ERROR    | aih.chat.rag_chat:generate_response:227 - Error generating response: Error code: 401 - {'type': 'error', 'error': {'type': 'authentication_error', 'message': 'invalid x-api-key'}}
+2025-05-31 12:25:48 | INFO     | aih.utils.database:_initialize_database:121 - Database initialized successfully
+2025-05-31 12:25:48 | INFO     | aih.chat.rag_chat:__init__:55 - RAG Chat System initialized with model: claude-3-5-sonnet-20241022
+2025-05-31 12:25:55 | INFO     | aih.utils.database:_initialize_database:121 - Database initialized successfully
+2025-05-31 12:25:55 | INFO     | aih.chat.rag_chat:__init__:55 - RAG Chat System initialized with model: gpt-4
+2025-05-31 12:25:55 | INFO     | aih.chat.rag_chat:chat:241 - Processing chat query: What new jobs will be created by AI and what tasks do people need to know how to do to do to get tho...
+2025-05-31 12:25:56 | ERROR    | aih.chat.rag_chat:generate_response:227 - Error generating response: Error code: 401 - {'error': {'message': 'Incorrect API key provided: your_ope************here. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_api_key'}}
+2025-05-31 12:26:03 | INFO     | aih.utils.database:_initialize_database:121 - Database initialized successfully
+2025-05-31 12:26:03 | INFO     | aih.chat.rag_chat:__init__:55 - RAG Chat System initialized with model: claude-3-5-sonnet-20241022
+2025-05-31 12:26:03 | INFO     | aih.chat.rag_chat:chat:241 - Processing chat query: What new jobs will be created by AI and what tasks do people need to know how to do to do to get tho...
+2025-05-31 12:26:03 | ERROR    | aih.chat.rag_chat:generate_response:227 - Error generating response: Error code: 401 - {'type': 'error', 'error': {'type': 'authentication_error', 'message': 'invalid x-api-key'}}
+2025-05-31 12:48:19 | INFO     | aih.utils.database:_initialize_database:121 - Database initialized successfully
+2025-05-31 12:48:19 | INFO     | aih.chat.rag_chat:__init__:55 - RAG Chat System initialized with model: claude-3-5-sonnet-20241022
+2025-05-31 12:48:27 | INFO     | aih.utils.database:_initialize_database:121 - Database initialized successfully
+2025-05-31 12:48:28 | INFO     | aih.chat.rag_chat:__init__:55 - RAG Chat System initialized with model: claude-3-5-sonnet-20241022
+2025-05-31 12:48:46 | INFO     | aih.utils.database:_initialize_database:121 - Database initialized successfully
+2025-05-31 12:48:46 | INFO     | aih.chat.rag_chat:__init__:55 - RAG Chat System initialized with model: claude-3-5-sonnet-20241022
+2025-05-31 12:48:46 | INFO     | aih.chat.rag_chat:chat:241 - Processing chat query: What tasks are being replaced by ai in cybersecurity...
+2025-05-31 12:48:46 | ERROR    | aih.chat.rag_chat:generate_response:227 - Error generating response: Error code: 401 - {'type': 'error', 'error': {'type': 'authentication_error', 'message': 'invalid x-api-key'}}
+2025-05-31 12:51:35 | INFO     | aih.utils.database:_initialize_database:121 - Database initialized successfully
+2025-05-31 12:51:35 | INFO     | aih.chat.rag_chat:__init__:55 - RAG Chat System initialized with model: claude-3-5-sonnet-20241022
+2025-05-31 12:51:47 | INFO     | aih.utils.database:_initialize_database:121 - Database initialized successfully
+2025-05-31 12:51:47 | INFO     | aih.chat.rag_chat:__init__:55 - RAG Chat System initialized with model: claude-3-5-sonnet-20241022
+2025-05-31 12:51:47 | INFO     | aih.chat.rag_chat:chat:241 - Processing chat query: What tasks are being replaced by AI in cybersecurity?...
+2025-05-31 14:34:20 | INFO     | aih.utils.database:_initialize_database:121 - Database initialized successfully
+2025-05-31 14:34:20 | INFO     | aih.chat.rag_chat:__init__:55 - RAG Chat System initialized with model: claude-3-7-sonnet-20250219
+2025-05-31 14:34:51 | INFO     | aih.utils.database:_initialize_database:121 - Database initialized successfully
+2025-05-31 14:34:51 | INFO     | aih.chat.rag_chat:__init__:55 - RAG Chat System initialized with model: claude-3-7-sonnet-20250219
+2025-05-31 14:34:51 | INFO     | aih.chat.rag_chat:chat:241 - Processing chat query: what new tasks will people entering the workforce need to learn how to do to be hirable...
+2025-05-31 14:46:10 | INFO     | aih.utils.database:_initialize_database:121 - Database initialized successfully
+2025-05-31 17:44:31 | INFO     | aih.utils.database:_initialize_database:121 - Database initialized successfully
+2025-05-31 17:44:45 | INFO     | aih.utils.database:_initialize_database:121 - Database initialized successfully
+2025-05-31 17:44:49 | INFO     | aih.utils.database:_initialize_database:121 - Database initialized successfully
+2025-05-31 17:44:51 | INFO     | aih.utils.database:_initialize_database:121 - Database initialized successfully
+2025-05-31 17:44:54 | INFO     | aih.utils.database:_initialize_database:121 - Database initialized successfully
+2025-05-31 17:44:59 | INFO     | aih.utils.database:_initialize_database:121 - Database initialized successfully
+2025-05-31 17:44:59 | INFO     | aih.chat.rag_chat:__init__:55 - RAG Chat System initialized with model: claude-3-7-sonnet-20250219
+2025-05-31 17:45:19 | INFO     | aih.utils.database:_initialize_database:121 - Database initialized successfully
+2025-05-31 17:45:22 | INFO     | aih.utils.database:_initialize_database:121 - Database initialized successfully

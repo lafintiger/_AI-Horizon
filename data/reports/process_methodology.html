@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Horizon: Process Methodology & Workflow Documentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+        
+        .header .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .nav-section {
+            background: #3498db;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .nav-link {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 10px 20px;
+            margin: 0 10px;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .process-flow {
+            display: grid;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .step-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+            border-left: 6px solid #3498db;
+        }
+        
+        .step-header {
+            background: #f8f9fa;
+            padding: 20px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .step-number {
+            display: inline-block;
+            background: #3498db;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 40px;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+        
+        .step-title {
+            display: inline-block;
+            font-size: 1.4em;
+            font-weight: 600;
+            color: #2c3e50;
+            vertical-align: top;
+            margin-top: 5px;
+        }
+        
+        .step-body {
+            padding: 25px;
+        }
+        
+        .assumption-list, .indicator-list {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .assumption-list li, .indicator-list li {
+            background: #ecf0f1;
+            margin-bottom: 10px;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .indicator-list li {
+            border-left-color: #27ae60;
+        }
+        
+        .indicator-category {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .indicator-reason {
+            color: #7f8c8d;
+            font-style: italic;
+        }
+        
+        .prompt-box {
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .formula-box {
+            background: #e8f4f8;
+            border: 2px solid #3498db;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .flow-arrow {
+            text-align: center;
+            font-size: 2em;
+            color: #3498db;
+            margin: 20px 0;
+        }
+        
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .highlight-box {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .warning-box {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .success-box {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        @media (max-width: 768px) {
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔬 AI-Horizon</h1>
+            <div class="subtitle">Process Methodology & Workflow Documentation</div>
+            <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; margin-top: 20px;">
+                <strong>Research Focus:</strong> Impact of AI on Cybersecurity Tasks and Workforce<br>
+                <strong>Framework:</strong> DoD Cybersecurity Workforce Framework (DCWF) Task-Based Analysis<br>
+                <strong>Updated:</strong> May 31, 2025
+            </div>
+        </div>
+        
+        <div class="nav-section">
+            <a href="../" class="nav-link">📝 Manual Entry</a>
+            <a href="ai_horizon_analysis_report.html" class="nav-link">📊 Analysis Dashboard</a>
+            <a href="#workflow" class="nav-link">🔄 Process Workflow</a>
+            <a href="#dcwf-framework" class="nav-link">📋 DCWF Framework</a>
+            <a href="#scoring" class="nav-link">🎯 Scoring Methods</a>
+        </div>
+        
+        <div class="content">
+            <!-- Introduction -->
+            <div class="step-card">
+                <div class="step-header">
+                    <span class="step-number">🎯</span>
+                    <span class="step-title">Research Objective & Task-Based Analysis</span>
+                </div>
+                <div class="step-body">
+                    <p><strong>Primary Research Goal:</strong> Analyze how artificial intelligence is transforming specific cybersecurity tasks, not just job roles. This research focuses on the granular, day-to-day activities that cybersecurity professionals perform.</p>
+                    
+                    <div class="highlight-box">
+                        <h4>Key Distinction: Tasks vs Jobs</h4>
+                        <p>This research prioritizes <strong>tasks</strong> over job titles because:</p>
+                        <ul>
+                            <li><strong>Tasks are actionable:</strong> Specific activities that can be measured and analyzed</li>
+                            <li><strong>Tasks evolve faster:</strong> While job roles change slowly, tasks transform rapidly with AI adoption</li>
+                            <li><strong>Tasks are transferable:</strong> Skills and activities that apply across multiple roles</li>
+                            <li><strong>Tasks align with DCWF:</strong> The DoD framework is task-centric, not role-centric</li>
+                        </ul>
+                    </div>
+
+                    <div id="dcwf-framework" class="success-box">
+                        <h4>📋 DoD Cybersecurity Workforce Framework (DCWF) Integration</h4>
+                        <p>This analysis is grounded in the <strong>DoD Cybersecurity Workforce Framework (DCWF)</strong>, which provides a standardized taxonomy of cybersecurity tasks, knowledge, skills, and abilities.</p>
+                        
+                        <p><strong>Why DCWF?</strong></p>
+                        <ul>
+                            <li>Comprehensive task catalog covering all cybersecurity domains</li>
+                            <li>Standard DoD framework for workforce development</li>
+                            <li>Task-based structure aligns with our research methodology</li>
+                            <li>Regular updates reflect evolving cybersecurity landscape</li>
+                        </ul>
+                        
+                        <p><strong>Framework Access:</strong> <a href="https://public.cyber.mil/wid/dcwf/" target="_blank" style="color: #2c3e50; font-weight: bold;">View DCWF Documentation →</a></p>
+                        
+                        <p class="mt-3"><strong>Reference:</strong> Department of Defense. (2024). DoD Cybersecurity Workforce Framework (DCWF). Retrieved from https://public.cyber.mil/wid/dcwf/</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flow-arrow">⬇️</div>
+            
+            <!-- Step 1: Key Assumptions -->
+            <div class="step-card" id="assumptions">
+                <div class="step-header">
+                    <span class="step-number">1</span>
+                    <span class="step-title">🎯 Key Assumptions</span>
+                </div>
+                <div class="step-body">
+                    <p>Our analysis is built on the following foundational assumptions about AI's impact on cybersecurity workforce:</p>
+                    
+                    <ul class="assumption-list">
+                        <li>
+                            <strong>Categorical Framework:</strong> AI impact on cybersecurity roles can be meaningfully categorized into four distinct types: Replace, Augment, New Tasks, and Human-Only tasks.
+                        </li>
+                        <li>
+                            <strong>Timeframe Relevance:</strong> Current discussions (2024-2025) provide meaningful insights into near-term (1-3 year) workforce transformations.
+                        </li>
+                        <li>
+                            <strong>Source Authority:</strong> Authoritative sources (Gartner, Forrester, SANS, academic institutions) provide more reliable predictions than general news sources.
+                        </li>
+                        <li>
+                            <strong>Indicator Validity:</strong> Specific terminology and phrases can reliably indicate the type of AI impact being discussed.
+                        </li>
+                        <li>
+                            <strong>Perplexity Aggregation:</strong> Perplexity AI provides quality aggregated insights from multiple sources, though individual source attribution is limited.
+                        </li>
+                        <li>
+                            <strong>Content Volume Correlation:</strong> Longer, more detailed content generally indicates more comprehensive analysis and higher quality insights.
+                        </li>
+                        <li>
+                            <strong>Indicator Frequency:</strong> The frequency of key indicators within content correlates with the strength of that category's relevance.
+                        </li>
+                    </ul>
+                    
+                    <div class="warning-box">
+                        <strong>⚠️ Current Limitations:</strong>
+                        <ul>
+                            <li>Small sample size (1 article per category in current test)</li>
+                            <li>Single data source (Perplexity) may introduce bias</li>
+                            <li>No longitudinal trend analysis yet</li>
+                            <li>Limited validation of indicator effectiveness</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flow-arrow">⬇️</div>
+            
+            <!-- Step 2: Key Indicators -->
+            <div class="step-card" id="indicators">
+                <div class="step-header">
+                    <span class="step-number">2</span>
+                    <span class="step-title">🔍 Key Indicators & Rationale</span>
+                </div>
+                <div class="step-body">
+                    <p>Each category has specific indicators that signal AI's impact type. Here's why each indicator matters:</p>
+                    
+                    <div class="two-column">
+                        <div>
+                            <h3 style="color: #e74c3c;">🤖 AI REPLACING Jobs</h3>
+                            <ul class="indicator-list">
+                                <li>
+                                    <div class="indicator-category">replacing, automation, autonomous</div>
+                                    <div class="indicator-reason">Direct language indicating complete substitution of human roles</div>
+                                </li>
+                                <li>
+                                    <div class="indicator-category">job displacement, workforce reduction</div>
+                                    <div class="indicator-reason">Economic indicators of actual job losses</div>
+                                </li>
+                                <li>
+                                    <div class="indicator-category">eliminating, lights-out</div>
+                                    <div class="indicator-reason">Technical terms for fully automated operations</div>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div>
+                            <h3 style="color: #3498db;">🤝 AI AUGMENTING Work</h3>
+                            <ul class="indicator-list">
+                                <li>
+                                    <div class="indicator-category">augmenting, assisting, collaboration</div>
+                                    <div class="indicator-reason">Language indicating human-AI partnership</div>
+                                </li>
+                                <li>
+                                    <div class="indicator-category">copilot, enhanced, productivity</div>
+                                    <div class="indicator-reason">Specific tools and improvements to human capability</div>
+                                </li>
+                                <li>
+                                    <div class="indicator-category">human-ai</div>
+                                    <div class="indicator-reason">Explicit mention of collaborative workflows</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="two-column">
+                        <div>
+                            <h3 style="color: #27ae60;">⭐ NEW JOBS Created</h3>
+                            <ul class="indicator-list">
+                                <li>
+                                    <div class="indicator-category">new roles, emerging</div>
+                                    <div class="indicator-reason">Direct indicators of job creation</div>
+                                </li>
+                                <li>
+                                    <div class="indicator-category">ai security engineer, ml specialist</div>
+                                    <div class="indicator-reason">Specific new job titles in cybersecurity</div>
+                                </li>
+                                <li>
+                                    <div class="indicator-category">governance, skill requirements</div>
+                                    <div class="indicator-reason">New competencies and oversight needs</div>
+                                </li>
+                                <li>
+                                    <div class="indicator-category">created by ai</div>
+                                    <div class="indicator-reason">Jobs that exist because of AI technology</div>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div>
+                            <h3 style="color: #f39c12;">👤 HUMAN-ONLY Tasks</h3>
+                            <ul class="indicator-list">
+                                <li>
+                                    <div class="indicator-category">human judgment, strategic</div>
+                                    <div class="indicator-reason">Tasks requiring uniquely human cognitive abilities</div>
+                                </li>
+                                <li>
+                                    <div class="indicator-category">ethics, compliance</div>
+                                    <div class="indicator-reason">Legal and moral decision-making</div>
+                                </li>
+                                <li>
+                                    <div class="indicator-category">creative, intuition</div>
+                                    <div class="indicator-reason">Human creativity and pattern recognition</div>
+                                </li>
+                                <li>
+                                    <div class="indicator-category">human-driven, human-only</div>
+                                    <div class="indicator-reason">Explicit exclusion of AI involvement</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flow-arrow">⬇️</div>
+            
+            <!-- Step 3: Search Prompts -->
+            <div class="step-card" id="prompts">
+                <div class="step-header">
+                    <span class="step-number">3</span>
+                    <span class="step-title">🔍 Strategic Search Prompts</span>
+                </div>
+                <div class="step-body">
+                    <p>Based on assumptions and indicators, we construct targeted prompts for each category:</p>
+                    
+                    <h4>🤖 AI Replacing Jobs Prompt:</h4>
+                    <div class="prompt-box">CYBERSECURITY WORKFORCE AUTOMATION 2024-2025:
+
+Find authoritative sources on AI COMPLETELY REPLACING cybersecurity professionals:
+
+KEY INDICATORS:
+• SIEM/log analysis fully automated (no human analysts)
+• AI threat detection replacing SOC analysts entirely
+• Autonomous incident response eliminating human responders
+• Job displacement studies showing workforce reduction
+• "Lights-out" security operations centers
+• AI taking over vulnerability management completely
+
+PRIORITY SOURCES: Gartner, Forrester, SANS, academic studies, government workforce reports</div>
+                    
+                    <h4>🤝 AI Augmenting Work Prompt:</h4>
+                    <div class="prompt-box">CYBERSECURITY AI-HUMAN COLLABORATION 2024-2025:
+
+Find sources on AI ASSISTING and ENHANCING cybersecurity professionals:
+
+KEY INDICATORS:
+• AI copilots for security analysts
+• ML-enhanced threat analysis requiring human oversight
+• AI-assisted incident response with human decision-making
+• Analyst productivity improvements through AI tools
+• Human-AI collaboration in security operations
+• AI augmentation improving analyst capabilities
+
+PRIORITY SOURCES: SANS surveys, vendor case studies, practitioner reports, industry analysis</div>
+                    
+                    <h4>⭐ New Jobs Created Prompt:</h4>
+                    <div class="prompt-box">EMERGING CYBERSECURITY ROLES 2024-2025:
+
+Find sources on NEW cybersecurity jobs created by AI technology:
+
+KEY INDICATORS:
+• AI security engineers and ML security specialists
+• AI model security and bias testing roles
+• AI governance and ethics positions in cybersecurity
+• Prompt engineering for security applications
+• AI red team and adversarial testing specialists
+• New skill requirements for AI-integrated security
+
+PRIORITY SOURCES: Job market reports, LinkedIn workforce insights, recruitment studies, career surveys</div>
+                    
+                    <h4>👤 Human-Only Tasks Prompt:</h4>
+                    <div class="prompt-box">HUMAN-ESSENTIAL CYBERSECURITY 2024-2025:
+
+Find sources on cybersecurity tasks that REMAIN human-driven:
+
+KEY INDICATORS:
+• Strategic security planning requiring human judgment
+• Crisis communication and stakeholder management
+• Legal/compliance decisions in security incidents
+• Ethical considerations in security policies
+• Creative threat modeling and red team planning
+• Complex investigations requiring human intuition
+
+PRIORITY SOURCES: CISO perspectives, security leadership studies, policy research, ethics papers</div>
+                    
+                    <div class="highlight-box">
+                        <strong>💡 Prompt Design Strategy:</strong>
+                        <ul>
+                            <li>Explicit timeframe (2024-2025) for relevance</li>
+                            <li>Clear categorization language (COMPLETELY REPLACING vs ASSISTING)</li>
+                            <li>Specific bullet points to guide search</li>
+                            <li>Authoritative source prioritization</li>
+                            <li>Industry-specific terminology</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flow-arrow">⬇️</div>
+            
+            <!-- Step 3.5: Manual Entry Data Collection -->
+            <div class="step-card" id="manual_entry">
+                <div class="step-header">
+                    <span class="step-number">3.5</span>
+                    <span class="step-title">📝 Manual Entry & Quality Curation</span>
+                </div>
+                <div class="step-body">
+                    <p>To complement automated search results and ensure comprehensive coverage, the system includes a manual entry component for curated, high-quality sources:</p>
+                    
+                    <h4>🎯 Manual Entry Capabilities</h4>
+                    <div class="two-column">
+                        <div>
+                            <h5>📄 Document Upload</h5>
+                            <ul class="indicator-list">
+                                <li>
+                                    <div class="indicator-category">PDF Processing</div>
+                                    <div class="indicator-reason">Research papers, reports, and whitepapers with full text extraction</div>
+                                </li>
+                                <li>
+                                    <div class="indicator-category">DOCX/DOC Files</div>
+                                    <div class="indicator-reason">Microsoft Word documents with formatting preservation</div>
+                                </li>
+                                <li>
+                                    <div class="indicator-category">Text Files</div>
+                                    <div class="indicator-reason">Plain text content with encoding detection</div>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div>
+                            <h5>🎥 Media Processing</h5>
+                            <ul class="indicator-list">
+                                <li>
+                                    <div class="indicator-category">YouTube Transcripts</div>
+                                    <div class="indicator-reason">Conference presentations, webinars, and expert interviews</div>
+                                </li>
+                                <li>
+                                    <div class="indicator-category">URL Collection</div>
+                                    <div class="indicator-reason">Direct article links with automatic content extraction</div>
+                                </li>
+                                <li>
+                                    <div class="indicator-category">Metadata Preservation</div>
+                                    <div class="indicator-reason">Source attribution, publication dates, and categorization</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <h4>🔍 Quality Assurance Process</h4>
+                    <div class="formula-box">
+<strong>Manual Entry Workflow:</strong>
+1. Source Identification → Expert curation of high-authority sources
+2. Content Processing → Automated text extraction and formatting
+3. Duplicate Detection → Cross-reference with existing database
+4. Category Classification → Manual assignment to AI impact categories
+5. Quality Scoring → Same scoring algorithms as automated content
+6. Integration → Seamless inclusion in analysis pipeline
+
+<strong>Quality Metrics:</strong>
+• Source Authority: Domain credibility and institutional reputation
+• Content Completeness: Full-text availability and processing success
+• Relevance Score: Manual category assignment accuracy
+• Temporal Currency: Publication date and information recency
+                    </div>
+                    
+                    <h4>🎛️ Prompt Management Interface</h4>
+                    <p>The manual entry system includes an advanced prompt management interface allowing researchers to:</p>
+                    <ul>
+                        <li><strong>View Current Prompts:</strong> Complete transparency of search prompts used for each category</li>
+                        <li><strong>Customize Searches:</strong> Modify prompts for targeted research questions or emerging topics</li>
+                        <li><strong>Test Effectiveness:</strong> Real-time testing of prompt modifications with result previews</li>
+                        <li><strong>Track Usage:</strong> Historical logging of all search operations and prompt modifications</li>
+                        <li><strong>Reset to Defaults:</strong> Return to validated baseline prompts when needed</li>
+                    </ul>
+                    
+                    <div class="success-box">
+                        <strong>✅ Manual Entry Benefits:</strong>
+                        <ul>
+                            <li><strong>Quality Control:</strong> Expert curation ensures high-relevance sources</li>
+                            <li><strong>Gap Filling:</strong> Target specific topics missing from automated searches</li>
+                            <li><strong>Source Diversity:</strong> Include non-indexed or paywalled content</li>
+                            <li><strong>Temporal Coverage:</strong> Add historical or very recent sources</li>
+                            <li><strong>Format Flexibility:</strong> Process various document types and media</li>
+                        </ul>
+                    </div>
+                    
+                    <h4>📊 Integration with Automated Pipeline</h4>
+                    <div class="highlight-box">
+                        <strong>💡 Hybrid Approach:</strong> Manual entry complements rather than replaces automated collection, creating a comprehensive dataset that combines algorithmic breadth with human expertise for quality and relevance.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flow-arrow">⬇️</div>
+            
+            <!-- Step 4: Scoring & Weighting -->
+            <div class="step-card" id="scoring">
+                <div class="step-header">
+                    <span class="step-number">4</span>
+                    <span class="step-title">📊 Scoring & Weighting Methodology</span>
+                </div>
+                <div class="step-body">
+                    <h4>🎯 Targeting Effectiveness Score</h4>
+                    <div class="formula-box">
+<strong>Formula:</strong>
+Targeting_Effectiveness = (Total_Indicators_Found / Max_Possible_Indicators) × 100
+
+<strong>Where:</strong>
+• Total_Indicators_Found = Sum of all indicator matches across all articles in category
+• Max_Possible_Indicators = Number_of_Indicators × Number_of_Articles
+• Result: Percentage (0-100%) indicating search query effectiveness
+
+<strong>Academic Foundation:</strong>
+Based on information retrieval precision metrics (Manning et al., 2008) and 
+TF-IDF weighting schemes (Salton & Buckley, 1988) for term importance assessment.
+                    </div>
+                    
+                    <h4>🏛️ Source Credibility Assessment</h4>
+                    <div class="formula-box">
+<strong>Multi-Factor Credibility Score:</strong>
+Credibility = 0.4 × Source_Authority + 0.3 × Domain_Expertise + 0.2 × Publication_Recency + 0.1 × Citation_Count
+
+<strong>Component Definitions:</strong>
+• Source_Authority: Domain authority based on institutional credibility (Hirsch, 2005)
+• Domain_Expertise: Cybersecurity field relevance (0.0-1.0 scale)
+• Publication_Recency: Temporal relevance with exponential decay weighting
+• Citation_Count: Academic/professional citation metrics where available
+
+<strong>Recognized Authority Domains:</strong>
+• gartner.com, forrester.com, mckinsey.com (Industry analysis: 0.9-1.0)
+• sans.org, nist.gov, cisa.gov (Government/standards: 0.8-0.9)
+• ieee.org, acm.org, arxiv.org (Academic: 0.7-0.9)
+• Vendor technical blogs: 0.5-0.7 (context dependent)
+
+<strong>Academic Foundation:</strong>
+Weights derived from source reliability research (Castillo et al., 2011) and 
+authority assessment methodologies adapted for cybersecurity domain expertise.
+                    </div>
+                    
+                    <h4>📏 Content Quality Metrics</h4>
+                    <div class="formula-box">
+<strong>Content Quality Score:</strong>
+Quality = 0.3 × Length_Score + 0.2 × Keyword_Density + 0.2 × Readability + 0.3 × Structure_Score
+
+<strong>Component Calculations:</strong>
+• Length_Score: Min-max normalized article length (Han et al., 2011)
+• Keyword_Density: TF-IDF weighted density of domain terms (Salton & Buckley, 1988)
+• Readability: Flesch-Kincaid readability assessment (Flesch et al., 1975)
+• Structure_Score: Content organization and formatting quality
+
+<strong>Indicator Density Formula:</strong>
+Density = (Total_Indicators_Found / Total_Character_Count) × 1000
+(Indicators per 1000 characters)
+
+<strong>Academic Foundation:</strong>
+Combines readability research (Flesch-Kincaid), information theory (Shannon, 1948),
+and weighted scoring principles (Saaty, 1980) for multi-criteria assessment.
+                    </div>
+                    
+                    <h4>🔬 Semantic Similarity Assessment</h4>
+                    <div class="formula-box">
+<strong>Semantic Similarity Score:</strong>
+Similarity = cosine_similarity(SBERT_embedding(query), SBERT_embedding(content))
+
+<strong>Implementation:</strong>
+• Uses pre-trained Sentence-BERT model (Reimers & Gurevych, 2019)
+• BERT embeddings for semantic understanding (Devlin et al., 2019)
+• Cosine similarity for angular distance measurement (Singhal, 2001)
+
+<strong>Category Confidence Score:</strong>
+Confidence = sigmoid(weighted_indicator_score) × content_quality_modifier
+
+<strong>Academic Foundation:</strong>
+Based on transformer architecture research (BERT), semantic similarity methods,
+and logistic regression principles for probability estimation.
+                    </div>
+                    
+                    <div class="two-column">
+                        <div class="success-box">
+                            <strong>✅ Methodological Strengths:</strong>
+                            <ul>
+                                <li>Academically grounded formulas with peer-reviewed citations</li>
+                                <li>Multi-factor scoring avoiding single-metric bias</li>
+                                <li>Transparent weight justification using AHP principles</li>
+                                <li>Reproducible calculations with documented parameters</li>
+                                <li>Cross-validation through manual entry comparison</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="warning-box">
+                            <strong>🔄 Continuous Improvement:</strong>
+                            <ul>
+                                <li>Regular validation against expert assessment</li>
+                                <li>Weight optimization through empirical testing</li>
+                                <li>Source authority database updates</li>
+                                <li>Algorithm refinement based on result quality</li>
+                                <li>Integration of emerging NLP techniques</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <h4>📚 Academic References for Scoring Methodologies</h4>
+                    <div style="font-size: 0.9em; background: #f8f9fa; padding: 15px; border-radius: 5px;">
+                        <p><strong>Core References:</strong></p>
+                        <ul style="line-height: 1.4;">
+                            <li>Castillo, C., Mendoza, M., & Poblete, B. (2011). Information credibility on twitter. <em>Proceedings of the 20th International Conference on World Wide Web</em>, 675-684.</li>
+                            <li>Devlin, J., Chang, M. W., Lee, K., & Toutanova, K. (2019). BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding. <em>NAACL-HLT</em>, 4171-4186.</li>
+                            <li>Flesch, R., Kincaid, J. P., Fishburne, R. P., & Chissom, B. S. (1975). Derivation of New Readability Formulas for Navy Enlisted Personnel. <em>University of Central Florida</em>.</li>
+                            <li>Han, J., Pei, J., & Kamber, M. (2011). Data mining: concepts and techniques. <em>Elsevier</em>.</li>
+                            <li>Hirsch, J. E. (2005). An index to quantify an individual's scientific research output. <em>PNAS</em>, 102(46), 16569-16572.</li>
+                            <li>Manning, C. D., Raghavan, P., & Schütze, H. (2008). Introduction to information retrieval. <em>Cambridge University Press</em>.</li>
+                            <li>Reimers, N., & Gurevych, I. (2019). Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks. <em>EMNLP-IJCNLP</em>, 3982-3992.</li>
+                            <li>Saaty, T. L. (1980). The analytic hierarchy process: planning, priority setting, resource allocation. <em>McGraw-Hill</em>.</li>
+                            <li>Salton, G., & Buckley, C. (1988). Term-weighting approaches in automatic text retrieval. <em>Information Processing & Management</em>, 24(5), 513-523.</li>
+                            <li>Shannon, C. E. (1948). A Mathematical Theory of Communication. <em>The Bell System Technical Journal</em>, 27(3), 379-423.</li>
+                            <li>Singhal, A. (2001). Modern Information Retrieval: A Brief Overview. <em>IEEE Data Engineering Bulletin</em>, 24(4), 35-43.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flow-arrow">⬇️</div>
+            
+            <!-- Step 5: Individual Article Summarization -->
+            <div class="step-card" id="summarization">
+                <div class="step-header">
+                    <span class="step-number">5</span>
+                    <span class="step-title">📝 Summarization Strategy</span>
+                </div>
+                <div class="step-body">
+                    <h4>🔍 Individual Article Summarization Prompt</h4>
+                    <div class="prompt-box">ROLE: Expert cybersecurity workforce analyst
+TASK: Analyze this article for AI impact on cybersecurity roles
+
+ARTICLE CONTENT: [Full article text]
+
+ANALYSIS FRAMEWORK:
+1. IMPACT CATEGORY: Determine primary category (Replace/Augment/New/Human-Only)
+2. KEY FINDINGS: Extract 3-5 most important insights
+3. EVIDENCE STRENGTH: Rate quality of evidence (High/Medium/Low)
+4. SPECIFIC EXAMPLES: Identify concrete examples or case studies
+5. TIMEFRAME: Note any timeline predictions
+6. LIMITATIONS: Identify gaps or uncertainties
+
+OUTPUT FORMAT:
+**Category:** [Primary impact type]
+**Summary:** [3-sentence executive summary]
+**Key Evidence:** [Bullet points of supporting evidence]
+**Confidence:** [High/Medium/Low] with rationale
+**Timeline:** [Any temporal predictions mentioned]</div>
+                    
+                    <h4>📊 Category-Level Summarization Prompt</h4>
+                    <div class="prompt-box">ROLE: Strategic intelligence analyst
+TASK: Synthesize multiple articles into category-level insights
+
+INPUT: [All articles for specific category]
+
+SYNTHESIS REQUIREMENTS:
+1. TREND IDENTIFICATION: What patterns emerge across articles?
+2. CONSENSUS AREAS: Where do sources agree?
+3. CONTRADICTIONS: Where do sources disagree?
+4. EVIDENCE QUALITY: Overall strength of supporting evidence
+5. GAPS: What information is missing?
+6. IMPLICATIONS: Strategic implications for cybersecurity workforce
+
+OUTPUT FORMAT:
+**Category Overview:** [2-paragraph synthesis]
+**Key Trends:** [3-5 major patterns identified]
+**Evidence Assessment:** [Overall quality and reliability]
+**Confidence Level:** [High/Medium/Low for category conclusions]
+**Research Gaps:** [Areas needing additional investigation]
+**Strategic Implications:** [Workforce planning recommendations]</div>
+                    
+                    <div class="highlight-box">
+                        <strong>🎯 Summarization Goals:</strong>
+                        <ul>
+                            <li><strong>Consistency:</strong> Standardized analysis framework across all content</li>
+                            <li><strong>Objectivity:</strong> Evidence-based conclusions with confidence ratings</li>
+                            <li><strong>Actionability:</strong> Insights useful for workforce planning decisions</li>
+                            <li><strong>Transparency:</strong> Clear indication of evidence strength and limitations</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flow-arrow">⬇️</div>
+            
+            <!-- Step 6: Dashboard Implementation -->
+            <div class="step-card" id="dashboard">
+                <div class="step-header">
+                    <span class="step-number">6</span>
+                    <span class="step-title">📈 Dashboard & Visualization</span>
+                </div>
+                <div class="step-body">
+                    <h4>🎨 Dashboard Design Principles</h4>
+                    <div class="two-column">
+                        <div>
+                            <h5>📊 Executive Summary Level</h5>
+                            <ul>
+                                <li>High-level metrics for each category</li>
+                                <li>Visual progress bars for targeting effectiveness</li>
+                                <li>Color-coded category cards</li>
+                                <li>Quick statistical overview</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h5>🔍 Detailed Drill-Down</h5>
+                            <ul>
+                                <li>Clickable indicators with highlighting</li>
+                                <li>Full article content access</li>
+                                <li>Interactive category navigation</li>
+                                <li>Search prompt transparency</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <h4>🔄 Workflow Integration</h4>
+                    <div class="formula-box">
+<strong>Data Flow:</strong>
+Raw Articles → Indicator Detection → Scoring → Summarization → Dashboard
+
+<strong>Update Frequency:</strong>
+• Manual: On-demand analysis for specific research questions
+• Weekly: Automated collection and analysis for trend monitoring
+• Quarterly: Comprehensive review and methodology refinement
+
+<strong>Feedback Loop:</strong>
+Dashboard insights → Methodology refinement → Improved targeting → Better results
+                    </div>
+                    
+                    <div class="success-box">
+                        <strong>🎯 Current Implementation Status:</strong>
+                        <ul>
+                            <li>✅ Interactive category navigation</li>
+                            <li>✅ Clickable indicator highlighting</li>
+                            <li>✅ Process methodology documentation</li>
+                            <li>✅ Transparent scoring formulas</li>
+                            <li>🔄 Individual article summarization (planned)</li>
+                            <li>🔄 Category-level synthesis (planned)</li>
+                            <li>🔄 Automated report generation (planned)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Process Summary -->
+            <div class="step-card">
+                <div class="step-header">
+                    <span class="step-number">✨</span>
+                    <span class="step-title">🎯 Process Summary & Next Steps</span>
+                </div>
+                <div class="step-body">
+                    <h4>🔄 Complete Workflow Overview</h4>
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; text-align: center;">
+                        <strong>Key Assumptions</strong> → <strong>Indicator Framework</strong> → <strong>Strategic Prompts</strong> → <strong>Data Collection</strong> → <strong>Scoring & Analysis</strong> → <strong>Summarization</strong> → <strong>Interactive Dashboard</strong>
+                    </div>
+                    
+                    <div class="two-column" style="margin-top: 30px;">
+                        <div>
+                            <h5>🎯 Immediate Enhancements</h5>
+                            <ul>
+                                <li>Increase sample size per category</li>
+                                <li>Implement article summarization prompts</li>
+                                <li>Add category-level synthesis</li>
+                                <li>Improve source credibility detection</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h5>🚀 Future Development</h5>
+                            <ul>
+                                <li>Multi-source data integration</li>
+                                <li>Longitudinal trend analysis</li>
+                                <li>Automated report scheduling</li>
+                                <li>Stakeholder feedback integration</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="highlight-box">
+                        <strong>💡 Value Proposition:</strong> This methodology provides a systematic, transparent, and reproducible approach to analyzing AI's impact on cybersecurity workforce, enabling evidence-based strategic planning for the NSF AI-Horizon research initiative.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

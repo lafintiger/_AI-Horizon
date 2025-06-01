@@ -1,0 +1,1059 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Horizon: Cybersecurity Workforce Impact Analysis</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+        
+        .header .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+        
+        .meta-info {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            padding: 40px;
+        }
+        
+        .category-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+        
+        .card-header {
+            padding: 25px;
+            color: white;
+            font-weight: 600;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .card-header:hover {
+            opacity: 0.9;
+        }
+        
+        .replace { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+        .augment { background: linear-gradient(135deg, #3498db, #2980b9); }
+        .new_tasks { background: linear-gradient(135deg, #27ae60, #229954); }
+        .human_only { background: linear-gradient(135deg, #f39c12, #e67e22); }
+        
+        .card-body {
+            padding: 25px;
+        }
+        
+        .stat {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .stat:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        
+        .stat-label {
+            font-weight: 500;
+            color: #555;
+        }
+        
+        .stat-value {
+            font-weight: 700;
+            font-size: 1.2em;
+            color: #2c3e50;
+        }
+        
+        .indicators {
+            margin-top: 20px;
+        }
+        
+        .indicators h4 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1em;
+        }
+        
+        .indicator-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .indicator-tag {
+            background: #ecf0f1;
+            color: #2c3e50;
+            padding: 4px 8px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .indicator-tag:hover {
+            background: #bdc3c7;
+        }
+        
+        .indicator-tag.found {
+            background: #2ecc71;
+            color: white;
+        }
+        
+        .indicator-tag.found:hover {
+            background: #27ae60;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #ecf0f1;
+            border-radius: 4px;
+            margin-top: 15px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+        
+        .details-section {
+            padding: 40px;
+            background: #f8f9fa;
+        }
+        
+        .details-section h2 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 2em;
+        }
+        
+        .article-grid {
+            display: grid;
+            gap: 20px;
+        }
+        
+        .article-item {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            border-left: 4px solid #3498db;
+        }
+        
+        .article-title {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+            cursor: pointer;
+        }
+        
+        .article-title:hover {
+            color: #3498db;
+        }
+        
+        .article-meta {
+            color: #7f8c8d;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+        }
+        
+        .article-preview {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        
+        .article-indicators {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+        
+        .search-prompt-section {
+            background: #f8f9fa;
+            padding: 30px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .search-prompt {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            white-space: pre-wrap;
+            border: 1px solid #e0e0e0;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .definitions-section {
+            background: #2c3e50;
+            color: white;
+            padding: 40px;
+            margin-top: 0;
+        }
+        
+        .definitions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 20px;
+        }
+        
+        .definition-card {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 8px;
+        }
+        
+        .definition-card h4 {
+            color: #ecf0f1;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+        
+        .category-section {
+            scroll-margin-top: 100px;
+        }
+        
+        .footer {
+            background: #34495e;
+            color: white;
+            padding: 30px 40px;
+            text-align: center;
+        }
+        
+        .footer h3 {
+            margin-bottom: 15px;
+            color: #ecf0f1;
+        }
+        
+        @media (max-width: 768px) {
+            .summary-grid {
+                grid-template-columns: 1fr;
+                padding: 20px;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+    <script>
+        function scrollToCategory(categoryId) {
+            const element = document.getElementById(categoryId + '-details');
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+        
+        function highlightIndicatorInArticle(indicator, categoryId) {
+            // Find all articles in this category and highlight the indicator
+            const categorySection = document.getElementById(categoryId + '-details');
+            if (categorySection) {
+                // Remove previous highlights
+                const highlighted = categorySection.querySelectorAll('.highlight');
+                highlighted.forEach(el => {
+                    el.outerHTML = el.innerHTML;
+                });
+                
+                // Add new highlights
+                const articles = categorySection.querySelectorAll('.article-preview');
+                articles.forEach(article => {
+                    const text = article.innerHTML;
+                    const regex = new RegExp(`(\b${indicator}\b)`, 'gi');
+                    article.innerHTML = text.replace(regex, '<span class="highlight" style="background-color: yellow; padding: 2px 4px; border-radius: 3px;">$1</span>');
+                });
+                
+                // Scroll to category
+                categorySection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+        
+        function showSearchPrompt(category) {
+            const prompts = {};
+            if (prompts[category]) {
+                alert('Search Prompt for ' + category.toUpperCase() + ':\n\n' + prompts[category]);
+            } else {
+                alert('Search prompt not available for this category.');
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 AI-Horizon</h1>
+            <div class="subtitle">Cybersecurity Workforce Impact Analysis</div>
+            <div class="meta-info">
+                <strong>Analysis Date:</strong> May 31, 2025 at 11:35 AM<br>
+                <strong>Data Source:</strong> Perplexity AI Research<br>
+                <strong>Categories Analyzed:</strong> 4 AI Impact Categories
+            </div>
+        </div>
+        
+        <div style="background: #3498db; padding: 15px; text-align: center;">
+            <a href="process_methodology.html" style="display: inline-block; background: rgba(255,255,255,0.2); color: white; padding: 10px 20px; margin: 0 10px; border-radius: 5px; text-decoration: none; transition: background 0.3s ease;" onmouseover="this.style.background='rgba(255,255,255,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'">📋 View Process Methodology</a>
+            <a href="#definitions" style="display: inline-block; background: rgba(255,255,255,0.2); color: white; padding: 10px 20px; margin: 0 10px; border-radius: 5px; text-decoration: none; transition: background 0.3s ease;" onmouseover="this.style.background='rgba(255,255,255,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'">📊 Scoring Definitions</a>
+            <a href="/" style="display: inline-block; background: rgba(255,255,255,0.2); color: white; padding: 10px 20px; margin: 0 10px; border-radius: 5px; text-decoration: none; transition: background 0.3s ease;" onmouseover="this.style.background='rgba(255,255,255,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'">➕ Manual Entry</a>
+            <a href="/chat" style="display: inline-block; background: rgba(255,255,255,0.2); color: white; padding: 10px 20px; margin: 0 10px; border-radius: 5px; text-decoration: none; transition: background 0.3s ease;" onmouseover="this.style.background='rgba(255,255,255,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'">💬 Chat with Articles</a>
+        </div>
+        
+        <div class="summary-grid">
+
+            <div class="category-card">
+                <div class="card-header new_tasks" onclick="scrollToCategory('new_tasks')">
+                    ⭐ New Jobs Created
+                </div>
+                <div class="card-body">
+                    <div class="stat">
+                        <span class="stat-label">Articles Collected</span>
+                        <span class="stat-value">5</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Key Indicators Found</span>
+                        <span class="stat-value">25</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Avg Content Length</span>
+                        <span class="stat-value">4,508 chars</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Credible Sources</span>
+                        <span class="stat-value">0/5</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Targeting Effectiveness</span>
+                        <span class="stat-value">71.4%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill new_tasks" style="width: 71.42857142857143%"></div>
+                    </div>
+                    
+                    <div class="indicators">
+                        <h4>Key Indicators Tracked:</h4>
+                        <div class="indicator-list">
+<span class="indicator-tag found" onclick="highlightIndicatorInArticle('ai security engineer', 'new_tasks')">ai security engineer (5)</span><span class="indicator-tag found" onclick="highlightIndicatorInArticle('governance', 'new_tasks')">governance (5)</span><span class="indicator-tag " onclick="">ml specialist (0)</span><span class="indicator-tag found" onclick="highlightIndicatorInArticle('emerging', 'new_tasks')">emerging (5)</span><span class="indicator-tag " onclick="">skill requirements (0)</span><span class="indicator-tag found" onclick="highlightIndicatorInArticle('new roles', 'new_tasks')">new roles (5)</span><span class="indicator-tag found" onclick="highlightIndicatorInArticle('created by ai', 'new_tasks')">created by ai (5)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="category-card">
+                <div class="card-header human_only" onclick="scrollToCategory('human_only')">
+                    👤 Human-Only Tasks
+                </div>
+                <div class="card-body">
+                    <div class="stat">
+                        <span class="stat-label">Articles Collected</span>
+                        <span class="stat-value">5</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Key Indicators Found</span>
+                        <span class="stat-value">15</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Avg Content Length</span>
+                        <span class="stat-value">5,638 chars</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Credible Sources</span>
+                        <span class="stat-value">0/5</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Targeting Effectiveness</span>
+                        <span class="stat-value">37.5%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill human_only" style="width: 37.5%"></div>
+                    </div>
+                    
+                    <div class="indicators">
+                        <h4>Key Indicators Tracked:</h4>
+                        <div class="indicator-list">
+<span class="indicator-tag " onclick="">human-only (0)</span><span class="indicator-tag " onclick="">intuition (0)</span><span class="indicator-tag " onclick="">ethics (0)</span><span class="indicator-tag found" onclick="highlightIndicatorInArticle('compliance', 'human_only')">compliance (5)</span><span class="indicator-tag found" onclick="highlightIndicatorInArticle('strategic', 'human_only')">strategic (5)</span><span class="indicator-tag " onclick="">creative (0)</span><span class="indicator-tag " onclick="">human-driven (0)</span><span class="indicator-tag found" onclick="highlightIndicatorInArticle('human judgment', 'human_only')">human judgment (5)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="category-card">
+                <div class="card-header replace" onclick="scrollToCategory('replace')">
+                    🤖 AI Replacing Jobs
+                </div>
+                <div class="card-body">
+                    <div class="stat">
+                        <span class="stat-label">Articles Collected</span>
+                        <span class="stat-value">5</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Key Indicators Found</span>
+                        <span class="stat-value">5</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Avg Content Length</span>
+                        <span class="stat-value">4,890 chars</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Credible Sources</span>
+                        <span class="stat-value">0/5</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Targeting Effectiveness</span>
+                        <span class="stat-value">14.3%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill replace" style="width: 14.285714285714285%"></div>
+                    </div>
+                    
+                    <div class="indicators">
+                        <h4>Key Indicators Tracked:</h4>
+                        <div class="indicator-list">
+<span class="indicator-tag " onclick="">lights-out (0)</span><span class="indicator-tag found" onclick="highlightIndicatorInArticle('automation', 'replace')">automation (5)</span><span class="indicator-tag " onclick="">autonomous (0)</span><span class="indicator-tag " onclick="">eliminating (0)</span><span class="indicator-tag " onclick="">job displacement (0)</span><span class="indicator-tag " onclick="">workforce reduction (0)</span><span class="indicator-tag " onclick="">replacing (0)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="category-card">
+                <div class="card-header augment" onclick="scrollToCategory('augment')">
+                    🤝 AI Augmenting Work
+                </div>
+                <div class="card-body">
+                    <div class="stat">
+                        <span class="stat-label">Articles Collected</span>
+                        <span class="stat-value">5</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Key Indicators Found</span>
+                        <span class="stat-value">5</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Avg Content Length</span>
+                        <span class="stat-value">4,050 chars</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Credible Sources</span>
+                        <span class="stat-value">0/5</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Targeting Effectiveness</span>
+                        <span class="stat-value">14.3%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill augment" style="width: 14.285714285714285%"></div>
+                    </div>
+                    
+                    <div class="indicators">
+                        <h4>Key Indicators Tracked:</h4>
+                        <div class="indicator-list">
+<span class="indicator-tag " onclick="">human-ai (0)</span><span class="indicator-tag " onclick="">assisting (0)</span><span class="indicator-tag found" onclick="highlightIndicatorInArticle('collaboration', 'augment')">collaboration (5)</span><span class="indicator-tag " onclick="">copilot (0)</span><span class="indicator-tag " onclick="">augmenting (0)</span><span class="indicator-tag " onclick="">productivity (0)</span><span class="indicator-tag " onclick="">enhanced (0)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+        </div>
+        
+        <div class="search-prompt-section">
+            <h2 style="color: #2c3e50; text-align: center; margin-bottom: 30px;">🔍 Search Prompts Used</h2>
+            <p style="text-align: center; margin-bottom: 20px; color: #7f8c8d;">
+                These are the actual search queries sent to Perplexity AI for each category. Click to expand each prompt.
+            </p>
+        
+            <div style="margin-bottom: 20px;">
+                <details style="background: white; border-radius: 8px; padding: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05);">
+                    <summary style="font-weight: 600; color: #2c3e50; cursor: pointer; margin-bottom: 15px;">
+                        🤖 AI Replacing Jobs Search Prompt
+                    </summary>
+                    <div class="search-prompt">CYBERSECURITY WORKFORCE AUTOMATION 2024-2025:
+
+Find authoritative sources on AI COMPLETELY REPLACING cybersecurity professionals:
+
+KEY INDICATORS:
+• SIEM/log analysis fully automated (no human analysts)
+• AI threat detection replacing SOC analysts entirely
+• Autonomous incident response eliminating human responders
+• Job displacement studies showing workforce reduction
+• "Lights-out" security operations centers
+• AI taking over vulnerability management completely
+
+PRIORITY SOURCES: Gartner, Forrester, SANS, academic studies, government workforce reports</div>
+                </details>
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+                <details style="background: white; border-radius: 8px; padding: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05);">
+                    <summary style="font-weight: 600; color: #2c3e50; cursor: pointer; margin-bottom: 15px;">
+                        🤝 AI Augmenting Work Search Prompt
+                    </summary>
+                    <div class="search-prompt">CYBERSECURITY AI-HUMAN COLLABORATION 2024-2025:
+
+Find sources on AI ASSISTING and ENHANCING cybersecurity professionals:
+
+KEY INDICATORS:
+• AI copilots for security analysts
+• ML-enhanced threat analysis requiring human oversight
+• AI-assisted incident response with human decision-making
+• Analyst productivity improvements through AI tools
+• Human-AI collaboration in security operations
+• AI augmentation improving analyst capabilities
+
+PRIORITY SOURCES: SANS surveys, vendor case studies, practitioner reports, industry analysis</div>
+                </details>
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+                <details style="background: white; border-radius: 8px; padding: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05);">
+                    <summary style="font-weight: 600; color: #2c3e50; cursor: pointer; margin-bottom: 15px;">
+                        ⭐ New Jobs Created Search Prompt
+                    </summary>
+                    <div class="search-prompt">EMERGING CYBERSECURITY ROLES 2024-2025:
+
+Find sources on NEW cybersecurity jobs created by AI technology:
+
+KEY INDICATORS:
+• AI security engineers and ML security specialists
+• AI model security and bias testing roles
+• AI governance and ethics positions in cybersecurity
+• Prompt engineering for security applications
+• AI red team and adversarial testing specialists
+• New skill requirements for AI-integrated security
+
+PRIORITY SOURCES: Job market reports, LinkedIn workforce insights, recruitment studies, career surveys</div>
+                </details>
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+                <details style="background: white; border-radius: 8px; padding: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05);">
+                    <summary style="font-weight: 600; color: #2c3e50; cursor: pointer; margin-bottom: 15px;">
+                        👤 Human-Only Tasks Search Prompt
+                    </summary>
+                    <div class="search-prompt">HUMAN-ESSENTIAL CYBERSECURITY 2024-2025:
+
+Find sources on cybersecurity tasks that REMAIN human-driven:
+
+KEY INDICATORS:
+• Strategic security planning requiring human judgment
+• Crisis communication and stakeholder management
+• Legal/compliance decisions in security incidents
+• Ethical considerations in security policies
+• Creative threat modeling and red team planning
+• Complex investigations requiring human intuition
+
+PRIORITY SOURCES: CISO perspectives, security leadership studies, policy research, ethics papers</div>
+                </details>
+            </div>
+            
+        </div>
+        
+        <div class="details-section">
+            <h2>📄 Collected Articles by Category</h2>
+            <div class="article-grid">
+    
+                <div class="category-section" id="new_tasks-details">
+                    <h3 style="color: #2c3e50; margin-bottom: 20px; padding: 15px; background: #ecf0f1; border-radius: 8px;">
+                        ⭐ New Jobs Created - 5 Articles
+                    </h3>
+        
+                    <div class="article-item">
+                        <div class="article-title" onclick="window.open('https://www.cybersecuritytribe.com/news/us-cybersecurity-recruitment-trends-for-2025', '_blank')">#1: AI Cybersecurity Impact Analysis 1: ## Emerging Cybersecurity Roles Created by AI, MLS...</div>
+                        <div class="article-meta">
+                            🗓️ 2025-05-31 11:34:57 | 📝 4,508 characters
+                        </div>
+                        <div style="background: #e8f4f8; padding: 10px; border-radius: 5px; margin: 10px 0; border-left: 3px solid #3498db;">
+                            <strong>📰 Source:</strong> <a href="https://www.cybersecuritytribe.com/news/us-cybersecurity-recruitment-trends-for-2025" target="_blank" style="color: #2980b9; font-weight: 600; text-decoration: none;">https://www.cybersecuritytribe.com/news/us-cybersecurity-recruitment-trends-for-2025</a>
+                            
+                        </div>
+                        <div class="article-preview">## Emerging Cybersecurity Roles Created by AI, MLSecOps, and AI Governance (2024–2025)
+
+The rapid integration of artificial intelligence (AI) into cybersecurity has catalyzed the creation of new job roles, particularly in areas like AI security engin...</div>
+                        <div class="article-indicators">
+                            <strong>Indicators Found:</strong>
+            <span class="indicator-tag found">new roles</span><span class="indicator-tag found">emerging</span><span class="indicator-tag found">ai security engineer</span><span class="indicator-tag found">governance</span><span class="indicator-tag found">created by ai</span>
+                        </div>
+                    </div>
+            
+                    <div class="article-item">
+                        <div class="article-title" onclick="window.open('https://www.crossover.com/resources/top-11-cyber-security-jobs-in-2024-what-to-expect', '_blank')">#2: AI Cybersecurity Impact Analysis 2: ## Emerging Cybersecurity Roles Created by AI, MLS...</div>
+                        <div class="article-meta">
+                            🗓️ 2025-05-31 11:34:57 | 📝 4,508 characters
+                        </div>
+                        <div style="background: #e8f4f8; padding: 10px; border-radius: 5px; margin: 10px 0; border-left: 3px solid #3498db;">
+                            <strong>📰 Source:</strong> <a href="https://www.crossover.com/resources/top-11-cyber-security-jobs-in-2024-what-to-expect" target="_blank" style="color: #2980b9; font-weight: 600; text-decoration: none;">https://www.crossover.com/resources/top-11-cyber-security-jobs-in-2024-what-to-expect</a>
+                            
+                        </div>
+                        <div class="article-preview">## Emerging Cybersecurity Roles Created by AI, MLSecOps, and AI Governance (2024–2025)
+
+The rapid integration of artificial intelligence (AI) into cybersecurity has catalyzed the creation of new job roles, particularly in areas like AI security engin...</div>
+                        <div class="article-indicators">
+                            <strong>Indicators Found:</strong>
+            <span class="indicator-tag found">new roles</span><span class="indicator-tag found">emerging</span><span class="indicator-tag found">ai security engineer</span><span class="indicator-tag found">governance</span><span class="indicator-tag found">created by ai</span>
+                        </div>
+                    </div>
+            
+                    <div class="article-item">
+                        <div class="article-title" onclick="window.open('https://ine.com/blog/top-5-cybersecurity-career-paths-for-new-graduates-in-2025', '_blank')">#3: AI Cybersecurity Impact Analysis 3: ## Emerging Cybersecurity Roles Created by AI, MLS...</div>
+                        <div class="article-meta">
+                            🗓️ 2025-05-31 11:34:57 | 📝 4,508 characters
+                        </div>
+                        <div style="background: #e8f4f8; padding: 10px; border-radius: 5px; margin: 10px 0; border-left: 3px solid #3498db;">
+                            <strong>📰 Source:</strong> <a href="https://ine.com/blog/top-5-cybersecurity-career-paths-for-new-graduates-in-2025" target="_blank" style="color: #2980b9; font-weight: 600; text-decoration: none;">https://ine.com/blog/top-5-cybersecurity-career-paths-for-new-graduates-in-2025</a>
+                            
+                        </div>
+                        <div class="article-preview">## Emerging Cybersecurity Roles Created by AI, MLSecOps, and AI Governance (2024–2025)
+
+The rapid integration of artificial intelligence (AI) into cybersecurity has catalyzed the creation of new job roles, particularly in areas like AI security engin...</div>
+                        <div class="article-indicators">
+                            <strong>Indicators Found:</strong>
+            <span class="indicator-tag found">new roles</span><span class="indicator-tag found">emerging</span><span class="indicator-tag found">ai security engineer</span><span class="indicator-tag found">governance</span><span class="indicator-tag found">created by ai</span>
+                        </div>
+                    </div>
+            
+                    <div class="article-item">
+                        <div class="article-title" onclick="window.open('https://birchwoodu.org/top-10-in-demand-cyber-security-jobs-roles-and-skills/', '_blank')">#4: AI Cybersecurity Impact Analysis 4: ## Emerging Cybersecurity Roles Created by AI, MLS...</div>
+                        <div class="article-meta">
+                            🗓️ 2025-05-31 11:34:57 | 📝 4,508 characters
+                        </div>
+                        <div style="background: #e8f4f8; padding: 10px; border-radius: 5px; margin: 10px 0; border-left: 3px solid #3498db;">
+                            <strong>📰 Source:</strong> <a href="https://birchwoodu.org/top-10-in-demand-cyber-security-jobs-roles-and-skills/" target="_blank" style="color: #2980b9; font-weight: 600; text-decoration: none;">https://birchwoodu.org/top-10-in-demand-cyber-security-jobs-roles-and-skills/</a>
+                            
+                        </div>
+                        <div class="article-preview">## Emerging Cybersecurity Roles Created by AI, MLSecOps, and AI Governance (2024–2025)
+
+The rapid integration of artificial intelligence (AI) into cybersecurity has catalyzed the creation of new job roles, particularly in areas like AI security engin...</div>
+                        <div class="article-indicators">
+                            <strong>Indicators Found:</strong>
+            <span class="indicator-tag found">new roles</span><span class="indicator-tag found">emerging</span><span class="indicator-tag found">ai security engineer</span><span class="indicator-tag found">governance</span><span class="indicator-tag found">created by ai</span>
+                        </div>
+                    </div>
+            
+                    <div class="article-item">
+                        <div class="article-title" onclick="window.open('https://cybersecurityventures.com/jobs/', '_blank')">#5: AI Cybersecurity Impact Analysis 5: ## Emerging Cybersecurity Roles Created by AI, MLS...</div>
+                        <div class="article-meta">
+                            🗓️ 2025-05-31 11:34:57 | 📝 4,508 characters
+                        </div>
+                        <div style="background: #e8f4f8; padding: 10px; border-radius: 5px; margin: 10px 0; border-left: 3px solid #3498db;">
+                            <strong>📰 Source:</strong> <a href="https://cybersecurityventures.com/jobs/" target="_blank" style="color: #2980b9; font-weight: 600; text-decoration: none;">https://cybersecurityventures.com/jobs/</a>
+                            
+                        </div>
+                        <div class="article-preview">## Emerging Cybersecurity Roles Created by AI, MLSecOps, and AI Governance (2024–2025)
+
+The rapid integration of artificial intelligence (AI) into cybersecurity has catalyzed the creation of new job roles, particularly in areas like AI security engin...</div>
+                        <div class="article-indicators">
+                            <strong>Indicators Found:</strong>
+            <span class="indicator-tag found">new roles</span><span class="indicator-tag found">emerging</span><span class="indicator-tag found">ai security engineer</span><span class="indicator-tag found">governance</span><span class="indicator-tag found">created by ai</span>
+                        </div>
+                    </div>
+            </div>
+                <div class="category-section" id="human_only-details">
+                    <h3 style="color: #2c3e50; margin-bottom: 20px; padding: 15px; background: #ecf0f1; border-radius: 8px;">
+                        👤 Human-Only Tasks - 5 Articles
+                    </h3>
+        
+                    <div class="article-item">
+                        <div class="article-title" onclick="window.open('https://destcert.com/resources/will-ai-replace-cybersecurity-experts/', '_blank')">#1: AI Cybersecurity Impact Analysis 1: ## Human-Essential Cybersecurity Tasks in the Age...</div>
+                        <div class="article-meta">
+                            🗓️ 2025-05-31 11:35:18 | 📝 5,638 characters
+                        </div>
+                        <div style="background: #e8f4f8; padding: 10px; border-radius: 5px; margin: 10px 0; border-left: 3px solid #3498db;">
+                            <strong>📰 Source:</strong> <a href="https://destcert.com/resources/will-ai-replace-cybersecurity-experts/" target="_blank" style="color: #2980b9; font-weight: 600; text-decoration: none;">https://destcert.com/resources/will-ai-replace-cybersecurity-experts/</a>
+                            
+                        </div>
+                        <div class="article-preview">## Human-Essential Cybersecurity Tasks in the Age of AI (2024–2025)
+
+AI is rapidly transforming cybersecurity, automating routine processes and enhancing threat detection. However, several critical cybersecurity tasks remain fundamentally reliant on ...</div>
+                        <div class="article-indicators">
+                            <strong>Indicators Found:</strong>
+            <span class="indicator-tag found">human judgment</span><span class="indicator-tag found">strategic</span><span class="indicator-tag found">compliance</span>
+                        </div>
+                    </div>
+            
+                    <div class="article-item">
+                        <div class="article-title" onclick="window.open('https://onlinedegrees.uwf.edu/articles/cybersecurity-and-ai/', '_blank')">#2: AI Cybersecurity Impact Analysis 2: ## Human-Essential Cybersecurity Tasks in the Age...</div>
+                        <div class="article-meta">
+                            🗓️ 2025-05-31 11:35:18 | 📝 5,638 characters
+                        </div>
+                        <div style="background: #e8f4f8; padding: 10px; border-radius: 5px; margin: 10px 0; border-left: 3px solid #3498db;">
+                            <strong>📰 Source:</strong> <a href="https://onlinedegrees.uwf.edu/articles/cybersecurity-and-ai/" target="_blank" style="color: #2980b9; font-weight: 600; text-decoration: none;">https://onlinedegrees.uwf.edu/articles/cybersecurity-and-ai/</a>
+                            
+                        </div>
+                        <div class="article-preview">## Human-Essential Cybersecurity Tasks in the Age of AI (2024–2025)
+
+AI is rapidly transforming cybersecurity, automating routine processes and enhancing threat detection. However, several critical cybersecurity tasks remain fundamentally reliant on ...</div>
+                        <div class="article-indicators">
+                            <strong>Indicators Found:</strong>
+            <span class="indicator-tag found">human judgment</span><span class="indicator-tag found">strategic</span><span class="indicator-tag found">compliance</span>
+                        </div>
+                    </div>
+            
+                    <div class="article-item">
+                        <div class="article-title" onclick="window.open('https://keepnetlabs.com/blog/will-ai-take-over-cybersecurity', '_blank')">#3: AI Cybersecurity Impact Analysis 3: ## Human-Essential Cybersecurity Tasks in the Age...</div>
+                        <div class="article-meta">
+                            🗓️ 2025-05-31 11:35:18 | 📝 5,638 characters
+                        </div>
+                        <div style="background: #e8f4f8; padding: 10px; border-radius: 5px; margin: 10px 0; border-left: 3px solid #3498db;">
+                            <strong>📰 Source:</strong> <a href="https://keepnetlabs.com/blog/will-ai-take-over-cybersecurity" target="_blank" style="color: #2980b9; font-weight: 600; text-decoration: none;">https://keepnetlabs.com/blog/will-ai-take-over-cybersecurity</a>
+                            
+                        </div>
+                        <div class="article-preview">## Human-Essential Cybersecurity Tasks in the Age of AI (2024–2025)
+
+AI is rapidly transforming cybersecurity, automating routine processes and enhancing threat detection. However, several critical cybersecurity tasks remain fundamentally reliant on ...</div>
+                        <div class="article-indicators">
+                            <strong>Indicators Found:</strong>
+            <span class="indicator-tag found">human judgment</span><span class="indicator-tag found">strategic</span><span class="indicator-tag found">compliance</span>
+                        </div>
+                    </div>
+            
+                    <div class="article-item">
+                        <div class="article-title" onclick="window.open('https://fedscoop.com/ai-cybersecurity-workforce-automation/', '_blank')">#4: AI Cybersecurity Impact Analysis 4: ## Human-Essential Cybersecurity Tasks in the Age...</div>
+                        <div class="article-meta">
+                            🗓️ 2025-05-31 11:35:18 | 📝 5,638 characters
+                        </div>
+                        <div style="background: #e8f4f8; padding: 10px; border-radius: 5px; margin: 10px 0; border-left: 3px solid #3498db;">
+                            <strong>📰 Source:</strong> <a href="https://fedscoop.com/ai-cybersecurity-workforce-automation/" target="_blank" style="color: #2980b9; font-weight: 600; text-decoration: none;">https://fedscoop.com/ai-cybersecurity-workforce-automation/</a>
+                            
+                        </div>
+                        <div class="article-preview">## Human-Essential Cybersecurity Tasks in the Age of AI (2024–2025)
+
+AI is rapidly transforming cybersecurity, automating routine processes and enhancing threat detection. However, several critical cybersecurity tasks remain fundamentally reliant on ...</div>
+                        <div class="article-indicators">
+                            <strong>Indicators Found:</strong>
+            <span class="indicator-tag found">human judgment</span><span class="indicator-tag found">strategic</span><span class="indicator-tag found">compliance</span>
+                        </div>
+                    </div>
+            
+                    <div class="article-item">
+                        <div class="article-title" onclick="window.open('https://skillogic.com/blog/will-ai-replace-cyber-security-jobs/', '_blank')">#5: AI Cybersecurity Impact Analysis 5: ## Human-Essential Cybersecurity Tasks in the Age...</div>
+                        <div class="article-meta">
+                            🗓️ 2025-05-31 11:35:18 | 📝 5,638 characters
+                        </div>
+                        <div style="background: #e8f4f8; padding: 10px; border-radius: 5px; margin: 10px 0; border-left: 3px solid #3498db;">
+                            <strong>📰 Source:</strong> <a href="https://skillogic.com/blog/will-ai-replace-cyber-security-jobs/" target="_blank" style="color: #2980b9; font-weight: 600; text-decoration: none;">https://skillogic.com/blog/will-ai-replace-cyber-security-jobs/</a>
+                            
+                        </div>
+                        <div class="article-preview">## Human-Essential Cybersecurity Tasks in the Age of AI (2024–2025)
+
+AI is rapidly transforming cybersecurity, automating routine processes and enhancing threat detection. However, several critical cybersecurity tasks remain fundamentally reliant on ...</div>
+                        <div class="article-indicators">
+                            <strong>Indicators Found:</strong>
+            <span class="indicator-tag found">human judgment</span><span class="indicator-tag found">strategic</span><span class="indicator-tag found">compliance</span>
+                        </div>
+                    </div>
+            </div>
+                <div class="category-section" id="replace-details">
+                    <h3 style="color: #2c3e50; margin-bottom: 20px; padding: 15px; background: #ecf0f1; border-radius: 8px;">
+                        🤖 AI Replacing Jobs - 5 Articles
+                    </h3>
+        
+                    <div class="article-item">
+                        <div class="article-title" onclick="window.open('https://explodingtopics.com/blog/ai-cybersecurity', '_blank')">#1: AI Cybersecurity Impact Analysis 1: ## AI Automation in Vulnerability Assessment, Inci...</div>
+                        <div class="article-meta">
+                            🗓️ 2025-05-31 11:34:27 | 📝 4,890 characters
+                        </div>
+                        <div style="background: #e8f4f8; padding: 10px; border-radius: 5px; margin: 10px 0; border-left: 3px solid #3498db;">
+                            <strong>📰 Source:</strong> <a href="https://explodingtopics.com/blog/ai-cybersecurity" target="_blank" style="color: #2980b9; font-weight: 600; text-decoration: none;">https://explodingtopics.com/blog/ai-cybersecurity</a>
+                            
+                        </div>
+                        <div class="article-preview">## AI Automation in Vulnerability Assessment, Incident Response, and Threat Detection (2024–2025)
+
+AI is rapidly transforming core cybersecurity functions, particularly vulnerability assessment, incident response, and threat detection. Below is a com...</div>
+                        <div class="article-indicators">
+                            <strong>Indicators Found:</strong>
+            <span class="indicator-tag found">automation</span>
+                        </div>
+                    </div>
+            
+                    <div class="article-item">
+                        <div class="article-title" onclick="window.open('https://www.sentinelone.com/cybersecurity-101/cybersecurity/cyber-security-trends/', '_blank')">#2: AI Cybersecurity Impact Analysis 2: ## AI Automation in Vulnerability Assessment, Inci...</div>
+                        <div class="article-meta">
+                            🗓️ 2025-05-31 11:34:27 | 📝 4,890 characters
+                        </div>
+                        <div style="background: #e8f4f8; padding: 10px; border-radius: 5px; margin: 10px 0; border-left: 3px solid #3498db;">
+                            <strong>📰 Source:</strong> <a href="https://www.sentinelone.com/cybersecurity-101/cybersecurity/cyber-security-trends/" target="_blank" style="color: #2980b9; font-weight: 600; text-decoration: none;">https://www.sentinelone.com/cybersecurity-101/cybersecurity/cyber-security-trends/</a>
+                            
+                        </div>
+                        <div class="article-preview">## AI Automation in Vulnerability Assessment, Incident Response, and Threat Detection (2024–2025)
+
+AI is rapidly transforming core cybersecurity functions, particularly vulnerability assessment, incident response, and threat detection. Below is a com...</div>
+                        <div class="article-indicators">
+                            <strong>Indicators Found:</strong>
+            <span class="indicator-tag found">automation</span>
+                        </div>
+                    </div>
+            
+                    <div class="article-item">
+                        <div class="article-title" onclick="window.open('https://www.optiv.com/insights/discover/blog/ai-trends-in-cybersecurity', '_blank')">#3: AI Cybersecurity Impact Analysis 3: ## AI Automation in Vulnerability Assessment, Inci...</div>
+                        <div class="article-meta">
+                            🗓️ 2025-05-31 11:34:27 | 📝 4,890 characters
+                        </div>
+                        <div style="background: #e8f4f8; padding: 10px; border-radius: 5px; margin: 10px 0; border-left: 3px solid #3498db;">
+                            <strong>📰 Source:</strong> <a href="https://www.optiv.com/insights/discover/blog/ai-trends-in-cybersecurity" target="_blank" style="color: #2980b9; font-weight: 600; text-decoration: none;">https://www.optiv.com/insights/discover/blog/ai-trends-in-cybersecurity</a>
+                            
+                        </div>
+                        <div class="article-preview">## AI Automation in Vulnerability Assessment, Incident Response, and Threat Detection (2024–2025)
+
+AI is rapidly transforming core cybersecurity functions, particularly vulnerability assessment, incident response, and threat detection. Below is a com...</div>
+                        <div class="article-indicators">
+                            <strong>Indicators Found:</strong>
+            <span class="indicator-tag found">automation</span>
+                        </div>
+                    </div>
+            
+                    <div class="article-item">
+                        <div class="article-title" onclick="window.open('https://www.infosecurity-magazine.com/news-features/cyber-ai-trends-review-preparing/', '_blank')">#4: AI Cybersecurity Impact Analysis 4: ## AI Automation in Vulnerability Assessment, Inci...</div>
+                        <div class="article-meta">
+                            🗓️ 2025-05-31 11:34:27 | 📝 4,890 characters
+                        </div>
+                        <div style="background: #e8f4f8; padding: 10px; border-radius: 5px; margin: 10px 0; border-left: 3px solid #3498db;">
+                            <strong>📰 Source:</strong> <a href="https://www.infosecurity-magazine.com/news-features/cyber-ai-trends-review-preparing/" target="_blank" style="color: #2980b9; font-weight: 600; text-decoration: none;">https://www.infosecurity-magazine.com/news-features/cyber-ai-trends-review-preparing/</a>
+                            
+                        </div>
+                        <div class="article-preview">## AI Automation in Vulnerability Assessment, Incident Response, and Threat Detection (2024–2025)
+
+AI is rapidly transforming core cybersecurity functions, particularly vulnerability assessment, incident response, and threat detection. Below is a com...</div>
+                        <div class="article-indicators">
+                            <strong>Indicators Found:</strong>
+            <span class="indicator-tag found">automation</span>
+                        </div>
+                    </div>
+            
+                    <div class="article-item">
+                        <div class="article-title" onclick="window.open('https://www.proofpoint.com/us/blog/ciso-perspectives/ai-data-security-and-ciso-shifts-top-cybersecurity-trends-watch-2025', '_blank')">#5: AI Cybersecurity Impact Analysis 5: ## AI Automation in Vulnerability Assessment, Inci...</div>
+                        <div class="article-meta">
+                            🗓️ 2025-05-31 11:34:27 | 📝 4,890 characters
+                        </div>
+                        <div style="background: #e8f4f8; padding: 10px; border-radius: 5px; margin: 10px 0; border-left: 3px solid #3498db;">
+                            <strong>📰 Source:</strong> <a href="https://www.proofpoint.com/us/blog/ciso-perspectives/ai-data-security-and-ciso-shifts-top-cybersecurity-trends-watch-2025" target="_blank" style="color: #2980b9; font-weight: 600; text-decoration: none;">https://www.proofpoint.com/us/blog/ciso-perspectives/ai-data-security-and-ciso-shifts-top-cybersecurity-trends-watch-2025</a>
+                            
+                        </div>
+                        <div class="article-preview">## AI Automation in Vulnerability Assessment, Incident Response, and Threat Detection (2024–2025)
+
+AI is rapidly transforming core cybersecurity functions, particularly vulnerability assessment, incident response, and threat detection. Below is a com...</div>
+                        <div class="article-indicators">
+                            <strong>Indicators Found:</strong>
+            <span class="indicator-tag found">automation</span>
+                        </div>
+                    </div>
+            </div>
+                <div class="category-section" id="augment-details">
+                    <h3 style="color: #2c3e50; margin-bottom: 20px; padding: 15px; background: #ecf0f1; border-radius: 8px;">
+                        🤝 AI Augmenting Work - 5 Articles
+                    </h3>
+        
+                    <div class="article-item">
+                        <div class="article-title" onclick="window.open('https://www.legitsecurity.com/aspm-knowledge-base/best-ai-cybersecurity-tools', '_blank')">#1: AI Cybersecurity Impact Analysis 1: # AI-Human Collaboration in Cybersecurity: 2024-20...</div>
+                        <div class="article-meta">
+                            🗓️ 2025-05-31 11:34:43 | 📝 4,050 characters
+                        </div>
+                        <div style="background: #e8f4f8; padding: 10px; border-radius: 5px; margin: 10px 0; border-left: 3px solid #3498db;">
+                            <strong>📰 Source:</strong> <a href="https://www.legitsecurity.com/aspm-knowledge-base/best-ai-cybersecurity-tools" target="_blank" style="color: #2980b9; font-weight: 600; text-decoration: none;">https://www.legitsecurity.com/aspm-knowledge-base/best-ai-cybersecurity-tools</a>
+                            
+                        </div>
+                        <div class="article-preview"># AI-Human Collaboration in Cybersecurity: 2024-2025 Trends
+
+The cybersecurity landscape is rapidly evolving with AI and machine learning technologies becoming essential tools for security professionals. As we move through 2024 and into 2025, the col...</div>
+                        <div class="article-indicators">
+                            <strong>Indicators Found:</strong>
+            <span class="indicator-tag found">collaboration</span>
+                        </div>
+                    </div>
+            
+                    <div class="article-item">
+                        <div class="article-title" onclick="window.open('https://cybermagazine.com/top10/top-10-ai-tools-for-enhancing-cybersecurity', '_blank')">#2: AI Cybersecurity Impact Analysis 2: # AI-Human Collaboration in Cybersecurity: 2024-20...</div>
+                        <div class="article-meta">
+                            🗓️ 2025-05-31 11:34:43 | 📝 4,050 characters
+                        </div>
+                        <div style="background: #e8f4f8; padding: 10px; border-radius: 5px; margin: 10px 0; border-left: 3px solid #3498db;">
+                            <strong>📰 Source:</strong> <a href="https://cybermagazine.com/top10/top-10-ai-tools-for-enhancing-cybersecurity" target="_blank" style="color: #2980b9; font-weight: 600; text-decoration: none;">https://cybermagazine.com/top10/top-10-ai-tools-for-enhancing-cybersecurity</a>
+                            
+                        </div>
+                        <div class="article-preview"># AI-Human Collaboration in Cybersecurity: 2024-2025 Trends
+
+The cybersecurity landscape is rapidly evolving with AI and machine learning technologies becoming essential tools for security professionals. As we move through 2024 and into 2025, the col...</div>
+                        <div class="article-indicators">
+                            <strong>Indicators Found:</strong>
+            <span class="indicator-tag found">collaboration</span>
+                        </div>
+                    </div>
+            
+                    <div class="article-item">
+                        <div class="article-title" onclick="window.open('https://www.infosecinstitute.com/resources/machine-learning-and-ai/the-future-of-machine-learning-in-cybersecurity/', '_blank')">#3: AI Cybersecurity Impact Analysis 3: # AI-Human Collaboration in Cybersecurity: 2024-20...</div>
+                        <div class="article-meta">
+                            🗓️ 2025-05-31 11:34:43 | 📝 4,050 characters
+                        </div>
+                        <div style="background: #e8f4f8; padding: 10px; border-radius: 5px; margin: 10px 0; border-left: 3px solid #3498db;">
+                            <strong>📰 Source:</strong> <a href="https://www.infosecinstitute.com/resources/machine-learning-and-ai/the-future-of-machine-learning-in-cybersecurity/" target="_blank" style="color: #2980b9; font-weight: 600; text-decoration: none;">https://www.infosecinstitute.com/resources/machine-learning-and-ai/the-future-of-machine-learning-in-cybersecurity/</a>
+                            
+                        </div>
+                        <div class="article-preview"># AI-Human Collaboration in Cybersecurity: 2024-2025 Trends
+
+The cybersecurity landscape is rapidly evolving with AI and machine learning technologies becoming essential tools for security professionals. As we move through 2024 and into 2025, the col...</div>
+                        <div class="article-indicators">
+                            <strong>Indicators Found:</strong>
+            <span class="indicator-tag found">collaboration</span>
+                        </div>
+                    </div>
+            
+                    <div class="article-item">
+                        <div class="article-title" onclick="window.open('https://terralogic.com/ai-in-cybersecurity/', '_blank')">#4: AI Cybersecurity Impact Analysis 4: # AI-Human Collaboration in Cybersecurity: 2024-20...</div>
+                        <div class="article-meta">
+                            🗓️ 2025-05-31 11:34:43 | 📝 4,050 characters
+                        </div>
+                        <div style="background: #e8f4f8; padding: 10px; border-radius: 5px; margin: 10px 0; border-left: 3px solid #3498db;">
+                            <strong>📰 Source:</strong> <a href="https://terralogic.com/ai-in-cybersecurity/" target="_blank" style="color: #2980b9; font-weight: 600; text-decoration: none;">https://terralogic.com/ai-in-cybersecurity/</a>
+                            
+                        </div>
+                        <div class="article-preview"># AI-Human Collaboration in Cybersecurity: 2024-2025 Trends
+
+The cybersecurity landscape is rapidly evolving with AI and machine learning technologies becoming essential tools for security professionals. As we move through 2024 and into 2025, the col...</div>
+                        <div class="article-indicators">
+                            <strong>Indicators Found:</strong>
+            <span class="indicator-tag found">collaboration</span>
+                        </div>
+                    </div>
+            
+                    <div class="article-item">
+                        <div class="article-title" onclick="window.open('https://www.1950.ai/post/ai-and-cybersecurity-in-2024-trends-and-challenges', '_blank')">#5: AI Cybersecurity Impact Analysis 5: # AI-Human Collaboration in Cybersecurity: 2024-20...</div>
+                        <div class="article-meta">
+                            🗓️ 2025-05-31 11:34:43 | 📝 4,050 characters
+                        </div>
+                        <div style="background: #e8f4f8; padding: 10px; border-radius: 5px; margin: 10px 0; border-left: 3px solid #3498db;">
+                            <strong>📰 Source:</strong> <a href="https://www.1950.ai/post/ai-and-cybersecurity-in-2024-trends-and-challenges" target="_blank" style="color: #2980b9; font-weight: 600; text-decoration: none;">https://www.1950.ai/post/ai-and-cybersecurity-in-2024-trends-and-challenges</a>
+                            
+                        </div>
+                        <div class="article-preview"># AI-Human Collaboration in Cybersecurity: 2024-2025 Trends
+
+The cybersecurity landscape is rapidly evolving with AI and machine learning technologies becoming essential tools for security professionals. As we move through 2024 and into 2025, the col...</div>
+                        <div class="article-indicators">
+                            <strong>Indicators Found:</strong>
+            <span class="indicator-tag found">collaboration</span>
+                        </div>
+                    </div>
+            </div>
+        </div>
+        
+        <div class="definitions-section" id="definitions">
+            <h2 style="text-align: center; margin-bottom: 30px;">📊 Scoring Methodology & Definitions</h2>
+            <div class="definitions-grid">
+                <div class="definition-card">
+                    <h4>🎯 Targeting Effectiveness Score</h4>
+                    <p><strong>Formula:</strong> (Total Indicators Found) ÷ (Max Possible Indicators × Total Articles) × 100</p>
+                    <p><strong>Purpose:</strong> Measures how well our search queries captured relevant content for each AI impact category.</p>
+                    <p><strong>Range:</strong> 0-100%, where higher scores indicate better search targeting.</p>
+                </div>
+                
+                <div class="definition-card">
+                    <h4>🏛️ Credible Source Criteria</h4>
+                    <p><strong>Current Implementation:</strong> Based on domain matching against authoritative sources.</p>
+                    <p><strong>Recognized Domains:</strong> Gartner, Forrester, SANS, NIST, IEEE, ACM, McKinsey, ArXiv</p>
+                    <p><strong>Issue:</strong> Perplexity aggregates sources, so URLs don't match individual credible domains.</p>
+                    <p><strong>Result:</strong> All sources marked as non-credible (0 credible sources found).</p>
+                </div>
+                
+                <div class="definition-card">
+                    <h4>🔍 Key Indicators</h4>
+                    <p><strong>Purpose:</strong> Specific terms and phrases that indicate AI's impact on cybersecurity roles.</p>
+                    <p><strong>Categories:</strong> Replacing, Augmenting, New Tasks, Human-Only</p>
+                    <p><strong>Detection:</strong> Case-insensitive text matching within article content.</p>
+                    <p><strong>Clickable:</strong> Click found indicators to highlight them in supporting articles.</p>
+                </div>
+                
+                <div class="definition-card">
+                    <h4>📊 Data Collection Status</h4>
+                    <p><strong>Current Run:</strong> Limited test data (1 article per category)</p>
+                    <p><strong>Total Articles:</strong> 4 articles collected from Perplexity AI</p>
+                    <p><strong>Source:</strong> Real data from Perplexity API searches, not simulated</p>
+                    <p><strong>Limitation:</strong> Small sample size for comprehensive analysis</p>
+                </div>
+            </div>
+        </div>
+    
+        
+        <div class="footer">
+            <h3>📊 Analysis Summary</h3>
+            <p>
+                <strong>Total Articles:</strong> 20 | 
+                <strong>Total Indicators Found:</strong> 50 | 
+                <strong>Total Content:</strong> 95,430 characters
+            </p>
+            <p style="margin-top: 15px; opacity: 0.8;">
+                Generated by AI-Horizon Strategic Intelligence Pipeline | NSF Grant Research Project
+            </p>
+        </div>
+    </div>
+</body>
+</html>
+    

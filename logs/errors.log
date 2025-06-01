@@ -1,0 +1,5 @@
+2025-05-31 01:20:13 | ERROR    | aih.utils.database:get_connection:116 - Database error: no such table: artifacts
+2025-05-31 01:20:42 | ERROR    | aih.utils.database:get_connection:120 - Database error: no such table: artifacts
+2025-05-31 01:21:18 | ERROR    | aih.utils.database:get_connection:120 - Database error: no such table: artifacts
+2025-05-31 01:21:43 | ERROR    | aih.utils.database:get_connection:128 - Database error: no such table: artifacts
+2025-05-31 01:22:07 | ERROR    | aih.utils.database:get_connection:128 - Database error: no such table: artifacts

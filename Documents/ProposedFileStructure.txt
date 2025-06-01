@@ -1,0 +1,21 @@
+aih_pipeline/
+├── aih/
+│   ├── __init__.py
+│   ├── cli.py                  # Entry point / on-demand commands
+│   ├── config.py               # API keys, feed lists, key-indicator list
+│   ├── gather/                 # “Gather” module
+│   │   ├── __init__.py
+│   │   ├── base.py             # Abstract Connector interface
+│   │   ├── bing_news.py        # BingNewsConnector
+│   │   ├── patents_uspto.py    # USPTOConnector
+│   │   ├── usajobs.py          # USAJOBSConnector
+│   │   ├── rss.py              # GenericRSSConnector
+│   │   └── query_builder.py    # Builds queries from key indicators
+│   ├── ingest/                 # Normalization of raw JSON/XML → Artifact
+│   ├── classify/               # LLM scoring/tagging
+│   ├── map/                    # DCWF task-mapping
+│   ├── report/                 # Report & CSV generation
+│   ├── ui/                     # Flask/Django human review app
+│   └── dashboard/              # Trends dashboard & feedback
+├── tests/                      # Unit / integration tests
+└── setup.py

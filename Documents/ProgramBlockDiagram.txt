@@ -1,0 +1,19 @@
++---------------------+      +---------------------+      +------------------+
+|   cronjob / CLI     |----->|   aih/gather/       |----->|   ./data/raw/    |
+| (weekly & on-demand)|      | query_builder.py    |      | YYYY-MM-DD/{src}/|
++---------------------+      +---------------------+      +------------------+
+                                     |
+                                     v
+                          +----------------------+
+                          |   Connector classes  |
+                          | (BingNews, USPTO,    |
+                          |  USAJOBS, RSS, ...)  |
+                          +----------------------+
+                                     |
+                                     v
+                          +----------------------+
+                          |    aih/ingest/       |
+                          | normalize → Artifact |
+                          +----------------------+
+                                     |
+                  (then → classify → map → report → UI/dashboard)

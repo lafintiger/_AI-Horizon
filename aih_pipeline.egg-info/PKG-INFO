@@ -1,0 +1,150 @@
+Metadata-Version: 2.4
+Name: aih-pipeline
+Version: 0.1.0
+Summary: AI-Horizon: Cybersecurity Workforce Evolution Forecasting Pipeline
+Home-page: https://github.com/csusb/ai-horizon
+Author: AI-Horizon Research Team
+Author-email: research@csusb.edu
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Researchers
+Classifier: Topic :: Scientific/Engineering :: Artificial Intelligence
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+Requires-Dist: requests>=2.31.0
+Requires-Dist: python-dotenv>=1.0.0
+Requires-Dist: pydantic>=2.5.0
+Requires-Dist: click>=8.1.0
+Requires-Dist: pandas>=2.1.0
+Requires-Dist: numpy>=1.24.0
+Requires-Dist: openai>=1.3.0
+Requires-Dist: anthropic>=0.7.0
+Requires-Dist: flask>=3.0.0
+Requires-Dist: jinja2>=3.1.0
+Requires-Dist: python-dateutil>=2.8.0
+Requires-Dist: tqdm>=4.66.0
+Requires-Dist: loguru>=0.7.0
+Requires-Dist: pyyaml>=6.0.0
+Requires-Dist: pytest>=7.4.0
+Requires-Dist: pytest-cov>=4.1.0
+Requires-Dist: black>=23.0.0
+Requires-Dist: flake8>=6.0.0
+Requires-Dist: isort>=5.12.0
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
+
+# AI-Horizon: Cybersecurity Workforce Evolution Forecasting
+
+NSF Grant Project: Forecasting how AI will impact cybersecurity tasks and work roles
+
+## Project Overview
+
+AI-Horizon is a multi-stage, multi-agent workflow system designed to predict how AI developments will impact cybersecurity workforce roles and tasks. The system categorizes impacts into four main areas:
+
+1. **Replace** - Tasks or jobs that AI will replace
+2. **Augment** - Tasks that will require AI assistance to perform
+3. **New Tasks** - Jobs/tasks created because of AI
+4. **Human-Only** - Tasks that remain predominantly human
+
+## Architecture
+
+```
+aih_pipeline/
+├── aih/
+│   ├── __init__.py
+│   ├── cli.py                  # Entry point / on-demand commands
+│   ├── config.py               # Configuration and settings
+│   ├── gather/                 # Data gathering modules
+│   ├── ingest/                 # Artifact processing and normalization
+│   ├── classify/               # AI-powered classification and scoring
+│   ├── report/                 # Report generation
+│   ├── dashboard/              # Web interface
+│   └── utils/                  # Shared utilities
+├── data/                       # Data storage
+│   ├── raw/                    # Raw artifacts by date
+│   ├── processed/              # Processed and classified data
+│   └── reports/                # Generated reports
+├── tests/                      # Unit and integration tests
+├── requirements.txt            # Python dependencies
+└── setup.py                   # Package installation
+```
+
+## Installation
+
+```bash
+# Clone and navigate to project
+cd ai-horizon
+
+# Create virtual environment
+python -m venv venv
+source venv/bin/activate  # Linux/Mac
+# or venv\Scripts\activate  # Windows
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Install in development mode
+pip install -e .
+```
+
+## Configuration
+
+1. Copy `.env.example` to `.env`
+2. Add your API keys:
+   ```
+   PERPLEXITY_API_KEY=your_key_here
+   OPENAI_API_KEY=your_key_here  # Optional for fallback
+   ```
+
+## Usage
+
+### Command Line Interface
+```bash
+# Run weekly collection
+aih collect --weekly
+
+# Manual artifact collection
+aih collect --query "AI automation cybersecurity jobs 2024"
+
+# Generate reports
+aih report --category all
+
+# Launch dashboard
+aih dashboard --port 8080
+```
+
+### Key Components
+
+- **Data Gathering**: Automated collection from Perplexity API, news sources, job postings
+- **Artifact Scoring**: NID model-based credibility assessment (A1-F6 scale)
+- **Classification**: AI-powered categorization into the four impact areas
+- **DCWF Mapping**: Integration with DHS Cybersecurity Workforce Framework
+- **Human Review**: Web interface for oversight and corrections
+
+## Development Phases
+
+- **Phase 1** ✅: Foundation (modular architecture, basic API integration, scoring system)
+- **Phase 2**: Processing (DCWF mapping, multi-classification, summarization)
+- **Phase 3**: Dashboard (web interface, interactivity, citations)
+
+## Contributing
+
+This is an NSF-funded research project. Development follows modular principles to enable:
+- Session continuity across development periods
+- Independent component enhancement
+- Easy debugging and testing
+
+## License
+
+NSF Grant Project - California State University, San Bernardino 
