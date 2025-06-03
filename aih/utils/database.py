@@ -10,6 +10,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Optional, Any
 from contextlib import contextmanager
+from collections import defaultdict
 
 from aih.config import settings, get_data_path
 from aih.utils.logging import get_logger
@@ -366,4 +367,79 @@ class DatabaseManager:
             cursor = conn.cursor()
             cursor.execute("SELECT * FROM artifacts WHERE url = ?", (url,))
             row = cursor.fetchone()
-            return dict(row) if row else None 
+            return dict(row) if row else None
+    
+    def delete_artifact(self, artifact_id: str) -> bool:
+        """
+        Delete an artifact and all associated data.
+        
+        Args:
+            artifact_id: The ID of the artifact to delete
+            
+        Returns:
+            True if artifact was deleted, False if not found
+        """
+        with self.get_connection() as conn:
+            cursor = conn.cursor()
+            
+            # Check if artifact exists
+            cursor.execute("SELECT 1 FROM artifacts WHERE id = ?", (artifact_id,))
+            if not cursor.fetchone():
+                logger.warning(f"Artifact {artifact_id} not found for deletion")
+                return False
+            
+            # Delete associated classifications
+            cursor.execute("DELETE FROM classifications WHERE artifact_id = ?", (artifact_id,))
+            classifications_deleted = cursor.rowcount
+            
+            # Delete associated source scores
+            cursor.execute("DELETE FROM source_scores WHERE artifact_id = ?", (artifact_id,))
+            scores_deleted = cursor.rowcount
+            
+            # Delete the artifact itself
+            cursor.execute("DELETE FROM artifacts WHERE id = ?", (artifact_id,))
+            
+            conn.commit()
+            logger.info(f"Deleted artifact {artifact_id} with {classifications_deleted} classifications and {scores_deleted} source scores")
+            return True
+    
+    def get_database_stats(self) -> Dict[str, Any]:
+        """
+        Get comprehensive database statistics.
+        
+        Returns:
+            Dictionary containing database statistics
+        """
+        with self.get_connection() as conn:
+            cursor = conn.cursor()
+            
+            # Count total artifacts
+            cursor.execute("SELECT COUNT(*) FROM artifacts")
+            total_artifacts = cursor.fetchone()[0]
+            
+            # Count by source type
+            cursor.execute("SELECT source_type, COUNT(*) FROM artifacts GROUP BY source_type")
+            source_types = dict(cursor.fetchall())
+            
+            # Count classifications
+            cursor.execute("SELECT COUNT(*) FROM classifications")
+            total_classifications = cursor.fetchone()[0]
+            
+            # Count by category from metadata
+            cursor.execute("SELECT raw_metadata FROM artifacts WHERE raw_metadata IS NOT NULL")
+            category_counts = defaultdict(int)
+            for (metadata_json,) in cursor.fetchall():
+                try:
+                    metadata = json.loads(metadata_json)
+                    category = metadata.get('ai_impact_category', 'unknown')
+                    category_counts[category] += 1
+                except (json.JSONDecodeError, TypeError):
+                    category_counts['unknown'] += 1
+            
+            return {
+                'total_artifacts': total_artifacts,
+                'total_classifications': total_classifications,
+                'source_types': dict(source_types),
+                'categories': dict(category_counts),
+                'last_updated': datetime.now().isoformat()
+            } 

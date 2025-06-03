@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browse Entries - AI-Horizon</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .nav-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 15px 30px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: background 0.3s;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+        }
+
+        .main-content {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .section-tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e1e5e9;
+        }
+
+        .tab {
+            padding: 12px 24px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            color: #666;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .entries-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .entries-table th,
+        .entries-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e1e5e9;
+        }
+
+        .entries-table th {
+            background: rgba(102, 126, 234, 0.1);
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .entries-table tr:hover {
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+            margin-right: 5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #667eea;
+            color: #667eea;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+            color: white;
+            text-decoration: none;
+        }
+
+        .category-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .category-general { background: #6c757d; }
+        .category-replace { background: #dc3545; }
+        .category-augment { background: #17a2b8; }
+        .category-new_tasks { background: #28a745; }
+        .category-human_only { background: #ffc107; color: #333; }
+
+        .quality-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .quality-excellent { background: #28a745; }
+        .quality-good { background: #17a2b8; }
+        .quality-fair { background: #ffc107; color: #333; }
+        .quality-poor { background: #dc3545; }
+        .quality-unknown { background: #6c757d; }
+
+        .alert {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+
+        .alert-warning {
+            background-color: #fff3cd;
+            border-color: #ffeaa7;
+            color: #856404;
+        }
+
+        .alert-error {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 15px;
+            color: #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav-header">
+            <h1 style="color: white; margin: 0;">🔍 Browse Entries</h1>
+            <div class="nav-links">
+                <a href="/" class="nav-link">📊 Status Dashboard</a>
+                <a href="/reports" class="nav-link">📋 Reports</a>
+                <a href="/analysis" class="nav-link">🔍 Analysis</a>
+                <a href="/methodology" class="nav-link">📖 Methodology</a>
+                <a href="/cost-analysis" class="nav-link">💰 Cost Analysis</a>
+                <a href="/manual-entry" class="nav-link">📝 Manual Entry</a>
+                <a href="/settings" class="nav-link">⚙️ Settings</a>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <h2 style="color: #667eea; margin-bottom: 30px;">📚 Database Entries</h2>
+            
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ 'error' if category == 'error' else category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <!-- Statistics -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">{{ total_manual }}</div>
+                    <div class="stat-label">Manual Entries</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{{ total_automated }}</div>
+                    <div class="stat-label">Automated Collections</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{{ total_manual + total_automated }}</div>
+                    <div class="stat-label">Total Articles</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{{ category_counts|length }}</div>
+                    <div class="stat-label">Categories</div>
+                </div>
+            </div>
+
+            <!-- Section Tabs -->
+            <div class="section-tabs">
+                <button class="tab active" onclick="showTab('manual')">
+                    📝 Manual Entries ({{ total_manual }})
+                </button>
+                <button class="tab" onclick="showTab('automated')">
+                    🤖 Automated Collections ({{ total_automated }})
+                </button>
+                <button class="tab" onclick="showTab('categories')">
+                    🏷️ By Category
+                </button>
+            </div>
+
+            <!-- Manual Entries Tab -->
+            <div id="manual-tab" class="tab-content active">
+                {% if manual_entries %}
+                    <div style="margin-bottom: 15px;">
+                        <a href="{{ url_for('process_entries') }}" class="btn btn-primary">
+                            🔄 Process Entries
+                        </a>
+                        <span style="color: #666; margin-left: 15px;">
+                            Your manually added URLs, files, and videos
+                        </span>
+                    </div>
+                    
+                    <table class="entries-table">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Type</th>
+                                <th>Category</th>
+                                <th>Quality Score</th>
+                                <th>Added</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for entry in manual_entries %}
+                                {% set metadata = entry.raw_metadata|from_json if entry.raw_metadata else {} %}
+                                <tr>
+                                    <td>
+                                        <strong>{{ entry.title[:60] }}{% if entry.title|length > 60 %}...{% endif %}</strong>
+                                        {% if entry.url and not entry.url.startswith('file://') %}
+                                            <br><small style="color: #666;">{{ entry.url[:80] }}{% if entry.url|length > 80 %}...{% endif %}</small>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if entry.source_type == 'manual_url' %}
+                                            🔗 URL
+                                        {% elif entry.source_type == 'manual_file' %}
+                                            📁 File
+                                        {% elif entry.source_type == 'manual_youtube' %}
+                                            📺 Video
+                                        {% else %}
+                                            📄 {{ entry.source_type.replace('manual_', '').title() }}
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% set ai_category = metadata.ai_impact_category %}
+                                        {% if ai_category %}
+                                            <span class="category-badge category-{{ ai_category }}">
+                                                {{ ai_category.replace('_', ' ').title() }}
+                                            </span>
+                                            <br><small style="color: #28a745; font-weight: 600;">✅ Processed</small>
+                                        {% else %}
+                                            <span class="category-badge category-general">
+                                                Unprocessed
+                                            </span>
+                                            <br><small style="color: #ffc107; font-weight: 600;">⏳ Needs Processing</small>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if entry.quality_score is defined %}
+                                            <span class="quality-badge quality-{{ entry.quality_grade.lower() }}">
+                                                {{ entry.quality_grade }}
+                                            </span>
+                                            <br><small style="color: #666;">{{ "%.3f"|format(entry.quality_score) }}</small>
+                                        {% else %}
+                                            <span class="quality-badge quality-unknown">
+                                                Unknown
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <small>{{ entry.collected_at[:19] if entry.collected_at else 'Unknown' }}</small>
+                                        {% if metadata.processed_at %}
+                                            <br><small style="color: #28a745;">Processed: {{ metadata.processed_at[:19] }}</small>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="{{ url_for('view_entry', artifact_id=entry.id) }}" class="btn btn-outline">
+                                            👁️ View
+                                        </a>
+                                        {% if entry.url and not entry.url.startswith('file://') %}
+                                            <a href="{{ entry.url }}" target="_blank" class="btn btn-outline">
+                                                🔗 Source
+                                            </a>
+                                        {% endif %}
+                                        {% if not metadata.ai_impact_category %}
+                                            <a href="{{ url_for('process_entries') }}" class="btn btn-outline" style="background: #ffc107; color: #333;">
+                                                🔄 Process
+                                            </a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <div class="empty-state">
+                        <div style="font-size: 48px;">📝</div>
+                        <h4>No Manual Entries Yet</h4>
+                        <p>Start adding articles, documents, or videos using the manual entry interface.</p>
+                        <a href="{{ url_for('manual_entry') }}" class="btn btn-primary" style="margin-top: 15px;">
+                            Add Your First Entry
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Automated Collections Tab -->
+            <div id="automated-tab" class="tab-content">
+                {% if automated_entries %}
+                    <div style="margin-bottom: 15px;">
+                        <span style="color: #666;">
+                            Articles collected automatically via Perplexity API and targeted sources
+                        </span>
+                    </div>
+                    
+                    <table class="entries-table">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Source</th>
+                                <th>Category</th>
+                                <th>Quality Score</th>
+                                <th>Collected</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for entry in automated_entries[:50] %}
+                                {% set metadata = entry.raw_metadata|from_json if entry.raw_metadata else {} %}
+                                <tr>
+                                    <td>
+                                        <strong>{{ entry.title[:60] }}{% if entry.title|length > 60 %}...{% endif %}</strong>
+                                        {% if entry.url %}
+                                            <br><small style="color: #666;">{{ entry.url[:80] }}{% if entry.url|length > 80 %}...{% endif %}</small>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if entry.source_type == 'perplexity' %}
+                                            🤖 Perplexity
+                                        {% elif entry.source_type == 'targeted' %}
+                                            🎯 Targeted
+                                        {% else %}
+                                            📊 {{ entry.source_type.title() }}
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% set category = metadata.ai_impact_category or 'general' %}
+                                        <span class="category-badge category-{{ category }}">
+                                            {{ category.replace('_', ' ').title() }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        {% if entry.quality_score is defined %}
+                                            <span class="quality-badge quality-{{ entry.quality_grade.lower() }}">
+                                                {{ entry.quality_grade }}
+                                            </span>
+                                            <br><small style="color: #666;">{{ "%.3f"|format(entry.quality_score) }}</small>
+                                        {% else %}
+                                            <span class="quality-badge quality-unknown">
+                                                Unknown
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <small>{{ entry.collected_at[:19] if entry.collected_at else 'Unknown' }}</small>
+                                    </td>
+                                    <td>
+                                        <a href="{{ url_for('view_entry', artifact_id=entry.id) }}" class="btn btn-outline">
+                                            👁️ View
+                                        </a>
+                                        {% if entry.url %}
+                                            <a href="{{ entry.url }}" target="_blank" class="btn btn-outline">
+                                                🔗 Source
+                                            </a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    
+                    {% if automated_entries|length > 50 %}
+                        <p style="text-align: center; margin-top: 20px; color: #666;">
+                            Showing first 50 of {{ automated_entries|length }} automated entries
+                        </p>
+                    {% endif %}
+                {% else %}
+                    <div class="empty-state">
+                        <div style="font-size: 48px;">🤖</div>
+                        <h4>No Automated Collections Yet</h4>
+                        <p>Run collection operations from the main dashboard to gather articles automatically.</p>
+                        <a href="/" class="btn btn-primary" style="margin-top: 15px;">
+                            Go to Dashboard
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Categories Tab -->
+            <div id="categories-tab" class="tab-content">
+                {% if category_counts %}
+                    <div style="margin-bottom: 20px;">
+                        <span style="color: #666;">Articles organized by AI impact category</span>
+                    </div>
+                    
+                    {% for category, count in category_counts.items() %}
+                        <div style="background: rgba(102, 126, 234, 0.1); border-radius: 10px; padding: 20px; margin-bottom: 15px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <span class="category-badge category-{{ category }}" style="font-size: 14px;">
+                                        {{ category.replace('_', ' ').title() }}
+                                    </span>
+                                    <span style="margin-left: 15px; color: #666;">
+                                        {% if category == 'replace' %}
+                                            Jobs and tasks being replaced by AI
+                                        {% elif category == 'augment' %}
+                                            Human work being enhanced by AI
+                                        {% elif category == 'new_tasks' %}
+                                            New jobs created by AI adoption
+                                        {% elif category == 'human_only' %}
+                                            Tasks requiring human expertise
+                                        {% else %}
+                                            General cybersecurity and AI content
+                                        {% endif %}
+                                    </span>
+                                </div>
+                                <div style="font-size: 24px; font-weight: 700; color: #667eea;">
+                                    {{ count }}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="empty-state">
+                        <div style="font-size: 48px;">🏷️</div>
+                        <h4>No Categorized Content Yet</h4>
+                        <p>Add content and run processing to see category breakdown.</p>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Back Button -->
+            <div style="margin-top: 30px; text-align: center;">
+                <a href="{{ url_for('manual_entry') }}" class="btn btn-secondary">
+                    ← Back to Manual Entry
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            document.getElementById(tabName + '-tab').classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html> 

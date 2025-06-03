@@ -1,0 +1,38 @@
+The impact of AI on the cybersecurity workforce has created significant new job opportunities between 2024-2025, with several emerging roles becoming increasingly important in the industry.
+
+## Emerging AI Security Job Roles (2024-2025)
+
+**AI Security Engineer** has emerged as a critical position in the cybersecurity landscape. These professionals work with software development teams to ensure the security of AI applications through code reviews, framework development, and design improvements. They typically need experience with security engineering, computer and network security protocols[1][3]. At Amazon, AI Security Engineers are responsible for creating threat models, performing manual and automated code reviews in languages like Java, Python, and JavaScript, and developing AI security automation tools[3].
+
+**AI/ML Engineers with Security Clearance** are in high demand, particularly for sensitive government and defense projects. These roles require professionals who can collaborate with data engineers to ensure optimal database design for model deployment while maintaining strict security protocols. They often mentor junior engineers and provide guidance on best practices in AI/ML implementation within secure environments[1].
+
+**AI Information Security Engineers** focus specifically on the security aspects of artificial intelligence systems. The role typically requires at least 2 years of experience with security engineering, computer and network security protocols, and security assessments[1].
+
+## Job Market Trends
+
+The cybersecurity AI job market is showing robust growth, with hundreds of positions currently available across various organizations:
+
+- Indeed.com lists over 468 AI Security Engineer positions[1]
+- Over 623 Cyber Security AI Engineer jobs are currently available on Indeed[4]
+- In Alabama alone, there are approximately 102 AI Security job openings[2]
+
+Companies are increasingly looking for hybrid professionals who can bridge the gap between intelligent systems and security protocols. These roles often come with competitive benefits, including wellness perks and flexible work arrangements[1].
+
+## Required Skills and Qualifications
+
+The most sought-after skills for these emerging roles include:
+
+- Experience with security engineering (typically 2+ years)
+- Proficiency in computer and network security protocols
+- Coding abilities in languages like Java, Python, and JavaScript
+- Understanding of AI/ML model deployment
+- Ability to perform security assessments and threat modeling
+- Experience developing security automation tools
+
+Many positions also require professionals to balance security outcomes with user experience considerations to ensure systems are both secure and sustainable at scale[1].
+
+## Industry Leaders and Opportunities
+
+Companies like Amazon are actively recruiting for AI Security Engineers to protect AI experiences for millions of customers[3]. Organizations like Vectra AI are bringing together security researchers, data scientists, and analysts to share security-AI research and expertise with the global cybersecurity community[5].
+
+The integration of AI into cybersecurity is creating a dynamic job market where professionals with cross-disciplinary skills in both AI and security are particularly valuable. As AI systems become more prevalent across industries, the demand for specialists who can secure these systems continues to grow.

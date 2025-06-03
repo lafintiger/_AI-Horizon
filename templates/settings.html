@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Horizon Settings</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .nav-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-brand {
+            display: flex;
+            flex-direction: column;
+            color: white;
+        }
+
+        .nav-brand h2 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .nav-subtitle {
+            font-size: 0.875rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 8px 12px;
+            border-radius: 6px;
+            transition: background 0.2s;
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-link.active {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .card h3 {
+            margin-bottom: 15px;
+            color: #4a5568;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 8px;
+        }
+
+        .coming-soon {
+            text-align: center;
+            padding: 40px;
+            color: #718096;
+        }
+
+        .coming-soon h2 {
+            color: #4a5568;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Navigation Header -->
+        <nav class="nav-header">
+            <div class="nav-brand">
+                <h2>🤖 AI-Horizon</h2>
+                <span class="nav-subtitle">Cybersecurity Workforce Intelligence</span>
+            </div>
+            <div class="nav-links">
+                <a href="/" class="nav-link">📊 Status Dashboard</a>
+                <a href="/reports" class="nav-link">📋 Reports</a>
+                <a href="/analysis" class="nav-link">🔍 Analysis</a>
+                <a href="/methodology" class="nav-link">📖 Methodology</a>
+                <a href="/cost-analysis" class="nav-link">💰 Cost Analysis</a>
+                <a href="/manual-entry" class="nav-link">📝 Manual Entry</a>
+                <a href="/settings" class="nav-link active">⚙️ Settings</a>
+            </div>
+        </nav>
+
+        <div class="header">
+            <h1>⚙️ System Settings</h1>
+            <p>Configure collection parameters and system preferences</p>
+        </div>
+
+        <div class="card">
+            <div class="coming-soon">
+                <h2>🚧 Coming Soon</h2>
+                <p>System configuration features are currently under development.</p>
+                <p>This page will include:</p>
+                <ul style="text-align: left; margin-top: 20px; max-width: 400px; margin-left: auto; margin-right: auto;">
+                    <li>🔧 Collection frequency settings</li>
+                    <li>🎯 Search query customization</li>
+                    <li>📊 Report generation preferences</li>
+                    <li>🔐 API key management</li>
+                    <li>📁 Data export/import options</li>
+                    <li>🎓 Student cohort configuration</li>
+                </ul>
+                <p style="margin-top: 30px;">
+                    <a href="/" style="color: #4299e1; text-decoration: none;">← Return to Dashboard</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

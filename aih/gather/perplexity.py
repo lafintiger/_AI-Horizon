@@ -12,11 +12,13 @@ import re
 
 import requests
 from openai import OpenAI
+from bs4 import BeautifulSoup
 
 from aih.gather.base import BaseConnector, Artifact
 from aih.config import settings, SEARCH_TEMPLATES, TASK_FOCUSED_QUERIES
 from aih.utils.logging import get_logger, log_api_call
 from aih.utils.rate_limiter import rate_limiter
+from aih.utils.cost_tracker import cost_tracker
 
 logger = get_logger(__name__)
 
@@ -115,6 +117,9 @@ class PerplexityConnector(BaseConnector):
                 cost=estimated_cost
             )
             
+            # Track API cost with actual token usage
+            cost_tracker.track_api_call("perplexity", "sonar_large", usage.total_tokens)
+            
             # Parse response using proper citation extraction
             content = response.choices[0].message.content
             parsed_artifacts = self._parse_response_with_citations(content, focused_query, response)
@@ -184,6 +189,51 @@ class PerplexityConnector(BaseConnector):
         
         Always include source URLs when possible and indicate the credibility level of each source."""
     
+    def _scrape_article_title(self, url: str) -> str:
+        """
+        Scrape the actual article title from a URL.
+        
+        Args:
+            url: URL to scrape
+            
+        Returns:
+            Article title or None if scraping fails
+        """
+        try:
+            # Set timeout and headers to avoid blocking
+            headers = {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+            }
+            
+            response = requests.get(url, headers=headers, timeout=10)
+            response.raise_for_status()
+            
+            soup = BeautifulSoup(response.content, 'html.parser')
+            
+            # Try multiple selectors for title
+            title_selectors = [
+                'title',
+                'meta[property="og:title"]',
+                'meta[name="twitter:title"]',
+                'h1',
+                '.title',
+                '.article-title'
+            ]
+            
+            for selector in title_selectors:
+                element = soup.select_one(selector)
+                if element:
+                    title = element.get('content') if element.name == 'meta' else element.get_text()
+                    title = title.strip()
+                    if title and len(title) > 5:  # Reasonable title length
+                        return title
+            
+            return None
+            
+        except Exception as e:
+            logger.debug(f"Failed to scrape title from {url}: {e}")
+            return None
+
     def _parse_response_with_citations(self, content: str, original_query: str, response) -> List[Artifact]:
         """
         Parse Perplexity response and extract artifacts using citations.
@@ -207,10 +257,19 @@ class PerplexityConnector(BaseConnector):
             sections = self._split_content_by_citations(content, citations)
             
             for i, citation in enumerate(citations):
-                # Use actual article title if available, otherwise extract from content
+                # Use actual article title if available
                 title = citation.get('title') 
+                
+                # If no title from Perplexity, try scraping from URL
                 if not title or title.strip() == "":
-                    title = self._extract_title_from_content(content, i)
+                    scraped_title = self._scrape_article_title(citation['url'])
+                    if scraped_title:
+                        title = scraped_title
+                        logger.info(f"Scraped title: {title[:50]}...")
+                    else:
+                        # Fallback to content-based title
+                        title = self._extract_title_from_content(content, i)
+                        logger.warning(f"Using fallback title for {citation['url']}")
                 
                 # Get the content section for this citation
                 section_content = sections.get(citation['url'], content)
@@ -226,7 +285,8 @@ class PerplexityConnector(BaseConnector):
                         "extraction_method": "perplexity_citations",
                         "full_response": content,
                         "source": citation['source'],
-                        "date": citation['date']
+                        "date": citation['date'],
+                        "title_source": "scraped" if not citation.get('title') else "perplexity"
                     }
                 )
                 artifacts.append(artifact)
@@ -262,17 +322,7 @@ class PerplexityConnector(BaseConnector):
             # Convert response to dict to access citation fields
             response_dict = response.model_dump()
             
-            # Extract from direct citations field
-            if 'citations' in response_dict:
-                for url in response_dict['citations']:
-                    citations.append({
-                        'url': url,
-                        'title': None,
-                        'date': None,
-                        'source': 'citation'
-                    })
-            
-            # Extract from search_results field (has more metadata)
+            # PRIORITIZE search_results field (has more metadata including titles)
             if 'search_results' in response_dict:
                 for result in response_dict['search_results']:
                     citations.append({
@@ -281,6 +331,19 @@ class PerplexityConnector(BaseConnector):
                         'date': result.get('date', None),
                         'source': 'search_result'
                     })
+            
+            # Add from direct citations field if search_results didn't provide enough
+            if 'citations' in response_dict and len(citations) < 5:
+                for url in response_dict['citations']:
+                    # Skip if already have this URL from search_results
+                    existing_urls = [c['url'] for c in citations]
+                    if url not in existing_urls:
+                        citations.append({
+                            'url': url,
+                            'title': None,  # Will be scraped later
+                            'date': None,
+                            'source': 'citation'
+                        })
             
             # Remove duplicates based on URL
             seen_urls = set()

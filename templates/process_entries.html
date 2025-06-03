@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Process Entries - AI-Horizon</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .nav-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 15px 30px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: background 0.3s;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+        }
+
+        .main-content {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+
+        .alert-warning {
+            background-color: #fff3cd;
+            border-color: #ffeaa7;
+            color: #856404;
+        }
+
+        .alert-error {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+
+        .alert-info {
+            background-color: #d1ecf1;
+            border-color: #bee5eb;
+            color: #0c5460;
+        }
+
+        .process-section {
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+            color: white;
+            margin: 5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .btn-success {
+            background: #28a745;
+        }
+
+        .btn-warning {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            color: white;
+            text-decoration: none;
+        }
+
+        .entry-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #667eea;
+        }
+
+        .entry-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .entry-meta {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .entry-url {
+            color: #667eea;
+            font-size: 14px;
+            word-break: break-all;
+        }
+
+        .processing-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #e2e8f0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4299e1, #3182ce);
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        .status-text {
+            text-align: center;
+            margin-top: 10px;
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .empty-state h4 {
+            color: #333;
+            margin: 15px 0;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .processing-info {
+            flex: 1;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .processing-details {
+            margin-top: 10px;
+            font-size: 0.8em;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav-header">
+            <h1 style="color: white; margin: 0;">🔄 Process Manual Entries</h1>
+            <div class="nav-links">
+                <a href="/browse_entries" class="nav-link">← Back to Browse</a>
+                <a href="/manual-entry" class="nav-link">📝 Manual Entry</a>
+                <a href="/" class="nav-link">📊 Dashboard</a>
+            </div>
+        </div>
+
+        <div class="main-content">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ 'error' if category == 'error' else category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <h2 style="color: #667eea; margin-bottom: 30px;">📊 Manual Entry Processing</h2>
+            
+            <div class="process-section">
+                <h4 style="color: #667eea; margin-bottom: 15px;">💡 What does processing do?</h4>
+                <p style="margin-bottom: 15px;">
+                    Processing analyzes your manually added content and categorizes it based on AI's impact on cybersecurity workforce:
+                </p>
+                <ul style="margin-left: 20px; margin-bottom: 20px;">
+                    <li><strong>Replace:</strong> Jobs/tasks being automated by AI</li>
+                    <li><strong>Augment:</strong> Human work being enhanced by AI tools</li>
+                    <li><strong>New Tasks:</strong> New opportunities created by AI adoption</li>
+                    <li><strong>Human Only:</strong> Tasks requiring human expertise</li>
+                </ul>
+                
+                {% if entries %}
+                    <div class="controls">
+                        <div class="processing-info">
+                            <h4>🤖 AI-Powered Processing</h4>
+                            <p>This will perform comprehensive analysis including:</p>
+                            <ul>
+                                <li><strong>📺 YouTube Transcript Extraction</strong> - Full video content analysis</li>
+                                <li><strong>🧠 AI Categorization</strong> - OpenAI GPT-4 powered classification</li>
+                                <li><strong>📊 Quality Analysis</strong> - Content depth and relevance scoring</li>
+                                <li><strong>💡 Key Insights</strong> - Actionable career guidance extraction</li>
+                            </ul>
+                            <p><em>Processing time: ~30-60 seconds per entry for thorough analysis</em></p>
+                        </div>
+                        
+                        <div class="action-buttons">
+                            <button class="btn btn-primary" onclick="processAllEntries()" id="processBtn">
+                                🚀 Process All {{ total_count }} Entries
+                            </button>
+                            <button class="btn btn-warning" onclick="processSelectedEntries()" id="processSelectedBtn" disabled>
+                                🎯 Process Selected (0)
+                            </button>
+                            <button class="btn btn-secondary" onclick="selectAll()">
+                                ☑️ Select All
+                            </button>
+                            <button class="btn btn-secondary" onclick="selectNone()">
+                                ☐ Clear Selection
+                            </button>
+                        </div>
+                        
+                        <!-- Progress Bar -->
+                        <div id="processingProgress" style="display: none;">
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progressFill"></div>
+                            </div>
+                            <div class="status-text" id="statusText">Preparing AI processing...</div>
+                            <div class="processing-details" id="processingDetails">
+                                <small>📺 Extracting transcripts... 🧠 AI analyzing content... 📊 Generating insights...</small>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+
+            {% if entries %}
+                <h3 style="margin-bottom: 20px;">📝 Manual Entries Ready for Processing</h3>
+                
+                {% for entry in entries %}
+                    {% set metadata = entry.raw_metadata|from_json if entry.raw_metadata else {} %}
+                    <div class="entry-card">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                            <div style="flex: 1;">
+                                <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                                    <input type="checkbox" class="entry-checkbox" value="{{ entry.id }}" 
+                                           onchange="updateSelectedCount()" style="margin-right: 10px;">
+                                    <div class="entry-title">{{ entry.title[:80] }}{% if entry.title|length > 80 %}...{% endif %}</div>
+                                </div>
+                                
+                                <div class="entry-meta">
+                                    <span>
+                                        {% if entry.source_type == 'manual_url' %}
+                                            🔗 URL Entry
+                                        {% elif entry.source_type == 'manual_file' %}
+                                            📁 File Upload
+                                        {% elif entry.source_type == 'manual_youtube' %}
+                                            📺 YouTube Video
+                                        {% else %}
+                                            📄 {{ entry.source_type.replace('manual_', '').title() }}
+                                        {% endif %}
+                                    </span>
+                                    <span>Added: {{ entry.collected_at[:19] if entry.collected_at else 'Unknown' }}</span>
+                                    {% if metadata.category %}
+                                        <span>Category: {{ metadata.category.replace('_', ' ').title() }}</span>
+                                    {% endif %}
+                                </div>
+                                
+                                {% if entry.url and not entry.url.startswith('file://') %}
+                                    <div class="entry-url">{{ entry.url[:100] }}{% if entry.url|length > 100 %}...{% endif %}</div>
+                                {% endif %}
+                                
+                                {% if metadata.notes %}
+                                    <div style="margin-top: 10px; font-style: italic; color: #666;">
+                                        Notes: {{ metadata.notes[:150] }}{% if metadata.notes|length > 150 %}...{% endif %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="processing-controls">
+                                <button class="btn btn-primary btn-small" onclick="processSingleEntry('{{ entry.id }}')">
+                                    🔄 Process This Entry
+                                </button>
+                                <a href="{{ url_for('view_entry', artifact_id=entry.id) }}" class="btn btn-secondary btn-small">
+                                    👁️ View
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                
+            {% else %}
+                <div class="empty-state">
+                    <div style="font-size: 48px;">✅</div>
+                    <h4>No Manual Entries Need Processing</h4>
+                    <p>All your manual entries have been processed, or there are no manual entries yet.</p>
+                    <a href="{{ url_for('manual_entry') }}" class="btn btn-primary" style="margin-top: 15px;">
+                        Add More Content
+                    </a>
+                </div>
+            {% endif %}
+
+            <div style="margin-top: 30px; text-align: center;">
+                <a href="{{ url_for('browse_entries') }}" class="btn btn-secondary">
+                    ← Back to Browse Entries
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedEntries = new Set();
+        let isProcessing = false;
+
+        function updateSelectedCount() {
+            const checkboxes = document.querySelectorAll('.entry-checkbox:checked');
+            selectedEntries.clear();
+            checkboxes.forEach(cb => selectedEntries.add(cb.value));
+            
+            const count = selectedEntries.size;
+            const btn = document.getElementById('processSelectedBtn');
+            btn.textContent = `🎯 Process Selected (${count})`;
+            btn.disabled = count === 0 || isProcessing;
+        }
+
+        function selectAll() {
+            document.querySelectorAll('.entry-checkbox').forEach(cb => {
+                cb.checked = true;
+            });
+            updateSelectedCount();
+        }
+
+        function selectNone() {
+            document.querySelectorAll('.entry-checkbox').forEach(cb => {
+                cb.checked = false;
+            });
+            updateSelectedCount();
+        }
+
+        function showProgress(show = true) {
+            const progressDiv = document.getElementById('processingProgress');
+            const processBtn = document.getElementById('processBtn');
+            const processSelectedBtn = document.getElementById('processSelectedBtn');
+            
+            progressDiv.style.display = show ? 'block' : 'none';
+            processBtn.disabled = show;
+            processSelectedBtn.disabled = show || selectedEntries.size === 0;
+            isProcessing = show;
+            
+            if (show) {
+                // Connect to real-time updates
+                connectToStatusUpdates();
+            }
+        }
+
+        function updateProgress(percent, status, details = '') {
+            const progressFill = document.getElementById('progressFill');
+            const statusText = document.getElementById('statusText');
+            const processingDetails = document.getElementById('processingDetails');
+            
+            progressFill.style.width = `${percent}%`;
+            statusText.textContent = status;
+            if (details) {
+                processingDetails.innerHTML = `<small>${details}</small>`;
+            }
+        }
+
+        function connectToStatusUpdates() {
+            if (window.eventSource) {
+                window.eventSource.close();
+            }
+            
+            window.eventSource = new EventSource('/api/stream');
+            
+            window.eventSource.onmessage = function(event) {
+                try {
+                    const data = JSON.parse(event.data);
+                    
+                    if (data.heartbeat) return; // Ignore heartbeats
+                    
+                    // Update progress if there's an active operation
+                    if (data.is_running && data.current_operation) {
+                        const progress = data.progress || {};
+                        const percent = progress.total > 0 ? (progress.current / progress.total) * 100 : 0;
+                        
+                        let details = '';
+                        if (data.current_operation.includes('Processing')) {
+                            details = '📺 Extracting transcripts... 🧠 AI analyzing content... 📊 Generating insights...';
+                        }
+                        
+                        updateProgress(percent, progress.status || 'Processing...', details);
+                    }
+                    
+                    // Show recent logs
+                    if (data.recent_logs && data.recent_logs.length > 0) {
+                        const latestLog = data.recent_logs[data.recent_logs.length - 1];
+                        if (latestLog.category === 'PROCESSING') {
+                            updateProgress(
+                                document.getElementById('progressFill').style.width ? 
+                                parseInt(document.getElementById('progressFill').style.width) : 0,
+                                latestLog.message,
+                                '🔄 AI processing in progress...'
+                            );
+                        }
+                    }
+                    
+                    // Check if operation completed
+                    if (!data.is_running && isProcessing) {
+                        updateProgress(100, 'Processing completed! Refreshing page...');
+                        setTimeout(() => {
+                            location.reload();
+                        }, 2000);
+                    }
+                    
+                } catch (e) {
+                    console.error('Error parsing status update:', e);
+                }
+            };
+            
+            window.eventSource.onerror = function(event) {
+                console.error('EventSource failed:', event);
+            };
+        }
+
+        async function processAllEntries() {
+            if (isProcessing) return;
+            
+            showProgress(true);
+            updateProgress(0, 'Starting AI processing of all entries...', '🚀 Initializing comprehensive analysis...');
+            
+            try {
+                const response = await fetch('/api/process_all_entries', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    updateProgress(10, result.message, '📺 Extracting YouTube transcripts and analyzing content...');
+                } else {
+                    updateProgress(0, `Error: ${result.error}`, '❌ Processing failed');
+                    setTimeout(() => showProgress(false), 3000);
+                }
+                
+            } catch (error) {
+                updateProgress(0, `Error: ${error.message}`, '❌ Network error');
+                setTimeout(() => showProgress(false), 3000);
+            }
+        }
+
+        async function processSelectedEntries() {
+            if (isProcessing || selectedEntries.size === 0) return;
+            
+            showProgress(true);
+            updateProgress(0, `Starting AI processing of ${selectedEntries.size} selected entries...`, '🎯 Preparing targeted analysis...');
+            
+            try {
+                const response = await fetch('/api/process_selected_entries', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        entry_ids: Array.from(selectedEntries)
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    updateProgress(10, result.message, '📺 Extracting transcripts and running AI analysis...');
+                } else {
+                    updateProgress(0, `Error: ${result.error}`, '❌ Processing failed');
+                    setTimeout(() => showProgress(false), 3000);
+                }
+                
+            } catch (error) {
+                updateProgress(0, `Error: ${error.message}`, '❌ Network error');
+                setTimeout(() => showProgress(false), 3000);
+            }
+        }
+
+        async function processSingleEntry(entryId) {
+            if (isProcessing) return;
+            
+            const button = event.target;
+            const originalText = button.textContent;
+            button.textContent = '🔄 Processing...';
+            button.disabled = true;
+            
+            try {
+                const response = await fetch('/api/process_single_entry', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        entry_id: entryId
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    button.textContent = '✅ Processing Started';
+                    setTimeout(() => {
+                        location.reload(); // Refresh to show updated status
+                    }, 3000);
+                } else {
+                    button.textContent = '❌ Failed';
+                    setTimeout(() => {
+                        button.textContent = originalText;
+                        button.disabled = false;
+                    }, 3000);
+                }
+                
+            } catch (error) {
+                button.textContent = '❌ Error';
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.disabled = false;
+                }, 3000);
+            }
+        }
+        
+        // Clean up event source when page unloads
+        window.addEventListener('beforeunload', function() {
+            if (window.eventSource) {
+                window.eventSource.close();
+            }
+        });
+
+        // Initialize
+        updateSelectedCount();
+    </script>
+</body>
+</html> 

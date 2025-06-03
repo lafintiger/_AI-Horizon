@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Article URL - AI-Horizon</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .nav-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 15px 30px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: background 0.3s;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+        }
+
+        .main-content {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-text {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+
+        .alert-warning {
+            background-color: #fff3cd;
+            border-color: #ffeaa7;
+            color: #856404;
+        }
+
+        .alert-error {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+
+        .help-section {
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+
+        .help-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .help-column h6 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .help-column ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .help-column li {
+            padding: 5px 0;
+            color: #555;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav-header">
+            <h1 style="color: white; margin: 0;">🚀 AI-Horizon Manual Entry</h1>
+            <div class="nav-links">
+                <a href="/" class="nav-link">📊 Status Dashboard</a>
+                <a href="/reports" class="nav-link">📋 Reports</a>
+                <a href="/analysis" class="nav-link">🔍 Analysis</a>
+                <a href="/methodology" class="nav-link">📖 Methodology</a>
+                <a href="/cost-analysis" class="nav-link">💰 Cost Analysis</a>
+                <a href="/manual-entry" class="nav-link active">📝 Manual Entry</a>
+                <a href="/settings" class="nav-link">⚙️ Settings</a>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <h2 style="color: #667eea; margin-bottom: 30px;">🔗 Add Article URL</h2>
+            
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ 'error' if category == 'error' else category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <form method="POST" action="{{ url_for('add_url') }}">
+                <div class="form-group">
+                    <label for="url" class="form-label">🌐 Article URL *</label>
+                    <input type="url" class="form-control" id="url" name="url" required 
+                           placeholder="https://example.com/article"
+                           value="{{ request.form.get('url', '') }}">
+                    <div class="form-text">
+                        Enter the full URL of the article or webpage. YouTube URLs will be automatically redirected to the video processor.
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="title" class="form-label">📋 Article Title</label>
+                    <input type="text" class="form-control" id="title" name="title" 
+                           placeholder="Enter a descriptive title (optional)"
+                           value="{{ request.form.get('title', '') }}">
+                    <div class="form-text">
+                        If left empty, a title will be generated automatically from the URL.
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="category" class="form-label">🏷️ AI Impact Category</label>
+                    <select class="form-control" id="category" name="category">
+                        <option value="general" {% if request.form.get('category') == 'general' %}selected{% endif %}>General</option>
+                        <option value="replace" {% if request.form.get('category') == 'replace' %}selected{% endif %}>Replace - AI replacing jobs</option>
+                        <option value="augment" {% if request.form.get('category') == 'augment' %}selected{% endif %}>Augment - AI assisting humans</option>
+                        <option value="new_tasks" {% if request.form.get('category') == 'new_tasks' %}selected{% endif %}>New Tasks - Jobs created by AI</option>
+                        <option value="human_only" {% if request.form.get('category') == 'human_only' %}selected{% endif %}>Human-Only - Tasks requiring human expertise</option>
+                    </select>
+                    <div class="form-text">
+                        Select the category that best matches the article's focus on AI's impact on cybersecurity workforce.
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="notes" class="form-label">📝 Notes</label>
+                    <textarea class="form-control" id="notes" name="notes" rows="3" 
+                              placeholder="Add any notes about why this article is relevant (optional)">{{ request.form.get('notes', '') }}</textarea>
+                    <div class="form-text">
+                        Optional notes about the article's relevance or key insights.
+                    </div>
+                </div>
+                
+                <div class="button-group">
+                    <a href="{{ url_for('manual_entry') }}" class="btn btn-secondary">
+                        ← Back to Manual Entry
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        ➕ Add Article URL
+                    </button>
+                </div>
+            </form>
+
+            <div class="help-section">
+                <h5 style="color: #667eea; margin-bottom: 20px;">❓ Help & Tips</h5>
+                <div class="help-grid">
+                    <div class="help-column">
+                        <h6>💡 Supported URLs</h6>
+                        <ul>
+                            <li>• News articles and blog posts</li>
+                            <li>• Research papers and reports</li>
+                            <li>• Government and industry publications</li>
+                            <li>• Academic articles and whitepapers</li>
+                            <li>• YouTube videos (auto-redirected)</li>
+                        </ul>
+                    </div>
+                    <div class="help-column">
+                        <h6>✅ Quality Sources</h6>
+                        <ul>
+                            <li>• Gartner, Forrester, McKinsey reports</li>
+                            <li>• SANS, NIST, IEEE publications</li>
+                            <li>• Cybersecurity industry leaders</li>
+                            <li>• Academic institutions</li>
+                            <li>• Government agencies (DHS, CISA)</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div style="background: rgba(255, 255, 255, 0.7); border-radius: 10px; padding: 15px; margin-top: 20px;">
+                    <strong>🔍 Duplicate Detection:</strong> The system will automatically check if this URL already exists in the database and prevent duplicates.
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

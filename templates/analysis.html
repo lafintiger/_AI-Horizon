@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Horizon - Analysis Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .header p {
+            color: #7f8c8d;
+            font-size: 1.1em;
+        }
+        
+        .analysis-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .analysis-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .analysis-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+            border-color: #667eea;
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .card-icon {
+            font-size: 2em;
+            margin-right: 15px;
+        }
+        
+        .card-title {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .card-description {
+            color: #7f8c8d;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        
+        .features-list {
+            list-style: none;
+            margin-bottom: 25px;
+        }
+        
+        .features-list li {
+            padding: 5px 0;
+            color: #34495e;
+            position: relative;
+            padding-left: 20px;
+        }
+        
+        .features-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #27ae60;
+            font-weight: bold;
+        }
+        
+        .run-button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .run-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .run-button:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .loading {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            margin-top: 15px;
+        }
+        
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #bdc3c7;
+            border-top: 2px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .results {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
+        }
+        
+        .results h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        
+        .result-item {
+            margin-bottom: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        
+        .result-label {
+            font-weight: bold;
+            color: #34495e;
+            display: inline-block;
+            width: 150px;
+        }
+        
+        .result-value {
+            color: #667eea;
+            font-weight: bold;
+        }
+        
+        .report-link {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 20px;
+            background: #27ae60;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background 0.3s ease;
+        }
+        
+        .report-link:hover {
+            background: #219a52;
+        }
+        
+        .navigation {
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        .nav-button {
+            display: inline-block;
+            margin: 0 10px;
+            padding: 12px 25px;
+            background: #34495e;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-button:hover {
+            background: #2c3e50;
+            transform: translateY(-2px);
+        }
+        
+        .error {
+            color: #e74c3c;
+            background: #fdf2f2;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 5px solid #e74c3c;
+            margin-top: 15px;
+        }
+        
+        .success {
+            color: #27ae60;
+            background: #f2fdf5;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 5px solid #27ae60;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Analysis Dashboard</h1>
+            <p>Advanced analytics and monitoring for AI-Horizon collection system</p>
+        </div>
+        
+        <div class="analysis-grid">
+            <!-- Quality Distribution Analysis Card -->
+            <div class="analysis-card">
+                <div class="card-header">
+                    <div class="card-icon">📈</div>
+                    <div class="card-title">Quality Distribution Analysis</div>
+                </div>
+                <div class="card-description">
+                    Comprehensive analysis of document quality patterns to optimize collection strategies and identify the most valuable sources.
+                </div>
+                <ul class="features-list">
+                    <li>Quality distribution by AI impact category</li>
+                    <li>Source quality assessment and ranking</li>
+                    <li>Quality trends over time analysis</li>
+                    <li>Content characteristics correlation</li>
+                    <li>Actionable optimization recommendations</li>
+                </ul>
+                <button class="run-button" onclick="runQualityAnalysis()">
+                    🚀 Run Quality Analysis
+                </button>
+                <div class="loading" id="qualityLoading">
+                    <div class="spinner"></div>
+                    <span>Analyzing quality distribution patterns...</span>
+                </div>
+                <div class="results" id="qualityResults"></div>
+            </div>
+            
+            <!-- Collection Monitoring Card -->
+            <div class="analysis-card">
+                <div class="card-header">
+                    <div class="card-icon">🔍</div>
+                    <div class="card-title">Collection Monitoring Dashboard</div>
+                </div>
+                <div class="card-description">
+                    Real-time monitoring and health assessment of collection activities with performance analytics and anomaly detection.
+                </div>
+                <ul class="features-list">
+                    <li>Live collection velocity tracking</li>
+                    <li>Source health and reliability assessment</li>
+                    <li>Collection efficiency metrics</li>
+                    <li>Anomaly detection and alerts</li>
+                    <li>Performance optimization insights</li>
+                </ul>
+                <button class="run-button" onclick="runCollectionMonitoring()">
+                    🎯 Run Collection Monitoring
+                </button>
+                <div class="loading" id="monitoringLoading">
+                    <div class="spinner"></div>
+                    <span>Analyzing collection performance...</span>
+                </div>
+                <div class="results" id="monitoringResults"></div>
+            </div>
+            
+            <!-- Trend Analysis Card -->
+            <div class="analysis-card" id="trend-analysis-card">
+                <div class="card-header">
+                    <div class="card-icon">📊</div>
+                    <div class="card-title">Comprehensive Trend Analysis</div>
+                </div>
+                <div class="card-description">
+                    Deep temporal analysis of collected articles revealing quality trends, topic evolution, sentiment patterns, and collection insights over time.
+                </div>
+                <ul class="features-list">
+                    <li>Quality trends across time periods</li>
+                    <li>Topic emergence and decline tracking</li>
+                    <li>Sentiment evolution analysis</li>
+                    <li>Collection pattern insights</li>
+                    <li>Predictive trend indicators</li>
+                </ul>
+                <button class="run-button" onclick="runTrendAnalysis()">
+                    📊 Run Trend Analysis
+                </button>
+                <div class="loading" id="trendLoading">
+                    <div class="spinner"></div>
+                    <span>Analyzing temporal trends and patterns...</span>
+                </div>
+                <div class="results" id="trendResults"></div>
+            </div>
+            
+            <!-- Job Market Sentiment Analysis Card -->
+            <div class="analysis-card" id="job-sentiment-card">
+                <div class="card-header">
+                    <div class="card-icon">🎯</div>
+                    <div class="card-title">Job Market Sentiment Tracking</div>
+                </div>
+                <div class="card-description">
+                    Comprehensive sentiment analysis of AI's impact on cybersecurity careers, tracking opportunities vs threats, skill demand, and stakeholder perspectives.
+                </div>
+                <ul class="features-list">
+                    <li>Overall job market sentiment analysis</li>
+                    <li>Career opportunities vs threats balance</li>
+                    <li>Skill demand sentiment tracking</li>
+                    <li>Employer vs employee perspective analysis</li>
+                    <li>Strategic career development recommendations</li>
+                </ul>
+                <div class="card-actions">
+                    <button class="run-button" onclick="runJobMarketSentiment()">🚀 Run Sentiment Analysis</button>
+                </div>
+                
+                <!-- Loading Animation -->
+                <div class="loading-container" id="sentimentLoading" style="display: none;">
+                    <div class="loading-spinner"></div>
+                    <div class="loading-text">Analyzing job market sentiment across collected articles...</div>
+                </div>
+                
+                <!-- Results Display -->
+                <div class="results-container" id="sentimentResults" style="display: none;">
+                    <h3>📊 Sentiment Analysis Results</h3>
+                    <div class="results-grid">
+                        <div class="result-item">
+                            <div class="result-label">Overall Sentiment</div>
+                            <div class="result-value" id="overallSentiment">-</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-label">Opportunity/Threat Ratio</div>
+                            <div class="result-value" id="opportunityRatio">-</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-label">Dominant Narrative</div>
+                            <div class="result-value" id="dominantNarrative">-</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-label">Top Skill in Demand</div>
+                            <div class="result-value" id="topSkill">-</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-label">Employer Sentiment</div>
+                            <div class="result-value" id="employerSentiment">-</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-label">Employee Sentiment</div>
+                            <div class="result-value" id="employeeSentiment">-</div>
+                        </div>
+                    </div>
+                    <div class="view-report">
+                        <a href="#" id="sentimentReportLink" target="_blank">📄 View Detailed Report</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- AI Adoption Rate Predictions Card -->
+            <div class="analysis-card" id="ai-adoption-card">
+                <div class="card-header">
+                    <div class="card-icon">🚀</div>
+                    <div class="card-title">AI Adoption Rate Predictions</div>
+                </div>
+                <div class="card-description">
+                    Predictive analysis of AI adoption patterns in cybersecurity focusing on DCWF task transformation, skill demand forecasting, and workforce evolution predictions.
+                </div>
+                <ul class="features-list">
+                    <li>DCWF task transformation analysis by AI impact category</li>
+                    <li>Cybersecurity skill demand forecasting and ranking</li>
+                    <li>Workforce transformation velocity predictions</li>
+                    <li>Technology adoption curve analysis with timeline</li>
+                    <li>Strategic workforce development recommendations</li>
+                </ul>
+                <div class="card-actions">
+                    <button class="run-button" onclick="runAIAdoptionPredictions()">🔮 Run DCWF Task Analysis</button>
+                </div>
+                
+                <!-- Loading Animation -->
+                <div class="loading-container" id="adoptionLoading" style="display: none;">
+                    <div class="loading-spinner"></div>
+                    <div class="loading-text">Analyzing AI adoption patterns and forecasting DCWF task transformation...</div>
+                </div>
+                
+                <!-- Results Display -->
+                <div class="results-container" id="adoptionResults" style="display: none;">
+                    <h3>🚀 AI Adoption Predictions Results</h3>
+                    <div class="results-grid">
+                        <div class="result-item">
+                            <div class="result-label">Articles Analyzed</div>
+                            <div class="result-value" id="adoptionAnalyzed">-</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-label">Current Adoption Phase</div>
+                            <div class="result-value" id="adoptionPhase">-</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-label">Transformation Speed</div>
+                            <div class="result-value" id="transformationSpeed">-</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-label">Top High-Demand Skills</div>
+                            <div class="result-value" id="topSkills">-</div>
+                        </div>
+                    </div>
+                    <div class="features-completed">
+                        <h4>✅ Analysis Features Completed:</h4>
+                        <ul id="completedFeatures">
+                            <!-- Features will be populated dynamically -->
+                        </ul>
+                    </div>
+                    <div class="view-report">
+                        <a href="#" id="adoptionReportLink" target="_blank">📄 View Detailed Predictions Report</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="navigation">
+            <a href="/" class="nav-button">🏠 Dashboard</a>
+            <a href="/reports" class="nav-button">📋 Reports</a>
+            <a href="/browse_entries" class="nav-button">📚 Browse Content</a>
+            <a href="/methodology" class="nav-button">📖 Methodology</a>
+        </div>
+    </div>
+
+    <script>
+        async function runQualityAnalysis() {
+            const button = document.querySelector('.analysis-card:first-child .run-button');
+            const loading = document.getElementById('qualityLoading');
+            const results = document.getElementById('qualityResults');
+            
+            button.disabled = true;
+            loading.style.display = 'flex';
+            results.style.display = 'none';
+            
+            try {
+                const response = await fetch('/api/run_quality_analysis', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({})
+                });
+                
+                const data = await response.json();
+                
+                if (data.error) {
+                    results.innerHTML = `<div class="error">Error: ${data.error}</div>`;
+                } else {
+                    results.innerHTML = `
+                        <h3>📈 Quality Analysis Results</h3>
+                        <div class="result-item">
+                            <span class="result-label">Overall Quality:</span>
+                            <span class="result-value">${data.overall_quality}</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">Excellent Articles:</span>
+                            <span class="result-value">${data.excellent_articles}</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">Total Analyzed:</span>
+                            <span class="result-value">${data.total_analyzed}</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">Analysis Time:</span>
+                            <span class="result-value">${new Date().toLocaleString()}</span>
+                        </div>
+                        ${data.report_file ? `<a href="/api/view_report?path=${encodeURIComponent(data.report_file)}" class="report-link" target="_blank">📄 View Detailed Report</a>` : ''}
+                    `;
+                }
+                
+                results.style.display = 'block';
+            } catch (error) {
+                results.innerHTML = `<div class="error">Error running analysis: ${error.message}</div>`;
+                results.style.display = 'block';
+            } finally {
+                button.disabled = false;
+                loading.style.display = 'none';
+            }
+        }
+        
+        async function runCollectionMonitoring() {
+            const button = document.querySelector('.analysis-card:nth-child(2) .run-button');
+            const loading = document.getElementById('monitoringLoading');
+            const results = document.getElementById('monitoringResults');
+            
+            button.disabled = true;
+            loading.style.display = 'flex';
+            results.style.display = 'none';
+            
+            try {
+                const response = await fetch('/api/run_collection_monitoring', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ hours: 24 })
+                });
+                
+                const data = await response.json();
+                
+                if (data.error) {
+                    results.innerHTML = `<div class="error">Error: ${data.error}</div>`;
+                } else {
+                    results.innerHTML = `
+                        <h3>🔍 Collection Monitoring Results</h3>
+                        <div class="result-item">
+                            <span class="result-label">Collection Rate:</span>
+                            <span class="result-value">${data.collection_rate} articles/hour</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">Source Health:</span>
+                            <span class="result-value">${data.source_health}</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">Quality Score:</span>
+                            <span class="result-value">${data.quality_score}</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">Efficiency Grade:</span>
+                            <span class="result-value">${data.efficiency_grade}</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">Analysis Time:</span>
+                            <span class="result-value">${new Date().toLocaleString()}</span>
+                        </div>
+                        ${data.report_file ? `<a href="/api/view_report?path=${encodeURIComponent(data.report_file)}" class="report-link" target="_blank">📄 View Detailed Report</a>` : ''}
+                    `;
+                }
+                
+                results.style.display = 'block';
+            } catch (error) {
+                results.innerHTML = `<div class="error">Error running monitoring: ${error.message}</div>`;
+                results.style.display = 'block';
+            } finally {
+                button.disabled = false;
+                loading.style.display = 'none';
+            }
+        }
+        
+        async function runTrendAnalysis() {
+            const button = document.querySelector('#trend-analysis-card .run-button');
+            const loading = document.getElementById('trendLoading');
+            const results = document.getElementById('trendResults');
+            
+            button.disabled = true;
+            loading.style.display = 'flex';
+            results.style.display = 'none';
+            
+            try {
+                const response = await fetch('/api/run_trend_analysis', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({})
+                });
+                
+                const data = await response.json();
+                
+                if (data.error) {
+                    results.innerHTML = `<div class="error">Error: ${data.error}</div>`;
+                } else {
+                    const summary = data.analysis_summary;
+                    results.innerHTML = `
+                        <h3>📊 Trend Analysis Results</h3>
+                        <div class="result-item">
+                            <span class="result-label">Quality Trend:</span>
+                            <span class="result-value">${summary.quality_trend} (${summary.quality_improvement > 0 ? '+' : ''}${summary.quality_improvement.toFixed(3)})</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">Collection Consistency:</span>
+                            <span class="result-value">${summary.collection_consistency.toFixed(3)}/1.0</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">Positive Sentiment:</span>
+                            <span class="result-value">${summary.positive_sentiment}%</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">Topic Evolution:</span>
+                            <span class="result-value">${summary.emerging_topics} emerging, ${summary.declining_topics} declining</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">Data Points:</span>
+                            <span class="result-value">${data.data_count} articles analyzed</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">Analysis Time:</span>
+                            <span class="result-value">${new Date().toLocaleString()}</span>
+                        </div>
+                        ${data.report_file ? `<a href="/api/view_report?path=${encodeURIComponent(data.report_file)}" class="report-link" target="_blank">📄 View Detailed Report</a>` : ''}
+                    `;
+                }
+                
+                results.style.display = 'block';
+            } catch (error) {
+                results.innerHTML = `<div class="error">Error running analysis: ${error.message}</div>`;
+                results.style.display = 'block';
+            } finally {
+                button.disabled = false;
+                loading.style.display = 'none';
+            }
+        }
+        
+        async function runJobMarketSentiment() {
+            const button = document.querySelector('#job-sentiment-card .run-button');
+            const loading = document.getElementById('sentimentLoading');
+            const results = document.getElementById('sentimentResults');
+            
+            button.disabled = true;
+            loading.style.display = 'flex';
+            results.style.display = 'none';
+            
+            try {
+                const response = await fetch('/api/run_job_market_sentiment', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({})
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Display results
+                    document.getElementById('overallSentiment').textContent = data.summary.overall_sentiment;
+                    document.getElementById('opportunityRatio').textContent = data.summary.opportunity_threat_ratio;
+                    document.getElementById('dominantNarrative').textContent = data.summary.dominant_narrative;
+                    document.getElementById('topSkill').textContent = data.summary.top_skill;
+                    document.getElementById('employerSentiment').textContent = data.summary.employer_sentiment;
+                    document.getElementById('employeeSentiment').textContent = data.summary.employee_sentiment;
+                    
+                    // Set report link
+                    const reportPath = data.report_file.replace(/\\/g, '/');
+                    document.getElementById('sentimentReportLink').href = `/api/view_report?path=${encodeURIComponent(reportPath)}`;
+                    
+                    results.style.display = 'block';
+                } else {
+                    alert('Sentiment analysis failed: ' + data.error);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error running sentiment analysis: ' + error.message);
+            } finally {
+                loading.style.display = 'none';
+                button.disabled = false;
+            }
+        }
+        
+        async function runAIAdoptionPredictions() {
+            const button = document.querySelector('#ai-adoption-card .run-button');
+            const loading = document.getElementById('adoptionLoading');
+            const results = document.getElementById('adoptionResults');
+            
+            button.disabled = true;
+            loading.style.display = 'flex';
+            results.style.display = 'none';
+            
+            try {
+                const response = await fetch('/api/run_ai_adoption_predictions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({})
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Display results using the metrics from the API response
+                    document.getElementById('adoptionAnalyzed').textContent = data.metrics?.total_analyzed || 'N/A';
+                    document.getElementById('adoptionPhase').textContent = data.metrics?.adoption_phase || 'N/A';
+                    document.getElementById('transformationSpeed').textContent = data.metrics?.transformation_speed || 'N/A';
+                    document.getElementById('topSkills').textContent = data.metrics?.top_skills || 'N/A';
+                    
+                    // Populate completed features
+                    const featuresContainer = document.getElementById('completedFeatures');
+                    featuresContainer.innerHTML = '';
+                    if (data.features) {
+                        data.features.forEach(feature => {
+                            const li = document.createElement('li');
+                            li.textContent = feature;
+                            featuresContainer.appendChild(li);
+                        });
+                    }
+                    
+                    // Set report link
+                    const reportPath = data.report_file.replace(/\\/g, '/');
+                    document.getElementById('adoptionReportLink').href = `/api/view_report?path=${encodeURIComponent(reportPath)}`;
+                    
+                    results.style.display = 'block';
+                } else {
+                    alert('Predictions analysis failed: ' + (data.error || 'Unknown error'));
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error running predictions analysis: ' + error.message);
+            } finally {
+                loading.style.display = 'none';
+                button.disabled = false;
+            }
+        }
+        
+        // Add some visual feedback on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.analysis-card');
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(30px)';
+                    card.style.transition = 'all 0.6s ease';
+                    
+                    setTimeout(() => {
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0)';
+                    }, 100);
+                }, index * 200);
+            });
+        });
+    </script>
+</body>
+</html> 

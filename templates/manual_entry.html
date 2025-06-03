@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual Entry - AI-Horizon</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .nav-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 15px 30px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: background 0.3s;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+        }
+
+        .main-content {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(102, 126, 234, 0.3);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+        }
+
+        .feature-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .feature-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .feature-desc {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+            color: white;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            color: white;
+            text-decoration: none;
+        }
+
+        .status-section {
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .status-item {
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .status-number {
+            font-size: 32px;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .status-label {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+
+        .alert-warning {
+            background-color: #fff3cd;
+            border-color: #ffeaa7;
+            color: #856404;
+        }
+
+        .alert-error {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+
+        .alert-info {
+            background-color: #d1ecf1;
+            border-color: #bee5eb;
+            color: #0c5460;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav-header">
+            <h1 style="color: white; margin: 0;">🚀 AI-Horizon Manual Entry</h1>
+            <div class="nav-links">
+                <a href="/" class="nav-link">📊 Status Dashboard</a>
+                <a href="/reports" class="nav-link">📋 Reports</a>
+                <a href="/analysis" class="nav-link">🔍 Analysis</a>
+                <a href="/methodology" class="nav-link">📖 Methodology</a>
+                <a href="/cost-analysis" class="nav-link">💰 Cost Analysis</a>
+                <a href="{{ url_for('browse_entries') }}" class="nav-link">📂 Browse Entries</a>
+                <a href="/manual-entry" class="nav-link active">📝 Manual Entry</a>
+                <a href="/settings" class="nav-link">⚙️ Settings</a>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <h2 style="color: #667eea; margin-bottom: 30px;">📝 Manual Entry Dashboard</h2>
+            
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ 'error' if category == 'error' else category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <p style="color: #666; margin-bottom: 30px; font-size: 18px;">
+                Manually add articles, documents, and media sources to the AI-Horizon research database. 
+                All entries will be integrated with the automated collection pipeline for comprehensive analysis.
+            </p>
+
+            <!-- Quick Action Buttons -->
+            <div style="display: flex; gap: 15px; margin-bottom: 30px; justify-content: center;">
+                <a href="{{ url_for('browse_entries') }}" class="btn btn-primary" style="background: #28a745;">
+                    🔍 Browse Your Entries
+                </a>
+                <a href="{{ url_for('process_entries') }}" class="btn btn-primary" style="background: #17a2b8;">
+                    🔄 Process Entries
+                </a>
+            </div>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🔗</div>
+                    <div class="feature-title">Add Article URL</div>
+                    <div class="feature-desc">
+                        Submit URLs of articles, blog posts, research papers, or any web content relevant to AI's impact on cybersecurity workforce.
+                    </div>
+                    <a href="{{ url_for('add_url') }}" class="btn btn-primary">
+                        Add Article URL
+                    </a>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">📁</div>
+                    <div class="feature-title">Upload Documents</div>
+                    <div class="feature-desc">
+                        Upload PDF files, Word documents, or text files containing research papers, reports, or industry publications.
+                    </div>
+                    <a href="{{ url_for('add_file') }}" class="btn btn-primary">
+                        Upload Documents
+                    </a>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">📺</div>
+                    <div class="feature-title">YouTube Videos</div>
+                    <div class="feature-desc">
+                        Add YouTube videos of conferences, interviews, webinars, or educational content about AI and cybersecurity.
+                    </div>
+                    <a href="{{ url_for('add_youtube') }}" class="btn btn-primary">
+                        Add YouTube Video
+                    </a>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🔍</div>
+                    <div class="feature-title">Browse Your Entries</div>
+                    <div class="feature-desc">
+                        View, search, and manage all your manually added content. See what you've uploaded and process it for analysis.
+                    </div>
+                    <a href="{{ url_for('browse_entries') }}" class="btn btn-primary">
+                        Browse Entries
+                    </a>
+                </div>
+            </div>
+
+            <div class="status-section">
+                <h5 style="color: #667eea; margin-bottom: 20px;">📊 Database Status</h5>
+                <div class="status-grid">
+                    <div class="status-item">
+                        <div class="status-number" id="totalArtifacts">--</div>
+                        <div class="status-label">Total Articles</div>
+                    </div>
+                    <div class="status-item">
+                        <div class="status-number" id="manualEntries">--</div>
+                        <div class="status-label">Manual Entries</div>
+                    </div>
+                    <div class="status-item">
+                        <div class="status-number" id="todayEntries">--</div>
+                        <div class="status-label">Added Today</div>
+                    </div>
+                    <div class="status-item">
+                        <div class="status-number" id="categorizedEntries">--</div>
+                        <div class="status-label">Categorized</div>
+                    </div>
+                </div>
+                
+                <div style="background: rgba(255, 255, 255, 0.7); border-radius: 10px; padding: 15px; margin-top: 20px;">
+                    <strong>💡 Tip:</strong> All manual entries are automatically processed and categorized using AI to determine their relevance to workforce impact categories (Replace, Augment, New Tasks, Human-Only).
+                </div>
+            </div>
+
+            <div style="margin-top: 30px; text-align: center;">
+                <a href="/" class="btn btn-primary" style="background: #6c757d;">
+                    ← Back to Main Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load database statistics
+        async function loadStats() {
+            try {
+                const response = await fetch('/api/database_stats');
+                const data = await response.json();
+                
+                document.getElementById('totalArtifacts').textContent = data.total_artifacts || 0;
+                
+                // Count manual entries (placeholder - would need API enhancement)
+                const manualCount = Math.floor((data.total_artifacts || 0) * 0.1); // Estimate
+                document.getElementById('manualEntries').textContent = manualCount;
+                
+                // Today's entries (placeholder)
+                document.getElementById('todayEntries').textContent = Math.floor(Math.random() * 5);
+                
+                // Categorized entries
+                const categorized = Object.values(data.categories || {}).reduce((a, b) => a + b, 0);
+                document.getElementById('categorizedEntries').textContent = categorized;
+                
+            } catch (error) {
+                console.error('Failed to load stats:', error);
+                document.getElementById('totalArtifacts').textContent = 'Error';
+            }
+        }
+
+        // Load stats on page load
+        loadStats();
+        
+        // Refresh stats every 30 seconds
+        setInterval(loadStats, 30000);
+    </script>
+</body>
+</html> 

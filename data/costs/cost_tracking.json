@@ -1,0 +1,25 @@
+{
+  "total_cost": 2.493170999999998,
+  "daily_costs": {
+    "2025-06-01": 2.478394999999998,
+    "2025-06-02": 0.014776000000000001
+  },
+  "api_usage": {
+    "perplexity": {
+      "calls": 145,
+      "tokens": 153171,
+      "cost": 0.153171
+    },
+    "openai": {
+      "calls": 156,
+      "tokens": 124800,
+      "cost": 2.339999999999997
+    },
+    "anthropic": {
+      "calls": 0,
+      "tokens": 0,
+      "cost": 0.0
+    }
+  },
+  "sessions": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "manual_file_20250601_035237",
+  "url": "file://manual_uploads/20250601_035237_WP140_web.pdf",
+  "title": "WP140_web",
+  "content": "PDF file uploaded: WP140_web.pdf. Text extraction not implemented yet.",
+  "source_type": "manual_file",
+  "collected_at": "2025-06-01 03:52:37.430728",
+  "raw_metadata": "{\"entry_method\": \"manual_file\", \"category\": \"general\", \"notes\": \"\", \"original_filename\": \"WP140_web.pdf\", \"file_path\": \"data\\\\uploads\\\\20250601_035237_WP140_web.pdf\", \"file_type\": \"pdf\", \"added_by\": \"manual_interface\", \"ai_impact_category\": \"augment\", \"processed_at\": \"2025-06-01T14:31:08.243986\", \"processing_method\": \"automated_keyword\"}"
+}

@@ -496,8 +496,15 @@ def delete_artifact(artifact_id):
             flash('Artifact not found!', 'error')
             return redirect(url_for('index'))
         
-        # TODO: Implement delete functionality in database manager
-        flash('Delete functionality will be implemented soon!', 'info')
+        # Delete the artifact and associated data
+        success = db.delete_artifact(artifact_id)
+        
+        if success:
+            flash(f'Successfully deleted artifact: {artifact.get("title", artifact_id)}', 'success')
+            logger.info(f"Deleted artifact {artifact_id}")
+        else:
+            flash('Failed to delete artifact!', 'error')
+            logger.error(f"Failed to delete artifact {artifact_id}")
         
     except Exception as e:
         flash(f'Error deleting artifact: {str(e)}', 'error')
