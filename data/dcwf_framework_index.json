@@ -1,0 +1,2431 @@
+{
+  "metadata": {
+    "total_work_roles": 5,
+    "total_tasks": 127,
+    "specialty_areas": [
+      "Operate and Maintain (OM)"
+    ],
+    "keyword_index_size": 547,
+    "framework_source": "/Users/vincentnestler/SynologyDrive/_aiprojects/__Dev/_AI-Horizon/Documents/(U) 2025-01-24 DCWF Work Role Tool_v5.0.xlsx",
+    "loaded_at": "2025-06-03T13:30:28.535521"
+  },
+  "work_roles": {
+    "DCWF_621": {
+      "role_name": "Software Developer",
+      "role_description": "Executes software planning, requirements, risk management, design, development, architecture, modeling, estimation, configuration management, quality, security, and tests using software development methodologies, architectural structures, viewpoints, styles, design decisions, and frameworks across all lifecycle phases.",
+      "specialty_area": "Operate and Maintain (OM)",
+      "task_count": 36
+    },
+    "DCWF_632": {
+      "role_name": "Systems Developer",
+      "role_description": "Designs, develops, tests, and evaluates information systems throughout the systems development lifecycle.",
+      "specialty_area": "Operate and Maintain (OM)",
+      "task_count": 37
+    },
+    "DCWF_421": {
+      "role_name": "Database Administrator",
+      "role_description": "Administers databases and/or data management systems that allow for the storage, query, and utilization of data.",
+      "specialty_area": "Operate and Maintain (OM)",
+      "task_count": 10
+    },
+    "DCWF_802": {
+      "role_name": "IT Project Manager",
+      "role_description": "Work that involves directly managing information technology projects to provide a unique service or product.",
+      "specialty_area": "Operate and Maintain (OM)",
+      "task_count": 25
+    },
+    "DCWF_651": {
+      "role_name": "Enterprise Architect",
+      "role_description": "Develops and maintains business, systems, and information processes to support enterprise mission needs; develops information technology (IT) rules and requirements that describe baseline and target architectures.",
+      "specialty_area": "Operate and Maintain (OM)",
+      "task_count": 19
+    }
+  },
+  "tasks": {
+    "DCWF_621_408": {
+      "description": "Analyze information to determine, recommend, and plan the development of a new application or modification of an existing application.",
+      "work_role": "Software Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "determine",
+        "existing",
+        "recommend",
+        "application",
+        "information",
+        "plan",
+        "modification",
+        "development",
+        "analyze"
+      ],
+      "ai_vulnerability_score": 0.0
+    },
+    "DCWF_621_414": {
+      "description": "Analyze user needs and software requirements to determine feasibility of design within time and cost constraints.",
+      "work_role": "Software Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "determine",
+        "within",
+        "feasibility",
+        "time",
+        "requirements",
+        "needs",
+        "design",
+        "constraints",
+        "software",
+        "user",
+        "analyze",
+        "cost"
+      ],
+      "ai_vulnerability_score": 0.06666666666666667
+    },
+    "DCWF_621_417": {
+      "description": "Apply coding and testing standards, apply security testing tools including \"fuzzing\" static-analysis code scanning tools, and conduct code reviews.",
+      "work_role": "Software Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "static",
+        "tools",
+        "apply",
+        "standards",
+        "code",
+        "coding",
+        "reviews",
+        "including",
+        "testing",
+        "scanning",
+        "fuzzing",
+        "analysis",
+        "security",
+        "conduct"
+      ],
+      "ai_vulnerability_score": 0.19999999999999998
+    },
+    "DCWF_621_418": {
+      "description": "Apply secure code documentation.",
+      "work_role": "Software Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "documentation",
+        "secure",
+        "apply",
+        "code"
+      ],
+      "ai_vulnerability_score": 0.09999999999999999
+    },
+    "DCWF_621_432": {
+      "description": "Capture security controls used during the requirements phase to integrate security within the process, to identify key security objectives, and to maximize software security while minimizing disruption to plans and schedules.",
+      "work_role": "Software Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "identify",
+        "maximize",
+        "objectives",
+        "process",
+        "requirements",
+        "controls",
+        "integrate",
+        "used",
+        "phase",
+        "minimizing",
+        "security",
+        "while",
+        "schedules",
+        "plans",
+        "within",
+        "disruption",
+        "during",
+        "capture",
+        "software"
+      ],
+      "ai_vulnerability_score": 0.0
+    },
+    "DCWF_621_446": {
+      "description": "Compile and write documentation of program development and subsequent revisions, inserting comments in the coded instructions so others can understand the program.",
+      "work_role": "Software Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "documentation",
+        "comments",
+        "write",
+        "coded",
+        "compile",
+        "others",
+        "inserting",
+        "understand",
+        "subsequent",
+        "revisions",
+        "development",
+        "instructions",
+        "program"
+      ],
+      "ai_vulnerability_score": 0.09999999999999999
+    },
+    "DCWF_621_459A": {
+      "description": "Conduct trial runs of programs and software applications to ensure the desired information is produced and instructions and security levels are correct.",
+      "work_role": "Software Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "runs",
+        "produced",
+        "trial",
+        "instructions",
+        "information",
+        "applications",
+        "programs",
+        "correct",
+        "security",
+        "software",
+        "levels",
+        "desired",
+        "conduct",
+        "ensure"
+      ],
+      "ai_vulnerability_score": 0.0
+    },
+    "DCWF_621_461": {
+      "description": "Confer with systems analysts, engineers, programmers, and others to design application and to obtain information on project limitations and capabilities, performance requirements, and interfaces.",
+      "work_role": "Software Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "performance",
+        "systems",
+        "capabilities",
+        "obtain",
+        "confer",
+        "application",
+        "others",
+        "information",
+        "design",
+        "requirements",
+        "analysts",
+        "limitations",
+        "programmers",
+        "interfaces",
+        "engineers",
+        "project"
+      ],
+      "ai_vulnerability_score": 0.06666666666666667
+    },
+    "DCWF_621_467": {
+      "description": "Consult with engineering staff to evaluate interface between hardware and software.",
+      "work_role": "Software Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "interface",
+        "evaluate",
+        "between",
+        "staff",
+        "hardware",
+        "software",
+        "consult",
+        "engineering"
+      ],
+      "ai_vulnerability_score": 0.0
+    },
+    "DCWF_621_477": {
+      "description": "Correct errors by making appropriate changes and rechecking the program to ensure desired results are produced.",
+      "work_role": "Software Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "produced",
+        "rechecking",
+        "changes",
+        "results",
+        "errors",
+        "making",
+        "correct",
+        "appropriate",
+        "desired",
+        "ensure",
+        "program"
+      ],
+      "ai_vulnerability_score": 0.0
+    },
+    "DCWF_621_506": {
+      "description": "Design, develop, and modify software systems, using scientific analysis and mathematical models to predict and measure outcome and consequences of design.",
+      "work_role": "Software Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "systems",
+        "measure",
+        "develop",
+        "mathematical",
+        "models",
+        "outcome",
+        "design",
+        "scientific",
+        "using",
+        "analysis",
+        "consequences",
+        "software",
+        "predict",
+        "modify"
+      ],
+      "ai_vulnerability_score": 0.16666666666666666
+    },
+    "DCWF_621_515A": {
+      "description": "Develop software system testing and validation procedures, programming, and documentation.",
+      "work_role": "Software Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "documentation",
+        "system",
+        "develop",
+        "procedures",
+        "testing",
+        "validation",
+        "programming",
+        "software"
+      ],
+      "ai_vulnerability_score": 0.09999999999999999
+    },
+    "DCWF_621_543": {
+      "description": "Develop secure code and error handling.",
+      "work_role": "Software Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "develop",
+        "error",
+        "handling",
+        "secure",
+        "code"
+      ],
+      "ai_vulnerability_score": 0.0
+    },
+    "DCWF_621_602": {
+      "description": "Evaluate factors such as reporting formats required, cost constraints, and need for security restrictions to determine hardware configuration.",
+      "work_role": "Software Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "determine",
+        "such",
+        "evaluate",
+        "restrictions",
+        "required",
+        "need",
+        "configuration",
+        "constraints",
+        "hardware",
+        "formats",
+        "factors",
+        "security",
+        "reporting",
+        "cost"
+      ],
+      "ai_vulnerability_score": 0.19999999999999998
+    },
+    "DCWF_621_634": {
+      "description": "Identify basic common coding flaws at a high level.",
+      "work_role": "Software Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "identify",
+        "coding",
+        "high",
+        "flaws",
+        "level",
+        "common",
+        "basic"
+      ],
+      "ai_vulnerability_score": 0.0
+    },
+    "DCWF_621_644": {
+      "description": "Identify security implications and apply methodologies within centralized and decentralized environments across the enterprises computer systems in software development.",
+      "work_role": "Software Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "systems",
+        "implications",
+        "apply",
+        "identify",
+        "environments",
+        "development",
+        "decentralized",
+        "across",
+        "methodologies",
+        "enterprises",
+        "security",
+        "software",
+        "centralized",
+        "within",
+        "computer"
+      ],
+      "ai_vulnerability_score": 0.0
+    },
+    "DCWF_621_645": {
+      "description": "Identify security issues around steady state operation and management of software and incorporate security measures that must be taken when a product reaches its end of life.",
+      "work_role": "Software Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "reaches",
+        "management",
+        "identify",
+        "incorporate",
+        "measures",
+        "product",
+        "life",
+        "around",
+        "operation",
+        "steady",
+        "that",
+        "issues",
+        "software",
+        "taken",
+        "security",
+        "state",
+        "when",
+        "must"
+      ],
+      "ai_vulnerability_score": 0.0
+    },
+    "DCWF_621_709A": {
+      "description": "Modify and maintain existing software to correct errors, to adapt it to new hardware, or to upgrade interfaces and improve performance.",
+      "work_role": "Software Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "improve",
+        "adapt",
+        "performance",
+        "upgrade",
+        "existing",
+        "interfaces",
+        "errors",
+        "hardware",
+        "correct",
+        "software",
+        "maintain",
+        "modify"
+      ],
+      "ai_vulnerability_score": 0.0
+    },
+    "DCWF_621_756": {
+      "description": "Perform integrated quality assurance testing for security functionality and resiliency attack.",
+      "work_role": "Software Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "attack",
+        "resiliency",
+        "assurance",
+        "integrated",
+        "functionality",
+        "testing",
+        "security",
+        "perform",
+        "quality"
+      ],
+      "ai_vulnerability_score": 0.0
+    },
+    "DCWF_621_764": {
+      "description": "Perform secure programming and identify potential flaws in codes to mitigate vulnerabilities.",
+      "work_role": "Software Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "mitigate",
+        "identify",
+        "codes",
+        "potential",
+        "flaws",
+        "secure",
+        "vulnerabilities",
+        "programming",
+        "perform"
+      ],
+      "ai_vulnerability_score": 0.0
+    },
+    "DCWF_621_770": {
+      "description": "Perform risk analysis (e.g., threat, vulnerability, and probability of occurrence) whenever an application or system undergoes a major change.",
+      "work_role": "Software Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "risk",
+        "change",
+        "whenever",
+        "system",
+        "vulnerability",
+        "application",
+        "undergoes",
+        "probability",
+        "analysis",
+        "major",
+        "occurrence",
+        "threat",
+        "perform"
+      ],
+      "ai_vulnerability_score": 0.09999999999999999
+    },
+    "DCWF_621_850": {
+      "description": "Store, retrieve, and manipulate data for analysis of system capabilities and requirements.",
+      "work_role": "Software Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "system",
+        "capabilities",
+        "store",
+        "retrieve",
+        "requirements",
+        "analysis",
+        "manipulate",
+        "data"
+      ],
+      "ai_vulnerability_score": 0.09999999999999999
+    },
+    "DCWF_621_865": {
+      "description": "Translate security requirements into application design elements including documenting the elements of the software attack surfaces, conducting threat modeling, and defining any specific security criteria.",
+      "work_role": "Software Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "attack",
+        "modeling",
+        "conducting",
+        "criteria",
+        "defining",
+        "application",
+        "including",
+        "surfaces",
+        "requirements",
+        "specific",
+        "design",
+        "documenting",
+        "security",
+        "software",
+        "threat",
+        "translate",
+        "into",
+        "elements"
+      ],
+      "ai_vulnerability_score": 0.06666666666666667
+    },
+    "DCWF_621_970A": {
+      "description": "Apply cybersecurity functions (e.g., encryption, access control, and identity management) to reduce exploitation opportunities.",
+      "work_role": "Software Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "opportunities",
+        "apply",
+        "management",
+        "access",
+        "reduce",
+        "exploitation",
+        "control",
+        "cybersecurity",
+        "identity",
+        "functions",
+        "encryption"
+      ],
+      "ai_vulnerability_score": 0.0
+    },
+    "DCWF_621_972A": {
+      "description": "Determine and document software patches or the extent of releases that would leave software vulnerable.",
+      "work_role": "Software Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "determine",
+        "document",
+        "would",
+        "vulnerable",
+        "patches",
+        "extent",
+        "leave",
+        "releases",
+        "that",
+        "software"
+      ],
+      "ai_vulnerability_score": 0.0
+    },
+    "DCWF_621_1149A": {
+      "description": "Enable applications with public keying by leveraging existing public key infrastructure (PKI) libraries and incorporating certificate management and encryption functionalities when appropriate.",
+      "work_role": "Software Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "management",
+        "keying",
+        "certificate",
+        "existing",
+        "public",
+        "leveraging",
+        "functionalities",
+        "enable",
+        "applications",
+        "when",
+        "incorporating",
+        "appropriate",
+        "infrastructure",
+        "libraries",
+        "encryption"
+      ],
+      "ai_vulnerability_score": 0.0
+    },
+    "DCWF_621_1150A": {
+      "description": "Identify and leverage the enterprise-wide security services while designing and developing secure applications (e.g., Enterprise PKI, Federated Identity server, Enterprise AV solution) when appropriate.",
+      "work_role": "Software Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "leverage",
+        "identify",
+        "identity",
+        "solution",
+        "designing",
+        "wide",
+        "developing",
+        "federated",
+        "secure",
+        "applications",
+        "security",
+        "appropriate",
+        "while",
+        "server",
+        "enterprise",
+        "services",
+        "when"
+      ],
+      "ai_vulnerability_score": 0.06666666666666667
+    },
+    "DCWF_621_785": {
+      "description": "Prepare detailed workflow charts and diagrams that describe input, output, and logical operation, and convert them into a series of instructions coded in a computer language.",
+      "work_role": "Software Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "series",
+        "prepare",
+        "charts",
+        "diagrams",
+        "instructions",
+        "coded",
+        "input",
+        "output",
+        "describe",
+        "into",
+        "them",
+        "workflow",
+        "logical",
+        "language",
+        "operation",
+        "that",
+        "detailed",
+        "computer",
+        "convert"
+      ],
+      "ai_vulnerability_score": 0.0
+    },
+    "DCWF_621_826": {
+      "description": "Address security implications in the software acceptance phase including completion criteria, risk acceptance and documentation, common criteria, and methods of independent testing.",
+      "work_role": "Software Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "risk",
+        "documentation",
+        "implications",
+        "criteria",
+        "acceptance",
+        "phase",
+        "address",
+        "including",
+        "methods",
+        "completion",
+        "independent",
+        "testing",
+        "security",
+        "software",
+        "common"
+      ],
+      "ai_vulnerability_score": 0.09999999999999999
+    },
+    "DCWF_621_971": {
+      "description": "Design countermeasures and mitigations against potential exploitations of programming language weaknesses and vulnerabilities in system and elements.",
+      "work_role": "Software Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "weaknesses",
+        "system",
+        "language",
+        "potential",
+        "exploitations",
+        "design",
+        "vulnerabilities",
+        "mitigations",
+        "programming",
+        "against",
+        "countermeasures",
+        "elements"
+      ],
+      "ai_vulnerability_score": 0.06666666666666667
+    },
+    "DCWF_621_1151": {
+      "description": "Identify and leverage the enterprise-wide version control system while designing and developing secure applications.",
+      "work_role": "Software Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "leverage",
+        "version",
+        "system",
+        "identify",
+        "designing",
+        "wide",
+        "developing",
+        "while",
+        "secure",
+        "applications",
+        "control",
+        "enterprise"
+      ],
+      "ai_vulnerability_score": 0.06666666666666667
+    },
+    "DCWF_621_2156": {
+      "description": "Consult with customers about software system design and maintenance.",
+      "work_role": "Software Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "maintenance",
+        "customers",
+        "system",
+        "about",
+        "design",
+        "software",
+        "consult"
+      ],
+      "ai_vulnerability_score": 0.06666666666666667
+    },
+    "DCWF_621_2335": {
+      "description": "Direct software programming and development of documentation.",
+      "work_role": "Software Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "documentation",
+        "development",
+        "direct",
+        "programming",
+        "software"
+      ],
+      "ai_vulnerability_score": 0.09999999999999999
+    },
+    "DCWF_621_2839": {
+      "description": "Supervise and assign work to programmers, designers, technologists and technicians, and other engineering and scientific personnel.",
+      "work_role": "Software Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "technologists",
+        "other",
+        "designers",
+        "work",
+        "personnel",
+        "scientific",
+        "supervise",
+        "programmers",
+        "technicians",
+        "engineering",
+        "assign"
+      ],
+      "ai_vulnerability_score": 0.06666666666666667
+    },
+    "DCWF_621_5200": {
+      "description": "Design, implement, test, and evaluate secure interfaces between information systems, physical systems, and/or embedded technologies.",
+      "work_role": "Software Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "systems",
+        "evaluate",
+        "between",
+        "information",
+        "design",
+        "secure",
+        "technologies",
+        "embedded",
+        "implement",
+        "physical",
+        "interfaces",
+        "test"
+      ],
+      "ai_vulnerability_score": 0.06666666666666667
+    },
+    "DCWF_621_726": {
+      "description": "Oversee and make recommendations regarding configuration management.",
+      "work_role": "Software Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "make",
+        "management",
+        "recommendations",
+        "configuration",
+        "regarding",
+        "oversee"
+      ],
+      "ai_vulnerability_score": 0.06666666666666667
+    },
+    "DCWF_632_999C": {
+      "description": "Collaborate on cybersecurity professionals to implement cybersecurity into designs to meet specific operational needs and environmental factors (e.g., access controls, automated applications, networked operations, high integrity and availability requirements, multilevel security/processing of multiple classification levels, and processing Sensitive Compartmented Information).",
+      "work_role": "Systems Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "high",
+        "multiple",
+        "specific",
+        "processing",
+        "classification",
+        "information",
+        "cybersecurity",
+        "multilevel",
+        "requirements",
+        "controls",
+        "applications",
+        "availability",
+        "networked",
+        "factors",
+        "designs",
+        "levels",
+        "into",
+        "integrity",
+        "access",
+        "professionals",
+        "environmental",
+        "needs",
+        "operational",
+        "security",
+        "implement",
+        "collaborate",
+        "compartmented",
+        "operations",
+        "automated",
+        "meet",
+        "sensitive"
+      ],
+      "ai_vulnerability_score": 0.06666666666666667
+    },
+    "DCWF_632_500B": {
+      "description": "Design hardware, operating systems, or software applications to adequately address requirements.",
+      "work_role": "Systems Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "systems",
+        "address",
+        "requirements",
+        "design",
+        "applications",
+        "adequately",
+        "hardware",
+        "software",
+        "operating"
+      ],
+      "ai_vulnerability_score": 0.06666666666666667
+    },
+    "DCWF_632_530A": {
+      "description": "Develop detailed design documentation for component and interface specifications to support system design and development.",
+      "work_role": "Systems Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "documentation",
+        "interface",
+        "system",
+        "develop",
+        "specifications",
+        "design",
+        "component",
+        "development",
+        "detailed",
+        "support"
+      ],
+      "ai_vulnerability_score": 0.16666666666666666
+    },
+    "DCWF_632_1000A": {
+      "description": "Ensure design and development activities are properly documented (providing a functional description of implementation) and updated as necessary.",
+      "work_role": "Systems Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "necessary",
+        "properly",
+        "updated",
+        "activities",
+        "implementation",
+        "documented",
+        "design",
+        "functional",
+        "providing",
+        "description",
+        "development",
+        "ensure"
+      ],
+      "ai_vulnerability_score": 0.06666666666666667
+    },
+    "DCWF_632_659A": {
+      "description": "Implement designs for new or existing system(s).",
+      "work_role": "Systems Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "implement",
+        "designs",
+        "system",
+        "existing"
+      ],
+      "ai_vulnerability_score": 0.06666666666666667
+    },
+    "DCWF_632_416A": {
+      "description": "Analyze design constraints, analyze trade-offs and security design, and consider lifecycle support.",
+      "work_role": "Systems Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "offs",
+        "design",
+        "lifecycle",
+        "constraints",
+        "security",
+        "trade",
+        "analyze",
+        "support",
+        "consider"
+      ],
+      "ai_vulnerability_score": 0.06666666666666667
+    },
+    "DCWF_632_998A": {
+      "description": "Analyze user needs and requirements to plan and conduct system development.",
+      "work_role": "Systems Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "system",
+        "requirements",
+        "needs",
+        "plan",
+        "development",
+        "user",
+        "conduct",
+        "analyze"
+      ],
+      "ai_vulnerability_score": 0.0
+    },
+    "DCWF_632_431A": {
+      "description": "Build, assess, and modify product prototypes using working models or theoretical models.",
+      "work_role": "Systems Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "working",
+        "assess",
+        "models",
+        "using",
+        "theoretical",
+        "product",
+        "prototypes",
+        "build",
+        "modify"
+      ],
+      "ai_vulnerability_score": 0.0
+    },
+    "DCWF_632_5110": {
+      "description": "Conduct a market analysis to identify, assess, and recommend commercial, GOTS, and open source products for use within a system and ensure recommended products are in compliance with organization's evaluation and validation requirements.",
+      "work_role": "Systems Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "system",
+        "identify",
+        "compliance",
+        "ensure",
+        "requirements",
+        "organization",
+        "recommended",
+        "commercial",
+        "assess",
+        "open",
+        "products",
+        "market",
+        "within",
+        "evaluation",
+        "recommend",
+        "source",
+        "analysis",
+        "validation",
+        "gots",
+        "conduct"
+      ],
+      "ai_vulnerability_score": 0.13333333333333333
+    },
+    "DCWF_632_494": {
+      "description": "Design and develop cybersecurity or cybersecurity-enabled products.",
+      "work_role": "Systems Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "products",
+        "develop",
+        "design",
+        "cybersecurity",
+        "enabled"
+      ],
+      "ai_vulnerability_score": 0.06666666666666667
+    },
+    "DCWF_632_5190": {
+      "description": "Design and develop system administration and management functionality for privileged access users.",
+      "work_role": "Systems Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "administration",
+        "management",
+        "system",
+        "users",
+        "develop",
+        "access",
+        "privileged",
+        "functionality",
+        "design"
+      ],
+      "ai_vulnerability_score": 0.03333333333333333
+    },
+    "DCWF_632_501": {
+      "description": "Design or integrate appropriate data backup capabilities into overall system designs, and ensure appropriate technical and procedural processes exist for secure system backups and protected storage of backup data.",
+      "work_role": "Systems Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "system",
+        "technical",
+        "design",
+        "ensure",
+        "capabilities",
+        "backup",
+        "exist",
+        "appropriate",
+        "designs",
+        "into",
+        "data",
+        "integrate",
+        "overall",
+        "backups",
+        "storage",
+        "protected",
+        "secure",
+        "procedural",
+        "processes"
+      ],
+      "ai_vulnerability_score": 0.06666666666666667
+    },
+    "DCWF_632_503A": {
+      "description": "Design to security requirements to ensure requirements are met for all systems and/or applications.",
+      "work_role": "Systems Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "systems",
+        "requirements",
+        "design",
+        "applications",
+        "security",
+        "ensure"
+      ],
+      "ai_vulnerability_score": 0.06666666666666667
+    },
+    "DCWF_632_5200A": {
+      "description": "Design, implement, assess, and evaluate secure interfaces between information systems, physical systems, and/or embedded technologies.",
+      "work_role": "Systems Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "systems",
+        "evaluate",
+        "assess",
+        "between",
+        "information",
+        "design",
+        "secure",
+        "technologies",
+        "embedded",
+        "implement",
+        "physical",
+        "interfaces"
+      ],
+      "ai_vulnerability_score": 0.06666666666666667
+    },
+    "DCWF_632_516A": {
+      "description": "Develop testing and validation procedures and documentation.",
+      "work_role": "Systems Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "documentation",
+        "develop",
+        "procedures",
+        "testing",
+        "validation"
+      ],
+      "ai_vulnerability_score": 0.09999999999999999
+    },
+    "DCWF_632_527": {
+      "description": "Develop architectures or system components consistent with technical specifications.",
+      "work_role": "Systems Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "architectures",
+        "system",
+        "technical",
+        "develop",
+        "specifications",
+        "components",
+        "consistent"
+      ],
+      "ai_vulnerability_score": 0.06666666666666667
+    },
+    "DCWF_632_999A": {
+      "description": "Develop designs to meet specific operational needs and environmental factors (e.g., access controls, automated applications, networked operations.",
+      "work_role": "Systems Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "operations",
+        "automated",
+        "develop",
+        "access",
+        "specific",
+        "environmental",
+        "factors",
+        "meet",
+        "operational",
+        "needs",
+        "controls",
+        "applications",
+        "networked",
+        "designs"
+      ],
+      "ai_vulnerability_score": 0.06666666666666667
+    },
+    "DCWF_632_531": {
+      "description": "Develop Disaster Recovery and Continuity of Operations plans for systems under development and ensure testing prior to systems entering a production environment.",
+      "work_role": "Systems Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "operations",
+        "systems",
+        "continuity",
+        "recovery",
+        "under",
+        "environment",
+        "develop",
+        "production",
+        "entering",
+        "prior",
+        "disaster",
+        "testing",
+        "development",
+        "plans",
+        "ensure"
+      ],
+      "ai_vulnerability_score": 0.0
+    },
+    "DCWF_632_542B": {
+      "description": "Develop risk mitigation strategies and cybersecurity countermeasures to address cost, performance, and security risks and to resolve vulnerabilities and recommend security changes to system or system components as needed.",
+      "work_role": "Systems Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "risk",
+        "performance",
+        "needed",
+        "system",
+        "develop",
+        "recommend",
+        "strategies",
+        "address",
+        "changes",
+        "components",
+        "vulnerabilities",
+        "risks",
+        "mitigation",
+        "security",
+        "cost",
+        "cybersecurity",
+        "countermeasures",
+        "resolve"
+      ],
+      "ai_vulnerability_score": 0.0
+    },
+    "DCWF_632_2354": {
+      "description": "Employ configuration management processes.",
+      "work_role": "Systems Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "configuration",
+        "employ",
+        "management",
+        "processes"
+      ],
+      "ai_vulnerability_score": 0.06666666666666667
+    },
+    "DCWF_632_630": {
+      "description": "Identify and direct the remediation of technical problems encountered during testing and implementation of new systems (e.g., identify and find work-arounds for communication protocols that are not interoperable).",
+      "work_role": "Systems Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "systems",
+        "arounds",
+        "identify",
+        "technical",
+        "during",
+        "find",
+        "protocols",
+        "implementation",
+        "interoperable",
+        "remediation",
+        "work",
+        "direct",
+        "testing",
+        "communication",
+        "encountered",
+        "that",
+        "problems"
+      ],
+      "ai_vulnerability_score": 0.0
+    },
+    "DCWF_632_632": {
+      "description": "Identify and prioritize essential system functions or sub-systems required to support essential capabilities or business functions for restoration or recovery after a system failure or during a system recovery event based on overall system requirements for continuity and availability.",
+      "work_role": "Systems Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "restoration",
+        "failure",
+        "system",
+        "identify",
+        "required",
+        "prioritize",
+        "functions",
+        "systems",
+        "capabilities",
+        "requirements",
+        "based",
+        "availability",
+        "support",
+        "overall",
+        "essential",
+        "recovery",
+        "event",
+        "continuity",
+        "during",
+        "business",
+        "after"
+      ],
+      "ai_vulnerability_score": 0.0
+    },
+    "DCWF_632_626A": {
+      "description": "Identify components or elements, allocate comprehensive functional components to include security functions, and describe the relationships between the elements.",
+      "work_role": "Systems Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "comprehensive",
+        "describe",
+        "identify",
+        "components",
+        "between",
+        "functional",
+        "relationships",
+        "allocate",
+        "security",
+        "include",
+        "functions",
+        "elements"
+      ],
+      "ai_vulnerability_score": 0.0
+    },
+    "DCWF_632_648": {
+      "description": "Identify, assess, and recommend cybersecurity or cybersecurity-enabled products for use within a system and ensure recommended products are in compliance with organization's evaluation and validation requirements.",
+      "work_role": "Systems Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "system",
+        "identify",
+        "recommended",
+        "evaluation",
+        "assess",
+        "recommend",
+        "products",
+        "compliance",
+        "requirements",
+        "validation",
+        "organization",
+        "cybersecurity",
+        "enabled",
+        "ensure",
+        "within"
+      ],
+      "ai_vulnerability_score": 0.03333333333333333
+    },
+    "DCWF_632_1152A": {
+      "description": "Implement and integrate systems engineering methodologies into development environment.",
+      "work_role": "Systems Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "systems",
+        "integrate",
+        "environment",
+        "development",
+        "methodologies",
+        "implement",
+        "into",
+        "engineering"
+      ],
+      "ai_vulnerability_score": 0.0
+    },
+    "DCWF_632_5400": {
+      "description": "Incorporates risk-driven systems maintenance updates process to address system deficiencies (periodically and out of cycle).",
+      "work_role": "Systems Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "risk",
+        "systems",
+        "driven",
+        "maintenance",
+        "process",
+        "system",
+        "periodically",
+        "address",
+        "incorporates",
+        "cycle",
+        "updates",
+        "deficiencies"
+      ],
+      "ai_vulnerability_score": 0.0
+    },
+    "DCWF_632_770": {
+      "description": "Perform risk analysis (e.g., threat, vulnerability, and probability of occurrence) whenever an application or system undergoes a major change.",
+      "work_role": "Systems Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "risk",
+        "change",
+        "whenever",
+        "system",
+        "vulnerability",
+        "application",
+        "undergoes",
+        "probability",
+        "analysis",
+        "major",
+        "occurrence",
+        "threat",
+        "perform"
+      ],
+      "ai_vulnerability_score": 0.09999999999999999
+    },
+    "DCWF_632_766A": {
+      "description": "Perform security reviews and identify security gaps in architecture.",
+      "work_role": "Systems Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "gaps",
+        "identify",
+        "reviews",
+        "architecture",
+        "security",
+        "perform"
+      ],
+      "ai_vulnerability_score": 0.06666666666666667
+    },
+    "DCWF_632_803": {
+      "description": "Provide guidelines for implementing developed systems to customers or installation teams.",
+      "work_role": "Systems Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "installation",
+        "systems",
+        "customers",
+        "teams",
+        "provide",
+        "implementing",
+        "guidelines",
+        "developed"
+      ],
+      "ai_vulnerability_score": 0.0
+    },
+    "DCWF_632_808B": {
+      "description": "Provide input to implementation plans, standard operating procedures, maintenance documentation, and maintenance training materials",
+      "work_role": "Systems Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "maintenance",
+        "input",
+        "documentation",
+        "materials",
+        "training",
+        "implementation",
+        "procedures",
+        "provide",
+        "standard",
+        "plans",
+        "operating"
+      ],
+      "ai_vulnerability_score": 0.06666666666666667
+    },
+    "DCWF_632_809": {
+      "description": "Provide input to the Risk Management Framework process activities and related documentation (e.g., system life-cycle support plans, concept of operations, operational procedures, and maintenance training materials).",
+      "work_role": "Systems Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "documentation",
+        "materials",
+        "management",
+        "system",
+        "related",
+        "concept",
+        "maintenance",
+        "input",
+        "process",
+        "cycle",
+        "support",
+        "framework",
+        "procedures",
+        "provide",
+        "operational",
+        "plans",
+        "risk",
+        "operations",
+        "life",
+        "training",
+        "activities"
+      ],
+      "ai_vulnerability_score": 0.033333333333333326
+    },
+    "DCWF_632_856A": {
+      "description": "Provide support to test and evaluation activities.",
+      "work_role": "Systems Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "evaluation",
+        "activities",
+        "provide",
+        "support",
+        "test"
+      ],
+      "ai_vulnerability_score": 0.06666666666666667
+    },
+    "DCWF_632_850": {
+      "description": "Store, retrieve, and manipulate data for analysis of system capabilities and requirements.",
+      "work_role": "Systems Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "system",
+        "capabilities",
+        "store",
+        "retrieve",
+        "requirements",
+        "analysis",
+        "manipulate",
+        "data"
+      ],
+      "ai_vulnerability_score": 0.09999999999999999
+    },
+    "DCWF_632_860A": {
+      "description": "Trace system requirements to design components and perform gap analysis.",
+      "work_role": "Systems Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "system",
+        "components",
+        "requirements",
+        "design",
+        "analysis",
+        "trace",
+        "perform"
+      ],
+      "ai_vulnerability_score": 0.16666666666666666
+    },
+    "DCWF_632_874": {
+      "description": "Utilize models and simulations to analyze or predict system performance under different operating conditions.",
+      "work_role": "Systems Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "analyze",
+        "performance",
+        "utilize",
+        "simulations",
+        "system",
+        "under",
+        "models",
+        "conditions",
+        "different",
+        "operating",
+        "predict"
+      ],
+      "ai_vulnerability_score": 0.0
+    },
+    "DCWF_632_877A": {
+      "description": "Verify stability, interoperability, portability, and/or scalability of system architecture.",
+      "work_role": "Systems Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "stability",
+        "system",
+        "verify",
+        "interoperability",
+        "architecture",
+        "scalability",
+        "portability"
+      ],
+      "ai_vulnerability_score": 0.06666666666666667
+    },
+    "DCWF_632_602": {
+      "description": "Evaluate factors such as reporting formats required, cost constraints, and need for security restrictions to determine hardware configuration.",
+      "work_role": "Systems Developer",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "determine",
+        "such",
+        "evaluate",
+        "restrictions",
+        "required",
+        "need",
+        "configuration",
+        "constraints",
+        "hardware",
+        "formats",
+        "factors",
+        "security",
+        "reporting",
+        "cost"
+      ],
+      "ai_vulnerability_score": 0.19999999999999998
+    },
+    "DCWF_421_5890": {
+      "description": "Identify data consolidation opportunities across database systems, including data sharing and access between business lines.",
+      "work_role": "Database Administrator",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "systems",
+        "opportunities",
+        "identify",
+        "database",
+        "business",
+        "access",
+        "including",
+        "lines",
+        "between",
+        "across",
+        "sharing",
+        "consolidation",
+        "data"
+      ],
+      "ai_vulnerability_score": 0.0
+    },
+    "DCWF_421_815": {
+      "description": "Provide recommendations on new database technologies and architectures.",
+      "work_role": "Database Administrator",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "architectures",
+        "database",
+        "recommendations",
+        "provide",
+        "technologies"
+      ],
+      "ai_vulnerability_score": 0.06666666666666667
+    },
+    "DCWF_421_401": {
+      "description": "Analyze and plan for anticipated changes in data capacity requirements.",
+      "work_role": "Database Administrator",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "anticipated",
+        "capacity",
+        "changes",
+        "requirements",
+        "plan",
+        "analyze",
+        "data"
+      ],
+      "ai_vulnerability_score": 0.0
+    },
+    "DCWF_421_664A": {
+      "description": "Install and configure database management systems and software.",
+      "work_role": "Database Administrator",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "systems",
+        "management",
+        "database",
+        "configure",
+        "install",
+        "software"
+      ],
+      "ai_vulnerability_score": 0.0
+    },
+    "DCWF_421_684": {
+      "description": "Maintain database management systems software.",
+      "work_role": "Database Administrator",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "systems",
+        "management",
+        "database",
+        "software",
+        "maintain"
+      ],
+      "ai_vulnerability_score": 0.0
+    },
+    "DCWF_421_712": {
+      "description": "Monitor and maintain databases to ensure optimal performance.",
+      "work_role": "Database Administrator",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "databases",
+        "performance",
+        "monitor",
+        "optimal",
+        "maintain",
+        "ensure"
+      ],
+      "ai_vulnerability_score": 0.0
+    },
+    "DCWF_421_740": {
+      "description": "Perform backup and recovery of databases to ensure data integrity.",
+      "work_role": "Database Administrator",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "databases",
+        "recovery",
+        "integrity",
+        "backup",
+        "perform",
+        "ensure",
+        "data"
+      ],
+      "ai_vulnerability_score": 0.0
+    },
+    "DCWF_421_1154": {
+      "description": "Perform configuration management, problem management, capacity management, and financial management for databases and data management systems.",
+      "work_role": "Database Administrator",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "databases",
+        "systems",
+        "management",
+        "capacity",
+        "financial",
+        "configuration",
+        "perform",
+        "problem",
+        "data"
+      ],
+      "ai_vulnerability_score": 0.06666666666666667
+    },
+    "DCWF_421_520A": {
+      "description": "Implement data mining and data warehousing applications.",
+      "work_role": "Database Administrator",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "mining",
+        "warehousing",
+        "applications",
+        "implement",
+        "data"
+      ],
+      "ai_vulnerability_score": 0.0
+    },
+    "DCWF_421_1155": {
+      "description": "Support incident management, service level management, change management, release management, continuity management, and availability management for databases and data management systems.",
+      "work_role": "Database Administrator",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "databases",
+        "change",
+        "release",
+        "management",
+        "continuity",
+        "data",
+        "systems",
+        "incident",
+        "level",
+        "service",
+        "availability",
+        "support"
+      ],
+      "ai_vulnerability_score": 0.0
+    },
+    "DCWF_802_5010": {
+      "description": "Act as a primary stakeholder in the underlying information technology (IT) operational processes and functions that support the service, provide direction and monitor all significant activities so the service is delivered successfully.",
+      "work_role": "IT Project Manager",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "underlying",
+        "monitor",
+        "successfully",
+        "support",
+        "activities",
+        "direction",
+        "information",
+        "technology",
+        "operational",
+        "service",
+        "stakeholder",
+        "provide",
+        "that",
+        "significant",
+        "delivered",
+        "primary",
+        "processes",
+        "functions"
+      ],
+      "ai_vulnerability_score": 0.0
+    },
+    "DCWF_802_5150": {
+      "description": "Coordinate and manage the overall service provided to a customer end-to-end.",
+      "work_role": "IT Project Manager",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "provided",
+        "customer",
+        "overall",
+        "manage",
+        "service",
+        "coordinate"
+      ],
+      "ai_vulnerability_score": 0.0
+    },
+    "DCWF_802_537": {
+      "description": "Develop methods to monitor and measure risk, compliance, and assurance efforts.",
+      "work_role": "IT Project Manager",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "risk",
+        "measure",
+        "monitor",
+        "develop",
+        "compliance",
+        "assurance",
+        "efforts",
+        "methods"
+      ],
+      "ai_vulnerability_score": 0.0
+    },
+    "DCWF_802_1018": {
+      "description": "Ensure all acquisitions, procurements, and outsourcing efforts address information security requirements consistent with organization goals.",
+      "work_role": "IT Project Manager",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "acquisitions",
+        "outsourcing",
+        "procurements",
+        "address",
+        "requirements",
+        "information",
+        "goals",
+        "efforts",
+        "security",
+        "organization",
+        "consistent",
+        "ensure"
+      ],
+      "ai_vulnerability_score": 0.0
+    },
+    "DCWF_802_1148B": {
+      "description": "Ensure supply chain, system, network, performance, and cyber security requirements are included in contract language and delivered.",
+      "work_role": "IT Project Manager",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "performance",
+        "included",
+        "system",
+        "network",
+        "language",
+        "supply",
+        "requirements",
+        "chain",
+        "delivered",
+        "contract",
+        "security",
+        "ensure",
+        "cyber"
+      ],
+      "ai_vulnerability_score": 0.0
+    },
+    "DCWF_802_5310": {
+      "description": "Ensure that appropriate SLAs and underpinning contracts have been defined that clearly set out for the customer a description of the service and the measures for monitoring the service.",
+      "work_role": "IT Project Manager",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "customer",
+        "defined",
+        "measures",
+        "slas",
+        "been",
+        "have",
+        "clearly",
+        "service",
+        "that",
+        "description",
+        "appropriate",
+        "monitoring",
+        "contracts",
+        "ensure",
+        "underpinning"
+      ],
+      "ai_vulnerability_score": 0.09999999999999999
+    },
+    "DCWF_802_949": {
+      "description": "Evaluate the effectiveness of procurement function in addressing information security requirements and supply chain risks through procurement activities and recommend improvements.",
+      "work_role": "IT Project Manager",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "procurement",
+        "improvements",
+        "evaluate",
+        "activities",
+        "addressing",
+        "recommend",
+        "supply",
+        "requirements",
+        "information",
+        "through",
+        "chain",
+        "function",
+        "risks",
+        "security",
+        "effectiveness"
+      ],
+      "ai_vulnerability_score": 0.0
+    },
+    "DCWF_802_5380": {
+      "description": "Gather feedback on customer satisfaction and internal service performance to foster continual improvement.",
+      "work_role": "IT Project Manager",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "performance",
+        "customer",
+        "continual",
+        "foster",
+        "gather",
+        "satisfaction",
+        "internal",
+        "feedback",
+        "service",
+        "improvement"
+      ],
+      "ai_vulnerability_score": 0.0
+    },
+    "DCWF_802_680A": {
+      "description": "Lead and oversee budget, staffing, and contracting.",
+      "work_role": "IT Project Manager",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "lead",
+        "contracting",
+        "budget",
+        "staffing",
+        "oversee"
+      ],
+      "ai_vulnerability_score": 0.0
+    },
+    "DCWF_802_5410": {
+      "description": "Manage the internal relationship with information technology (IT) process owners supporting the service, assisting with the definition and agreement of operating level agreements (OLAs).",
+      "work_role": "IT Project Manager",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "process",
+        "definition",
+        "manage",
+        "agreements",
+        "owners",
+        "internal",
+        "agreement",
+        "supporting",
+        "information",
+        "relationship",
+        "technology",
+        "service",
+        "level",
+        "olas",
+        "assisting",
+        "operating"
+      ],
+      "ai_vulnerability_score": 0.0
+    },
+    "DCWF_802_1017A": {
+      "description": "Participate in the acquisition process as necessary.",
+      "work_role": "IT Project Manager",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "process",
+        "acquisition",
+        "necessary",
+        "participate"
+      ],
+      "ai_vulnerability_score": 0.0
+    },
+    "DCWF_802_760": {
+      "description": "Perform needs analysis to determine opportunities for new and improved business process solutions.",
+      "work_role": "IT Project Manager",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "improved",
+        "opportunities",
+        "process",
+        "determine",
+        "business",
+        "solutions",
+        "needs",
+        "analysis",
+        "perform"
+      ],
+      "ai_vulnerability_score": 0.09999999999999999
+    },
+    "DCWF_802_797": {
+      "description": "Provide advice on project costs, design concepts, or design changes.",
+      "work_role": "IT Project Manager",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "concepts",
+        "changes",
+        "provide",
+        "design",
+        "advice",
+        "costs",
+        "project"
+      ],
+      "ai_vulnerability_score": 0.06666666666666667
+    },
+    "DCWF_802_811": {
+      "description": "Provide ongoing optimization and problem solving support.",
+      "work_role": "IT Project Manager",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "solving",
+        "ongoing",
+        "provide",
+        "optimization",
+        "problem",
+        "support"
+      ],
+      "ai_vulnerability_score": 0.0
+    },
+    "DCWF_802_813": {
+      "description": "Provide recommendations for possible improvements and upgrades.",
+      "work_role": "IT Project Manager",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "improvements",
+        "recommendations",
+        "provide",
+        "possible",
+        "upgrades"
+      ],
+      "ai_vulnerability_score": 0.0
+    },
+    "DCWF_802_840B": {
+      "description": "Review or conduct audits of programs and projects.",
+      "work_role": "IT Project Manager",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "review",
+        "programs",
+        "projects",
+        "audits",
+        "conduct"
+      ],
+      "ai_vulnerability_score": 0.0
+    },
+    "DCWF_802_5610": {
+      "description": "Review service performance reports identifying any significant issues and variances, initiating, where necessary, corrective actions and ensuring that all outstanding issues are followed up.",
+      "work_role": "IT Project Manager",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "performance",
+        "reports",
+        "review",
+        "necessary",
+        "corrective",
+        "identifying",
+        "where",
+        "followed",
+        "ensuring",
+        "service",
+        "actions",
+        "significant",
+        "that",
+        "issues",
+        "outstanding",
+        "initiating",
+        "variances"
+      ],
+      "ai_vulnerability_score": 0.0
+    },
+    "DCWF_802_5660": {
+      "description": "Work with other service managers and product owners to balance and prioritize services to meet overall customer requirements, constraints, and objectives.",
+      "work_role": "IT Project Manager",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "customer",
+        "overall",
+        "other",
+        "balance",
+        "owners",
+        "work",
+        "requirements",
+        "meet",
+        "service",
+        "prioritize",
+        "constraints",
+        "managers",
+        "product",
+        "services",
+        "objectives"
+      ],
+      "ai_vulnerability_score": 0.0
+    },
+    "DCWF_802_1143A": {
+      "description": "Conduct import/export reviews for acquiring systems and software.",
+      "work_role": "IT Project Manager",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "systems",
+        "reviews",
+        "import",
+        "export",
+        "software",
+        "acquiring",
+        "conduct"
+      ],
+      "ai_vulnerability_score": 0.0
+    },
+    "DCWF_802_1003": {
+      "description": "Develop and document supply chain risks for critical system elements, as appropriate.",
+      "work_role": "IT Project Manager",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "document",
+        "system",
+        "develop",
+        "critical",
+        "supply",
+        "chain",
+        "risks",
+        "appropriate",
+        "elements"
+      ],
+      "ai_vulnerability_score": 0.0
+    },
+    "DCWF_802_1148A": {
+      "description": "Develop supply chain, system, network, performance, and cyber security requirements.",
+      "work_role": "IT Project Manager",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "performance",
+        "system",
+        "develop",
+        "network",
+        "supply",
+        "requirements",
+        "chain",
+        "security",
+        "cyber"
+      ],
+      "ai_vulnerability_score": 0.0
+    },
+    "DCWF_802_955A": {
+      "description": "Draft and publish supply chain security and risk management documents.",
+      "work_role": "IT Project Manager",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "risk",
+        "management",
+        "supply",
+        "documents",
+        "chain",
+        "security",
+        "publish",
+        "draft"
+      ],
+      "ai_vulnerability_score": 0.0
+    },
+    "DCWF_802_629A": {
+      "description": "Identify and address cyber workforce planning and management issues (e.g. recruitment, retention, and training).",
+      "work_role": "IT Project Manager",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "management",
+        "identify",
+        "workforce",
+        "training",
+        "address",
+        "planning",
+        "issues",
+        "retention",
+        "recruitment",
+        "cyber"
+      ],
+      "ai_vulnerability_score": 0.0
+    },
+    "DCWF_802_801": {
+      "description": "Provide enterprise cybersecurity and supply chain risk management guidance for development of the Continuity of Operations Plans.",
+      "work_role": "IT Project Manager",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "risk",
+        "operations",
+        "management",
+        "continuity",
+        "plans",
+        "supply",
+        "guidance",
+        "provide",
+        "chain",
+        "development",
+        "cybersecurity",
+        "enterprise"
+      ],
+      "ai_vulnerability_score": 0.0
+    },
+    "DCWF_802_834": {
+      "description": "Resolve conflicts in laws, regulations, policies, standards, or procedures.",
+      "work_role": "IT Project Manager",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "standards",
+        "laws",
+        "regulations",
+        "policies",
+        "procedures",
+        "conflicts",
+        "resolve"
+      ],
+      "ai_vulnerability_score": 0.0
+    },
+    "DCWF_651_413A": {
+      "description": "Analyze user needs and requirements to plan architecture.",
+      "work_role": "Enterprise Architect",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "requirements",
+        "needs",
+        "plan",
+        "architecture",
+        "user",
+        "analyze"
+      ],
+      "ai_vulnerability_score": 0.06666666666666667
+    },
+    "DCWF_651_502B": {
+      "description": "Develop enterprise architecture required to meet user needs.",
+      "work_role": "Enterprise Architect",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "develop",
+        "required",
+        "meet",
+        "architecture",
+        "needs",
+        "user",
+        "enterprise"
+      ],
+      "ai_vulnerability_score": 0.06666666666666667
+    },
+    "DCWF_651_569A": {
+      "description": "Document and update as necessary all definition and architecture activities.",
+      "work_role": "Enterprise Architect",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "definition",
+        "document",
+        "necessary",
+        "activities",
+        "architecture",
+        "update"
+      ],
+      "ai_vulnerability_score": 0.06666666666666667
+    },
+    "DCWF_651_579": {
+      "description": "Ensure acquired or developed system(s) and architecture(s) are consistent with organization's cybersecurity architecture guidelines.",
+      "work_role": "Enterprise Architect",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "system",
+        "architecture",
+        "acquired",
+        "guidelines",
+        "organization",
+        "cybersecurity",
+        "consistent",
+        "ensure",
+        "developed"
+      ],
+      "ai_vulnerability_score": 0.06666666666666667
+    },
+    "DCWF_651_631": {
+      "description": "Identify and prioritize critical business functions in collaboration with organizational stakeholders.",
+      "work_role": "Enterprise Architect",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "stakeholders",
+        "identify",
+        "organizational",
+        "business",
+        "critical",
+        "prioritize",
+        "collaboration",
+        "functions"
+      ],
+      "ai_vulnerability_score": 0.0
+    },
+    "DCWF_651_780A": {
+      "description": "Plan implementation strategy to ensure enterprise components can be integrated and aligned.",
+      "work_role": "Enterprise Architect",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "strategy",
+        "enterprise",
+        "implementation",
+        "components",
+        "integrated",
+        "plan",
+        "aligned",
+        "ensure"
+      ],
+      "ai_vulnerability_score": 0.06666666666666667
+    },
+    "DCWF_651_2014": {
+      "description": "Analyze candidate architectures, allocate security services, and select security mechanisms.",
+      "work_role": "Enterprise Architect",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "architectures",
+        "select",
+        "allocate",
+        "services",
+        "security",
+        "candidate",
+        "analyze",
+        "mechanisms"
+      ],
+      "ai_vulnerability_score": 0.06666666666666667
+    },
+    "DCWF_651_483A": {
+      "description": "Captures and integrates essential system capabilities or business functions required for partial or full system restoration after a catastrophic failure event.",
+      "work_role": "Enterprise Architect",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "restoration",
+        "catastrophic",
+        "partial",
+        "failure",
+        "capabilities",
+        "system",
+        "essential",
+        "business",
+        "captures",
+        "required",
+        "after",
+        "event",
+        "full",
+        "functions",
+        "integrates"
+      ],
+      "ai_vulnerability_score": 0.0
+    },
+    "DCWF_651_484": {
+      "description": "Define appropriate levels of system availability based on critical system functions and ensure system requirements identify appropriate disaster recovery and continuity of operations requirements to include any appropriate fail-over/alternate site requirements, backup requirements, and material supportability requirements for system recover/restoration.",
+      "work_role": "Enterprise Architect",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "restoration",
+        "system",
+        "identify",
+        "critical",
+        "material",
+        "ensure",
+        "supportability",
+        "functions",
+        "recover",
+        "define",
+        "requirements",
+        "backup",
+        "based",
+        "disaster",
+        "availability",
+        "appropriate",
+        "levels",
+        "recovery",
+        "site",
+        "over",
+        "alternate",
+        "operations",
+        "continuity",
+        "fail",
+        "include"
+      ],
+      "ai_vulnerability_score": 0.0
+    },
+    "DCWF_651_994A": {
+      "description": "Document how the implementation of a new system or new interface between systems impacts the current and target environment including but not limited to security posture.",
+      "work_role": "Enterprise Architect",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "systems",
+        "interface",
+        "system",
+        "document",
+        "implementation",
+        "including",
+        "posture",
+        "between",
+        "target",
+        "current",
+        "environment",
+        "security",
+        "impacts",
+        "limited"
+      ],
+      "ai_vulnerability_score": 0.0
+    },
+    "DCWF_651_2390": {
+      "description": "Evaluate security architectures and designs to determine the adequacy of security design and architecture proposed or provided in response to requirements contained in acquisition documents.",
+      "work_role": "Enterprise Architect",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "architectures",
+        "adequacy",
+        "provided",
+        "determine",
+        "response",
+        "evaluate",
+        "acquisition",
+        "contained",
+        "requirements",
+        "documents",
+        "design",
+        "architecture",
+        "proposed",
+        "security",
+        "designs"
+      ],
+      "ai_vulnerability_score": 0.20000000000000004
+    },
+    "DCWF_651_996B": {
+      "description": "Integrate key management functions as related to cyberspace.",
+      "work_role": "Enterprise Architect",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "management",
+        "integrate",
+        "cyberspace",
+        "related",
+        "functions"
+      ],
+      "ai_vulnerability_score": 0.0
+    },
+    "DCWF_651_765A": {
+      "description": "Integrate results regarding the identification of gaps in security architecture.",
+      "work_role": "Enterprise Architect",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "integrate",
+        "gaps",
+        "results",
+        "architecture",
+        "identification",
+        "security",
+        "regarding"
+      ],
+      "ai_vulnerability_score": 0.06666666666666667
+    },
+    "DCWF_651_797": {
+      "description": "Provide advice on project costs, design concepts, or design changes.",
+      "work_role": "Enterprise Architect",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "concepts",
+        "changes",
+        "provide",
+        "design",
+        "advice",
+        "costs",
+        "project"
+      ],
+      "ai_vulnerability_score": 0.06666666666666667
+    },
+    "DCWF_651_809": {
+      "description": "Provide input to the Risk Management Framework process activities and related documentation (e.g., system life-cycle support plans, concept of operations, operational procedures, and maintenance training materials).",
+      "work_role": "Enterprise Architect",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "documentation",
+        "materials",
+        "management",
+        "system",
+        "related",
+        "concept",
+        "maintenance",
+        "input",
+        "process",
+        "cycle",
+        "support",
+        "framework",
+        "procedures",
+        "provide",
+        "operational",
+        "plans",
+        "risk",
+        "operations",
+        "life",
+        "training",
+        "activities"
+      ],
+      "ai_vulnerability_score": 0.033333333333333326
+    },
+    "DCWF_651_1147A": {
+      "description": "Develop data management capabilities (e.g., cloud based, centralized cryptographic key management) to include support to the mobile workforce.",
+      "work_role": "Enterprise Architect",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "management",
+        "capabilities",
+        "workforce",
+        "cryptographic",
+        "develop",
+        "support",
+        "cloud",
+        "based",
+        "centralized",
+        "mobile",
+        "include",
+        "data"
+      ],
+      "ai_vulnerability_score": 0.0
+    },
+    "DCWF_651_864A": {
+      "description": "Translate proposed capabilities into technical requirements.",
+      "work_role": "Enterprise Architect",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "capabilities",
+        "technical",
+        "requirements",
+        "proposed",
+        "translate",
+        "into"
+      ],
+      "ai_vulnerability_score": 0.0
+    },
+    "DCWF_651_2887": {
+      "description": "Write detailed functional specifications that document the architecture development process.",
+      "work_role": "Enterprise Architect",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "process",
+        "document",
+        "write",
+        "specifications",
+        "architecture",
+        "functional",
+        "that",
+        "development",
+        "detailed"
+      ],
+      "ai_vulnerability_score": 0.06666666666666667
+    },
+    "DCWF_651_602": {
+      "description": "Evaluate factors such as reporting formats required, cost constraints, and need for security restrictions to determine hardware configuration.",
+      "work_role": "Enterprise Architect",
+      "specialty_area": "Operate and Maintain (OM)",
+      "keywords": [
+        "determine",
+        "such",
+        "evaluate",
+        "restrictions",
+        "required",
+        "need",
+        "configuration",
+        "constraints",
+        "hardware",
+        "formats",
+        "factors",
+        "security",
+        "reporting",
+        "cost"
+      ],
+      "ai_vulnerability_score": 0.19999999999999998
+    }
+  }
+}

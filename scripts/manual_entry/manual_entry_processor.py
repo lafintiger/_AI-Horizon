@@ -16,7 +16,7 @@ import asyncio
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
-from urllib.parse import urlparse
+from urllib.parse import urlparse, parse_qs
 
 # Add project root to path
 sys.path.append(str(Path(__file__).parent))
@@ -51,7 +51,6 @@ class ManualEntryProcessor:
         """Extract transcript from YouTube video."""
         try:
             from youtube_transcript_api import YouTubeTranscriptApi
-            from urllib.parse import urlparse, parse_qs
             
             # Extract video ID
             video_id = self._extract_youtube_id(url)
