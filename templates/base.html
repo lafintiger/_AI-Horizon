@@ -58,13 +58,18 @@
         .nav-brand h2 {
             margin: 0;
             font-size: 1.5rem;
-            font-weight: 700;
+            font-weight: 900;
+            color: #ffffff;
+            text-shadow: 0 3px 6px rgba(0, 0, 0, 0.8), 0 1px 3px rgba(0, 0, 0, 0.6);
+            letter-spacing: 0.5px;
         }
 
         .nav-subtitle {
             font-size: 0.875rem;
-            color: rgba(255, 255, 255, 0.8);
-            font-weight: 400;
+            color: #ffffff;
+            font-weight: 600;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 1px 2px rgba(0, 0, 0, 0.6);
+            letter-spacing: 0.3px;
         }
 
         .nav-links {
@@ -91,20 +96,21 @@
 
         .nav-group-label {
             font-size: 0.6rem;
-            color: rgba(255, 255, 255, 0.7);
-            font-weight: 600;
+            color: #000000;
+            font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             margin-bottom: 3px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            border-bottom: 1px solid #333333;
             padding-bottom: 1px;
             width: 100%;
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
         }
 
         .nav-link {
-            color: white;
+            color: #000000;
             text-decoration: none;
-            font-weight: 500;
+            font-weight: 600;
             padding: 4px 6px;
             border-radius: 5px;
             transition: all 0.3s ease;
@@ -114,18 +120,21 @@
             align-items: center;
             gap: 3px;
             width: 100%;
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
         }
 
         .nav-link:hover {
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.3);
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            color: #000000;
         }
 
         .nav-link.active {
-            background: rgba(255, 255, 255, 0.25);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            font-weight: 600;
+            background: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+            font-weight: 700;
+            color: #000000;
         }
 
         .nav-link-icon {
@@ -308,7 +317,7 @@
                         <span class="nav-link-icon">⚙️</span>
                         Settings
                     </a>
-                    <a href="/cost_analysis" class="nav-link {% if request.endpoint == 'cost_analysis' %}active{% endif %}">
+                    <a href="/cost-analysis" class="nav-link {% if request.endpoint == 'cost_analysis' %}active{% endif %}">
                         <span class="nav-link-icon">💰</span>
                         Cost Analysis
                     </a>

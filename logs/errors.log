@@ -1208,3 +1208,13 @@
 2025-06-15 11:55:46 | ERROR    | aih.utils.database:get_connection:144 - Database error: cannot access local variable 'datetime' where it is not associated with a value
 2025-06-15 11:56:06 | ERROR    | aih.utils.database:get_connection:144 - Database error: cannot access local variable 'datetime' where it is not associated with a value
 2025-06-15 11:56:11 | ERROR    | aih.utils.database:get_connection:144 - Database error: cannot access local variable 'datetime' where it is not associated with a value
+2025-06-15 14:41:50 | ERROR    | aih.chat.rag_chat:generate_response:236 - Error generating response: Error code: 401 - {'type': 'error', 'error': {'type': 'authentication_error', 'message': 'invalid x-api-key'}}
+2025-06-15 14:47:30 | ERROR    | aih.chat.rag_chat:generate_response:236 - Error generating response: Error code: 401 - {'type': 'error', 'error': {'type': 'authentication_error', 'message': 'invalid x-api-key'}}
+2025-06-15 14:47:52 | ERROR    | aih.chat.rag_chat:generate_response:236 - Error generating response: Error code: 401 - {'type': 'error', 'error': {'type': 'authentication_error', 'message': 'invalid x-api-key'}}
+2025-06-15 14:48:04 | ERROR    | aih.chat.rag_chat:generate_response:236 - Error generating response: Error code: 401 - {'error': {'message': 'Incorrect API key provided: your_ope************here. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_api_key'}}
+2025-06-15 16:39:24 | ERROR    | scripts.manual_entry.manual_entry_processor:ai_categorize_content:214 - Failed to parse AI response as JSON
+2025-06-15 16:39:30 | ERROR    | scripts.manual_entry.manual_entry_processor:ai_categorize_content:214 - Failed to parse AI response as JSON
+2025-06-15 16:39:38 | ERROR    | scripts.manual_entry.manual_entry_processor:ai_categorize_content:214 - Failed to parse AI response as JSON
+2025-06-15 16:39:57 | ERROR    | scripts.manual_entry.manual_entry_processor:ai_categorize_content:214 - Failed to parse AI response as JSON
+2025-06-15 16:40:04 | ERROR    | scripts.manual_entry.manual_entry_processor:ai_categorize_content:214 - Failed to parse AI response as JSON
+2025-06-15 16:40:10 | ERROR    | scripts.manual_entry.manual_entry_processor:ai_categorize_content:214 - Failed to parse AI response as JSON

@@ -26085,3 +26085,621 @@ SUPPORTING_EVIDENCE:
 2025-06-15 12:03:17 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
 2025-06-15 12:03:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
 2025-06-15 12:03:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:04:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:04:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:05:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:05:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:06:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:06:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:07:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:07:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:08:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:08:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:09:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:09:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:10:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:10:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:11:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:11:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:12:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:12:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:13:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:13:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:14:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:14:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:15:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:15:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:16:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:16:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:17:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:17:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:18:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:18:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:19:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:19:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:20:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:20:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:21:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:21:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:22:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:22:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:23:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:23:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:24:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:24:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:25:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:25:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:26:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:26:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:27:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:27:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:28:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:28:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:29:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:29:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:30:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:30:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:31:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:31:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:32:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:32:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:33:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:33:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:34:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:34:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:35:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:35:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:36:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:36:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:37:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:37:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:38:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:38:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:39:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:39:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:40:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:40:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:41:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:41:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:42:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:42:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:43:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:43:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:44:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:44:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:45:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:45:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:46:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:46:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:47:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:47:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:48:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:48:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:49:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:49:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:50:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:50:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:51:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:51:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:52:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:52:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:53:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:53:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:54:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:54:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:55:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:55:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:56:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:56:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:57:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:57:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:58:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:58:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:59:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 12:59:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 13:00:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 13:00:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 13:01:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 13:01:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 13:02:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 13:02:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 13:03:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 13:03:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 13:04:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 13:04:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 13:05:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 13:05:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 13:06:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 13:06:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 13:07:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 13:07:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 13:08:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 13:08:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 13:09:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 13:09:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 13:10:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 13:10:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 13:11:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 13:11:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 13:12:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 13:12:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 13:13:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 13:13:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 13:14:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 13:14:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 13:15:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 13:15:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 13:16:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 13:16:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 13:17:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 13:17:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 13:18:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 13:18:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 13:19:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 13:19:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 13:20:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 13:20:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 13:21:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 13:21:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 13:22:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 13:22:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 13:23:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 13:23:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 13:24:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 13:24:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 13:25:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 13:25:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 13:26:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 13:26:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 13:27:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 13:27:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 13:28:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 13:28:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 13:29:20 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 13:30:52 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 13:42:56 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 13:44:08 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 14:19:16 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 14:19:21 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 14:19:50 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 14:20:20 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 14:21:16 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 14:22:16 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 14:23:16 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 14:24:16 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 14:25:16 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 14:26:16 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 14:27:16 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 14:28:16 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 14:29:16 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 14:30:16 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 14:31:16 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 14:32:16 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 14:33:16 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 14:34:16 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 14:35:16 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 14:36:16 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 14:37:16 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 14:38:05 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 14:40:18 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 14:40:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 14:40:19 | INFO     | __main__:run_server:3470 - Starting AI-Horizon Status Server on http://0.0.0.0:5000
+2025-06-15 14:40:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 14:40:54 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 14:40:54 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 14:41:01 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 14:41:13 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 14:41:44 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 14:41:44 | INFO     | aih.chat.rag_chat:__init__:55 - RAG Chat System initialized with model: claude-3-7-sonnet-20250219
+2025-06-15 14:41:44 | INFO     | aih.chat.rag_chat:__init__:62 - DCWF Framework integration enabled
+2025-06-15 14:41:44 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 14:41:44 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 14:41:44 | INFO     | aih.chat.rag_chat:__init__:55 - RAG Chat System initialized with model: claude-3-5-sonnet-20241022
+2025-06-15 14:41:44 | INFO     | aih.chat.rag_chat:__init__:62 - DCWF Framework integration enabled
+2025-06-15 14:41:50 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 14:41:50 | INFO     | aih.chat.rag_chat:__init__:55 - RAG Chat System initialized with model: claude-3-7-sonnet-20250219
+2025-06-15 14:41:50 | INFO     | aih.chat.rag_chat:__init__:62 - DCWF Framework integration enabled
+2025-06-15 14:41:50 | ERROR    | aih.chat.rag_chat:generate_response:236 - Error generating response: Error code: 401 - {'type': 'error', 'error': {'type': 'authentication_error', 'message': 'invalid x-api-key'}}
+2025-06-15 14:47:30 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 14:47:30 | INFO     | aih.chat.rag_chat:__init__:55 - RAG Chat System initialized with model: claude-3-7-sonnet-20250219
+2025-06-15 14:47:30 | INFO     | aih.chat.rag_chat:__init__:62 - DCWF Framework integration enabled
+2025-06-15 14:47:30 | ERROR    | aih.chat.rag_chat:generate_response:236 - Error generating response: Error code: 401 - {'type': 'error', 'error': {'type': 'authentication_error', 'message': 'invalid x-api-key'}}
+2025-06-15 14:47:41 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 14:47:41 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 14:47:41 | INFO     | __main__:run_server:3470 - Starting AI-Horizon Status Server on http://0.0.0.0:5000
+2025-06-15 14:47:41 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 14:47:52 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 14:47:52 | INFO     | aih.chat.rag_chat:__init__:55 - RAG Chat System initialized with model: claude-3-7-sonnet-20250219
+2025-06-15 14:47:52 | INFO     | aih.chat.rag_chat:__init__:62 - DCWF Framework integration enabled
+2025-06-15 14:47:52 | ERROR    | aih.chat.rag_chat:generate_response:236 - Error generating response: Error code: 401 - {'type': 'error', 'error': {'type': 'authentication_error', 'message': 'invalid x-api-key'}}
+2025-06-15 14:48:04 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 14:48:04 | INFO     | aih.chat.rag_chat:__init__:55 - RAG Chat System initialized with model: gpt-4
+2025-06-15 14:48:04 | INFO     | aih.chat.rag_chat:__init__:62 - DCWF Framework integration enabled
+2025-06-15 14:48:04 | ERROR    | aih.chat.rag_chat:generate_response:236 - Error generating response: Error code: 401 - {'error': {'message': 'Incorrect API key provided: your_ope************here. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'param': None, 'code': 'invalid_api_key'}}
+2025-06-15 14:49:37 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 14:49:37 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 14:49:37 | INFO     | __main__:run_server:3470 - Starting AI-Horizon Status Server on http://0.0.0.0:5000
+2025-06-15 14:49:37 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:29:05 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:29:05 | INFO     | aih.chat.rag_chat:__init__:55 - RAG Chat System initialized with model: claude-3-7-sonnet-20250219
+2025-06-15 15:29:05 | INFO     | aih.chat.rag_chat:__init__:62 - DCWF Framework integration enabled
+2025-06-15 15:29:31 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:29:31 | INFO     | aih.chat.rag_chat:__init__:55 - RAG Chat System initialized with model: gpt-4
+2025-06-15 15:29:31 | INFO     | aih.chat.rag_chat:__init__:62 - DCWF Framework integration enabled
+2025-06-15 15:37:54 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:38:01 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:38:01 | INFO     | aih.chat.rag_chat:__init__:55 - RAG Chat System initialized with model: claude-3-7-sonnet-20250219
+2025-06-15 15:38:01 | INFO     | aih.chat.rag_chat:__init__:62 - DCWF Framework integration enabled
+2025-06-15 15:38:01 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:38:01 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:38:01 | INFO     | aih.chat.rag_chat:__init__:55 - RAG Chat System initialized with model: claude-3-5-sonnet-20241022
+2025-06-15 15:38:01 | INFO     | aih.chat.rag_chat:__init__:62 - DCWF Framework integration enabled
+2025-06-15 15:38:04 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:38:04 | INFO     | aih.chat.rag_chat:__init__:55 - RAG Chat System initialized with model: claude-3-7-sonnet-20250219
+2025-06-15 15:38:04 | INFO     | aih.chat.rag_chat:__init__:62 - DCWF Framework integration enabled
+2025-06-15 15:39:21 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:39:21 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:41:59 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:42:29 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:42:59 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:43:29 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:43:59 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:44:29 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:44:59 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:45:29 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:45:59 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:46:16 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:46:59 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:47:59 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:48:47 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:48:47 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:48:47 | INFO     | __main__:run_server:3475 - Starting AI-Horizon Status Server on http://0.0.0.0:5000
+2025-06-15 15:48:47 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:48:59 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:49:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:50:00 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:50:29 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:51:00 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:51:25 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:51:37 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:52:07 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:52:23 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:52:24 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:52:54 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:53:24 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:53:54 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:54:24 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:54:48 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:54:50 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:54:51 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:54:53 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:55:20 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:55:38 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:55:38 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:55:38 | INFO     | __main__:run_server:3475 - Starting AI-Horizon Status Server on http://0.0.0.0:5000
+2025-06-15 15:55:38 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:55:40 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:56:11 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:56:14 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:56:15 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:56:17 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:56:18 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:56:18 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:56:18 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:56:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:56:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:56:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:56:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:57:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:57:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:58:08 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:58:08 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:58:08 | INFO     | __main__:run_server:3475 - Starting AI-Horizon Status Server on http://0.0.0.0:5000
+2025-06-15 15:58:08 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:58:17 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:58:18 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:58:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:58:36 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:58:37 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:58:37 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:59:07 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 15:59:38 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:00:07 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:00:37 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:01:01 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:01:01 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:01:01 | INFO     | __main__:run_server:3475 - Starting AI-Horizon Status Server on http://0.0.0.0:5000
+2025-06-15 16:01:01 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:01:07 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:01:37 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:01:38 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:01:39 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:01:40 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:01:40 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:02:11 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:02:40 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:03:11 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:03:40 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:04:10 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:04:15 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:04:17 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:04:18 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:04:18 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:04:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:04:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:04:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:04:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:04:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:04:21 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:04:52 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:05:13 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:05:13 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:05:13 | INFO     | __main__:run_server:3475 - Starting AI-Horizon Status Server on http://0.0.0.0:5000
+2025-06-15 16:05:13 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:05:22 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:05:31 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:05:35 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:05:36 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:05:36 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:05:45 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:05:52 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:05:52 | INFO     | aih.chat.rag_chat:__init__:55 - RAG Chat System initialized with model: claude-3-7-sonnet-20250219
+2025-06-15 16:05:52 | INFO     | aih.chat.rag_chat:__init__:62 - DCWF Framework integration enabled
+2025-06-15 16:05:52 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:05:52 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:05:52 | INFO     | aih.chat.rag_chat:__init__:55 - RAG Chat System initialized with model: claude-3-5-sonnet-20241022
+2025-06-15 16:05:52 | INFO     | aih.chat.rag_chat:__init__:62 - DCWF Framework integration enabled
+2025-06-15 16:05:54 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:05:54 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:08:54 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:08:54 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:08:54 | INFO     | __main__:run_server:3475 - Starting AI-Horizon Status Server on http://0.0.0.0:5000
+2025-06-15 16:08:54 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:09:01 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:09:25 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:09:25 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:09:30 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:09:30 | INFO     | aih.chat.rag_chat:__init__:55 - RAG Chat System initialized with model: claude-3-7-sonnet-20250219
+2025-06-15 16:09:30 | INFO     | aih.chat.rag_chat:__init__:62 - DCWF Framework integration enabled
+2025-06-15 16:09:30 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:09:30 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:09:30 | INFO     | aih.chat.rag_chat:__init__:55 - RAG Chat System initialized with model: claude-3-5-sonnet-20241022
+2025-06-15 16:09:30 | INFO     | aih.chat.rag_chat:__init__:62 - DCWF Framework integration enabled
+2025-06-15 16:09:32 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:09:36 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:09:38 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:09:38 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:10:04 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:10:04 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:10:07 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:10:07 | INFO     | aih.chat.rag_chat:__init__:55 - RAG Chat System initialized with model: claude-3-7-sonnet-20250219
+2025-06-15 16:10:07 | INFO     | aih.chat.rag_chat:__init__:62 - DCWF Framework integration enabled
+2025-06-15 16:10:07 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:10:07 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:10:07 | INFO     | aih.chat.rag_chat:__init__:55 - RAG Chat System initialized with model: claude-3-5-sonnet-20241022
+2025-06-15 16:10:07 | INFO     | aih.chat.rag_chat:__init__:62 - DCWF Framework integration enabled
+2025-06-15 16:10:08 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:10:16 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:10:18 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:10:18 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:10:48 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:10:48 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:11:18 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:11:18 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:11:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:11:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:12:18 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:12:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:12:27 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:12:27 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:12:27 | INFO     | __main__:run_server:3475 - Starting AI-Horizon Status Server on http://0.0.0.0:5000
+2025-06-15 16:12:27 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:12:42 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:12:42 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:12:42 | INFO     | __main__:run_server:3475 - Starting AI-Horizon Status Server on http://0.0.0.0:5000
+2025-06-15 16:12:42 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:12:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:12:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:13:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:13:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:13:29 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:13:38 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:13:38 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:14:15 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:14:15 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:16:20 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:16:20 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:16:20 | INFO     | __main__:run_server:3475 - Starting AI-Horizon Status Server on http://0.0.0.0:5000
+2025-06-15 16:16:20 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:20:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:20:23 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:20:23 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:20:31 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:20:39 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:20:39 | INFO     | aih.chat.rag_chat:__init__:55 - RAG Chat System initialized with model: claude-3-7-sonnet-20250219
+2025-06-15 16:20:39 | INFO     | aih.chat.rag_chat:__init__:62 - DCWF Framework integration enabled
+2025-06-15 16:20:40 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:20:40 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:20:40 | INFO     | aih.chat.rag_chat:__init__:55 - RAG Chat System initialized with model: claude-3-5-sonnet-20241022
+2025-06-15 16:20:40 | INFO     | aih.chat.rag_chat:__init__:62 - DCWF Framework integration enabled
+2025-06-15 16:20:43 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:20:43 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:20:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:20:54 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:20:54 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:26:40 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:26:40 | INFO     | aih.utils.database:save_artifact:179 - Saved artifact manual_20250615_162640
+2025-06-15 16:26:40 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:26:40 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:27:11 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:27:11 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:27:41 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:27:41 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:28:11 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:28:11 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:28:40 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:28:40 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:29:10 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:29:10 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:29:40 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:29:40 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:30:11 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:30:11 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:30:41 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:30:41 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:31:22 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:31:22 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:31:53 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:31:53 | INFO     | aih.utils.database:save_artifact:179 - Saved artifact manual_20250615_163153
+2025-06-15 16:31:53 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:31:53 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:32:23 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:32:23 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:32:42 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:32:43 | INFO     | aih.utils.database:save_artifact:179 - Saved artifact manual_20250615_163243
+2025-06-15 16:32:43 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:32:43 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:33:13 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:33:13 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:33:43 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:33:43 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:34:13 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:34:13 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:34:43 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:34:43 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:35:25 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:35:26 | INFO     | aih.utils.database:save_artifact:179 - Saved artifact manual_20250615_163526
+2025-06-15 16:35:26 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:35:26 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:36:10 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:36:11 | INFO     | aih.utils.database:save_artifact:179 - Saved artifact manual_20250615_163611
+2025-06-15 16:36:11 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:36:11 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:36:24 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:36:30 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:36:30 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:37:01 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:37:01 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:37:31 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:37:31 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:38:01 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:38:01 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:38:50 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:38:51 | INFO     | aih.utils.database:save_artifact:179 - Saved artifact manual_20250615_163851
+2025-06-15 16:38:51 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:38:51 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:39:05 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:39:17 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:39:18 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:39:18 | INFO     | scripts.manual_entry.manual_entry_processor:__init__:49 - OpenAI client initialized
+2025-06-15 16:39:18 | INFO     | scripts.manual_entry.manual_entry_processor:ai_categorize_content:164 - Sending content to OpenAI for multi-category analysis
+2025-06-15 16:39:24 | ERROR    | scripts.manual_entry.manual_entry_processor:ai_categorize_content:214 - Failed to parse AI response as JSON
+2025-06-15 16:39:24 | INFO     | aih.utils.database:save_artifact:179 - Saved artifact manual_20250615_163851
+2025-06-15 16:39:24 | INFO     | scripts.manual_entry.manual_entry_processor:ai_categorize_content:164 - Sending content to OpenAI for multi-category analysis
+2025-06-15 16:39:30 | ERROR    | scripts.manual_entry.manual_entry_processor:ai_categorize_content:214 - Failed to parse AI response as JSON
+2025-06-15 16:39:30 | INFO     | aih.utils.database:save_artifact:179 - Saved artifact manual_20250615_163611
+2025-06-15 16:39:31 | INFO     | scripts.manual_entry.manual_entry_processor:ai_categorize_content:164 - Sending content to OpenAI for multi-category analysis
+2025-06-15 16:39:38 | ERROR    | scripts.manual_entry.manual_entry_processor:ai_categorize_content:214 - Failed to parse AI response as JSON
+2025-06-15 16:39:38 | INFO     | aih.utils.database:save_artifact:179 - Saved artifact manual_20250615_163526
+2025-06-15 16:39:38 | INFO     | scripts.manual_entry.manual_entry_processor:ai_categorize_content:164 - Sending content to OpenAI for multi-category analysis
+2025-06-15 16:39:57 | ERROR    | scripts.manual_entry.manual_entry_processor:ai_categorize_content:214 - Failed to parse AI response as JSON
+2025-06-15 16:39:57 | INFO     | aih.utils.database:save_artifact:179 - Saved artifact manual_20250615_163243
+2025-06-15 16:39:57 | INFO     | scripts.manual_entry.manual_entry_processor:ai_categorize_content:164 - Sending content to OpenAI for multi-category analysis
+2025-06-15 16:40:04 | ERROR    | scripts.manual_entry.manual_entry_processor:ai_categorize_content:214 - Failed to parse AI response as JSON
+2025-06-15 16:40:04 | INFO     | aih.utils.database:save_artifact:179 - Saved artifact manual_20250615_163153
+2025-06-15 16:40:04 | INFO     | scripts.manual_entry.manual_entry_processor:ai_categorize_content:164 - Sending content to OpenAI for multi-category analysis
+2025-06-15 16:40:10 | ERROR    | scripts.manual_entry.manual_entry_processor:ai_categorize_content:214 - Failed to parse AI response as JSON
+2025-06-15 16:40:10 | INFO     | aih.utils.database:save_artifact:179 - Saved artifact manual_20250615_162640
+2025-06-15 16:40:11 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:40:13 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:40:13 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:45:32 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:45:32 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:45:32 | INFO     | __main__:run_server:3475 - Starting AI-Horizon Status Server on http://0.0.0.0:5000
+2025-06-15 16:45:32 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:45:35 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:45:43 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:46:10 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:51:03 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:51:03 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:51:03 | INFO     | __main__:run_server:3475 - Starting AI-Horizon Status Server on http://0.0.0.0:5000
+2025-06-15 16:51:03 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:51:17 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:51:26 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:51:38 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:51:47 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:51:56 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:52:33 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:55:12 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:55:12 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:55:12 | INFO     | __main__:run_server:3475 - Starting AI-Horizon Status Server on http://0.0.0.0:5000
+2025-06-15 16:55:12 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:55:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:55:30 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:55:39 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:55:51 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:56:18 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:58:23 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:58:23 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:58:23 | INFO     | __main__:run_server:3475 - Starting AI-Horizon Status Server on http://0.0.0.0:5000
+2025-06-15 16:58:23 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:58:29 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 16:58:42 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 17:00:56 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 17:00:56 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 17:00:56 | INFO     | __main__:run_server:3475 - Starting AI-Horizon Status Server on http://0.0.0.0:5000
+2025-06-15 17:00:56 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 17:01:02 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 17:01:12 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 17:01:24 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 17:01:53 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 17:03:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 17:03:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 17:03:19 | INFO     | __main__:run_server:3475 - Starting AI-Horizon Status Server on http://0.0.0.0:5000
+2025-06-15 17:03:19 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 17:03:29 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 17:08:25 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 17:08:25 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 17:08:25 | INFO     | __main__:run_server:3175 - Starting AI-Horizon Status Server on http://0.0.0.0:5000
+2025-06-15 17:08:25 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 17:08:35 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 17:08:35 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 17:08:40 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 17:09:24 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 17:09:24 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 17:09:24 | INFO     | __main__:run_server:3177 - Starting AI-Horizon Status Server on http://0.0.0.0:5000
+2025-06-15 17:09:24 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 17:09:32 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 17:10:29 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 17:10:29 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 17:10:29 | INFO     | __main__:run_server:3182 - Starting AI-Horizon Status Server on http://0.0.0.0:5000
+2025-06-15 17:10:29 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 17:10:36 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 17:13:24 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 17:13:24 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 17:13:24 | INFO     | __main__:run_server:3211 - Starting AI-Horizon Status Server on http://0.0.0.0:5000
+2025-06-15 17:13:24 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 17:13:33 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 17:13:41 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 17:13:49 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 17:13:59 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 17:14:14 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 17:15:08 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 17:18:53 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 17:18:53 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 17:18:53 | INFO     | __main__:run_server:3235 - Starting AI-Horizon Status Server on http://0.0.0.0:5000
+2025-06-15 17:18:53 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 17:18:59 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 17:19:08 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 17:19:16 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 17:19:25 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 17:19:34 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 17:19:43 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 17:19:53 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 17:20:54 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 17:21:18 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 17:24:56 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 17:24:56 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 17:24:56 | INFO     | __main__:run_server:3235 - Starting AI-Horizon Status Server on http://0.0.0.0:5000
+2025-06-15 17:24:56 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully
+2025-06-15 17:29:37 | INFO     | aih.utils.database:_initialize_database:122 - Database initialized successfully

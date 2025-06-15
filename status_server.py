@@ -615,15 +615,18 @@ def start_comprehensive_collection():
     """Alias for start_collection - comprehensive collection of all categories."""
     return start_collection()
 
-@app.route('/manual-entry')
+@app.route('/manual_entry')
 def manual_entry():
     """Manual entry page for uploading content."""
     return render_template('manual_entry.html')
 
 @app.route('/browse_entries')
 def browse_entries():
-    """Browse all manual entries and artifacts."""
+    """Browse all manual entries and artifacts, with optional category filtering."""
     try:
+        # Get category filter from URL parameter
+        category_filter = request.args.get('category')
+        
         db = DatabaseManager()
         all_artifacts = db.get_artifacts(limit=100)
         
@@ -647,6 +650,25 @@ def browse_entries():
                 artifact_with_score['quality_grade'] = 'Unknown'
                 artifacts_with_scores.append(artifact_with_score)
         
+        # Filter by category if specified
+        if category_filter:
+            filtered_artifacts = []
+            for artifact in artifacts_with_scores:
+                metadata = json.loads(artifact.get('raw_metadata', '{}'))
+                
+                # Check if artifact belongs to the filtered category
+                ai_categories = metadata.get('ai_impact_categories', {})
+                ai_category = metadata.get('ai_impact_category')
+                
+                if ai_categories and category_filter in ai_categories:
+                    filtered_artifacts.append(artifact)
+                elif ai_category == category_filter:
+                    filtered_artifacts.append(artifact)
+                elif category_filter == 'general' and not ai_categories and not ai_category:
+                    filtered_artifacts.append(artifact)
+            
+            artifacts_with_scores = filtered_artifacts
+        
         # Sort by quality score (highest first)
         artifacts_with_scores.sort(key=lambda x: x['quality_score'], reverse=True)
         
@@ -664,334 +686,38 @@ def browse_entries():
         
         automated_entries.sort(key=sort_key, reverse=True)
         
-        # Count by category
+        # Count by category (always show full counts, not filtered)
         category_counts = {}
-        for artifact in artifacts_with_scores:
+        all_artifacts_for_counting = db.get_artifacts(limit=100)  # Get fresh data for counting
+        for artifact in all_artifacts_for_counting:
             metadata = json.loads(artifact.get('raw_metadata', '{}'))
-            category = metadata.get('category', 'general')
-            category_counts[category] = category_counts.get(category, 0) + 1
+            
+            # Check for multi-category analysis first
+            ai_categories = metadata.get('ai_impact_categories', {})
+            if ai_categories:
+                # For multi-category entries, count each category
+                for category in ai_categories.keys():
+                    category_counts[category] = category_counts.get(category, 0) + 1
+            else:
+                # Check for single category (legacy)
+                ai_category = metadata.get('ai_impact_category')
+                if ai_category:
+                    category_counts[ai_category] = category_counts.get(ai_category, 0) + 1
+                else:
+                    # Unprocessed entries go to general
+                    category_counts['general'] = category_counts.get('general', 0) + 1
         
         return render_template('browse_entries.html',
                              manual_entries=manual_entries,
                              automated_entries=automated_entries,
                              category_counts=category_counts,
                              total_manual=len(manual_entries),
-                             total_automated=len(automated_entries))
-                             
-    except Exception as e:
-        flash(f'Error browsing entries: {str(e)}', 'error')
-        return redirect(url_for('manual_entry'))
-
-@app.route('/view_entry/<artifact_id>')
-def view_entry(artifact_id):
-    """View detailed information about a specific entry."""
-    try:
-        db = DatabaseManager()
-        artifact = db.get_artifact_by_id(artifact_id)
-        
-        if not artifact:
-            flash('Entry not found!', 'error')
-            return redirect(url_for('browse_entries'))
-        
-        # Parse metadata if it exists
-        metadata = {}
-        if artifact.get('raw_metadata'):
-            try:
-                metadata = json.loads(artifact['raw_metadata'])
-            except:
-                pass
-        
-        return render_template('view_entry.html', 
-                             artifact=artifact, 
-                             metadata=metadata)
-                             
-    except Exception as e:
-        flash(f'Error viewing entry: {str(e)}', 'error')
-        return redirect(url_for('browse_entries'))
-
-@app.route('/process_entries')
-def process_entries():
-    """Process manual entries through AI categorization."""
-    try:
-        db = DatabaseManager()
-        artifacts = db.get_artifacts(limit=500)
-        
-        # Get manual entries that need processing (no ai_impact_category)
-        manual_entries = []
-        for artifact in artifacts:
-            if artifact.get('source_type', '').startswith('manual_'):
-                # Parse metadata to check processing status
-                metadata = json.loads(artifact.get('raw_metadata', '{}'))
-                
-                # Only include if not already processed
-                if not metadata.get('ai_impact_category'):
-                    manual_entries.append(artifact)
-        
-        if not manual_entries:
-            flash('No manual entries need processing. All entries have been processed!', 'success')
-            return redirect(url_for('browse_entries'))
-        
-        return render_template('process_entries.html', 
-                             entries=manual_entries,
-                             total_count=len(manual_entries))
-                             
-    except Exception as e:
-        flash(f'Error accessing processing: {str(e)}', 'error')
-        return redirect(url_for('manual_entry'))
-
-@app.route('/methodology')
-def methodology():
-    """Research methodology page."""
-    return render_template('methodology.html')
-
-@app.route('/workflow')
-def workflow():
-    """System workflow and architecture visualization page."""
-    return render_template('workflow.html')
-
-@app.route('/reports')
-def reports():
-    """Reports page."""
-    return render_template('reports.html')
-
-@app.route('/analysis')
-def analysis():
-    """Analysis tools page."""
-    return render_template('analysis.html')
-
-@app.route('/chat')
-def chat():
-    """Enhanced RAG chat interface for querying collected documents with DCWF integration."""
-    try:
-        from aih.chat.rag_chat import RAGChatSystem
-        
-        # Initialize RAG system with default model
-        rag_system = RAGChatSystem(model="claude-3-7-sonnet-20250219")
-        
-        # Get article summary for context
-        summary = rag_system.get_article_summary()
-        
-        # Get database stats for sidebar
-        db = DatabaseManager()
-        stats = db.get_database_stats()
-        
-        return render_template('chat.html', 
-                             article_summary=summary,
-                             database_stats=stats,
-                             available_models=[
-                                 'claude-3-7-sonnet-20250219',  # Default
-                                 'claude-4-sonnet-20250514',    # Claude 4 Sonnet  
-                                 'claude-4-opus-20250514',      # Claude 4 Opus
-                                 'claude-3-5-sonnet-20241022',  # Previous Claude 3.5
-                                 'gpt-4o',                       # GPT-4o
-                                 'gpt-4',                        # GPT-4
-                                 'gpt-3.5-turbo'                # GPT-3.5 Turbo
-                             ])
-    except Exception as e:
-        logger.error(f"Error loading chat interface: {e}")
-        return render_template('error.html', error=f'Error loading chat interface: {str(e)}')
-
-@app.route('/summaries')
-def summaries():
-    """Current summaries page with LLM-generated category insights."""
-    return render_template('summaries.html')
-
-
-@app.route('/settings')
-def settings():
-    """Settings page (placeholder)."""
-    return render_template('settings.html')
-
-@app.route('/api/reports')
-def api_reports():
-    """Get list of available reports."""
-    try:
-        reports_dir = Path('data/reports')
-        reports = []
-        
-        if reports_dir.exists():
-            # Get both markdown and HTML files
-            for report_file in reports_dir.glob('*.md'):
-                stat = report_file.stat()
-                # Clean path to remove any potential line ending characters
-                clean_path = str(report_file).replace('\\', '/').strip()
-                reports.append({
-                    'name': report_file.name,
-                    'path': clean_path,
-                    'size': f"{stat.st_size / 1024:.1f} KB",
-                    'created': stat.st_mtime,
-                    'type': 'student'  # Mark as student report
-                })
-                
-            for report_file in reports_dir.glob('*.html'):
-                stat = report_file.stat()
-                # Clean path to remove any potential line ending characters
-                clean_path = str(report_file).replace('\\', '/').strip()
-                reports.append({
-                    'name': report_file.name,
-                    'path': clean_path,
-                    'size': f"{stat.st_size / 1024:.1f} KB", 
-                    'created': stat.st_mtime,
-                    'type': 'web'  # Mark as web report
-                })
-        
-        # Sort by creation time (newest first)
-        reports.sort(key=lambda x: x['created'], reverse=True)
-        
-        return jsonify({"reports": reports})
-        
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-@app.route('/api/generate_student_report', methods=['POST'])
-def api_generate_student_report():
-    """Generate student career intelligence report."""
-    try:
-        import subprocess
-        import sys
-        
-        # Use subprocess to run the script directly
-        script_path = "scripts/generate_student_report.py"
-        
-        # Run the script and capture output
-        result = subprocess.run(
-            [sys.executable, script_path],
-            capture_output=True,
-            text=True,
-            cwd=str(Path(__file__).parent)
-        )
-        
-        if result.returncode == 0:
-            # Parse the output to get the filepath
-            output_lines = result.stdout.strip().split('\n')
-            filepath = None
-            
-            # First, look for clean filepath output
-            for line in output_lines:
-                if line.startswith('[FILEPATH]'):
-                    filepath = line.replace('[FILEPATH]', '').strip()
-                    break
-            
-            # Fallback to parsing common report output patterns
-            if not filepath:
-                for line in output_lines:
-                    if 'saved to:' in line.lower() or 'report saved' in line.lower():
-                        # Extract filepath from output line
-                        parts = line.split()
-                        for part in parts:
-                            if 'data' in part and ('.html' in part or '.md' in part):
-                                filepath = part
-                                break
-                        if filepath:
-                            break
-            
-            # Final fallback to scanning for data/reports paths
-            if not filepath:
-                # Look for the last line that might contain the filepath
-                for line in reversed(output_lines):
-                    if 'data' in line and 'reports' in line and ('.html' in line or '.md' in line):
-                        # Try to extract just the file path part
-                        parts = line.split()
-                        for part in parts:
-                            if 'data' in part and ('.html' in part or '.md' in part):
-                                filepath = part
-                                break
-                        if filepath:
-                            break
-            
-            return jsonify({
-                "message": "Student report generated successfully",
-                "filepath": filepath or "Report generated but filepath not found",
-                "output": result.stdout
-            })
-        else:
-            return jsonify({
-                "error": f"Script execution failed: {result.stderr}",
-                "stdout": result.stdout,
-                "returncode": result.returncode
-            }), 500
+                             total_automated=len(automated_entries),
+                             category_filter=category_filter)
             
     except Exception as e:
         import traceback
-        return jsonify({
-            "error": str(e),
-            "traceback": traceback.format_exc()
-        }), 500
-
-@app.route('/api/generate_web_report', methods=['POST'])
-def api_generate_web_report():
-    """Generate web intelligence report."""
-    try:
-        import subprocess
-        import sys
-        
-        # Use subprocess to run the script directly
-        script_path = "scripts/generate_web_report.py"
-        
-        # Run the script and capture output
-        result = subprocess.run(
-            [sys.executable, script_path],
-            capture_output=True,
-            text=True,
-            cwd=str(Path(__file__).parent)
-        )
-        
-        if result.returncode == 0:
-            # Parse the output to get the filepath
-            output_lines = result.stdout.strip().split('\n')
-            filepath = None
-            
-            # First, look for clean filepath output
-            for line in output_lines:
-                if line.startswith('[FILEPATH]'):
-                    filepath = line.replace('[FILEPATH]', '').strip()
-                    break
-            
-            # Fallback to parsing common report output patterns
-            if not filepath:
-                for line in output_lines:
-                    if 'saved to:' in line.lower() or 'report saved' in line.lower():
-                        # Extract filepath from output line
-                        parts = line.split()
-                        for part in parts:
-                            if 'data' in part and ('.html' in part or '.md' in part):
-                                filepath = part
-                                break
-                        if filepath:
-                            break
-            
-            # Final fallback to scanning for data/reports paths
-            if not filepath:
-                # Look for the last line that might contain the filepath
-                for line in reversed(output_lines):
-                    if 'data' in line and 'reports' in line and ('.html' in line or '.md' in line):
-                        # Try to extract just the file path part
-                        parts = line.split()
-                        for part in parts:
-                            if 'data' in part and ('.html' in part or '.md' in part):
-                                filepath = part
-                                break
-                        if filepath:
-                            break
-            
-            return jsonify({
-                "message": "Web report generated successfully", 
-                "filepath": filepath or "Report generated but filepath not found",
-                "output": result.stdout
-            })
-        else:
-            return jsonify({
-                "error": f"Script execution failed: {result.stderr}",
-                "stdout": result.stdout,
-                "returncode": result.returncode
-            }), 500
-            
-    except Exception as e:
-        import traceback
-        return jsonify({
-            "error": str(e),
-            "traceback": traceback.format_exc()
-        }), 500
+        return f"Error loading browse entries: {str(e)}", 500
 
 @app.route('/api/view_report')
 def api_view_report():
@@ -1078,6 +804,11 @@ def add_cost():
         return jsonify({"message": f"Added ${cost:.4f} cost for {api_name}"})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+@app.route('/cost_analysis')
+def cost_analysis_redirect():
+    """Redirect cost_analysis (underscore) to cost-analysis (hyphen)."""
+    return redirect('/cost-analysis')
 
 @app.route('/cost-analysis')
 def cost_analysis():
@@ -3464,6 +3195,40 @@ def api_reprocess_entries():
     except Exception as e:
         logger.error(f"Reprocessing API error: {e}")
         return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/process_entries')
+def process_entries():
+    """Redirect to reprocess interface for processing entries."""
+    return redirect('/reprocess')
+
+@app.route('/view_entry/<artifact_id>')
+def view_entry(artifact_id):
+    """View detailed information about an artifact."""
+    try:
+        db = DatabaseManager()
+        artifact = db.get_artifact_by_id(artifact_id)
+        
+        if not artifact:
+            return f"Artifact not found: {artifact_id}", 404
+        
+        # Calculate quality score if not already present
+        if 'quality_score' not in artifact:
+            try:
+                quality_score, detailed_scores = quality_ranker.calculate_document_score(artifact)
+                artifact['quality_score'] = round(quality_score, 3)
+                artifact['quality_grade'] = (
+                    'Excellent' if quality_score >= 0.8 else
+                    'Good' if quality_score >= 0.6 else
+                    'Fair' if quality_score >= 0.4 else 'Poor'
+                )
+            except Exception as e:
+                artifact['quality_score'] = 0.0
+                artifact['quality_grade'] = 'Unknown'
+        
+        return render_template('view_artifact.html', artifact=artifact)
+        
+    except Exception as e:
+        return f"Error viewing artifact: {str(e)}", 500
 
 def run_server(host='127.0.0.1', port=5000, debug=False):
     """Run the status server."""
