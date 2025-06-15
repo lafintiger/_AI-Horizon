@@ -1,58 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Process Entries - AI-Horizon</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+{% extends "base.html" %}
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            color: #333;
-        }
+{% block title %}Process Entries - AI-Horizon{% endblock %}
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
+{% block extra_styles %}
+<style>
 
-        .nav-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 15px 30px;
-            margin-bottom: 30px;
-            backdrop-filter: blur(10px);
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 20px;
-        }
-
-        .nav-link {
-            color: white;
-            text-decoration: none;
-            padding: 8px 16px;
-            border-radius: 8px;
-            transition: background 0.3s;
-        }
-
-        .nav-link:hover, .nav-link.active {
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            text-decoration: none;
-        }
 
         .main-content {
             background: rgba(255, 255, 255, 0.95);
@@ -228,11 +180,12 @@
             font-size: 0.8em;
             color: #666;
         }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="nav-header">
+</style>
+{% endblock %}
+
+{% block content %}
+    <div class="main-content">
+<div class="nav-header">
             <h1 style="color: white; margin: 0;">🔄 Process Manual Entries</h1>
             <div class="nav-links">
                 <a href="/browse_entries" class="nav-link">← Back to Browse</a>
@@ -611,5 +564,236 @@
         // Initialize
         updateSelectedCount();
     </script>
-</body>
-</html> 
+    </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+let selectedEntries = new Set();
+        let isProcessing = false;
+
+        function updateSelectedCount() {
+            const checkboxes = document.querySelectorAll('.entry-checkbox:checked');
+            selectedEntries.clear();
+            checkboxes.forEach(cb => selectedEntries.add(cb.value));
+            
+            const count = selectedEntries.size;
+            const btn = document.getElementById('processSelectedBtn');
+            btn.textContent = `🎯 Process Selected (${count})`;
+            btn.disabled = count === 0 || isProcessing;
+        }
+
+        function selectAll() {
+            document.querySelectorAll('.entry-checkbox').forEach(cb => {
+                cb.checked = true;
+            });
+            updateSelectedCount();
+        }
+
+        function selectNone() {
+            document.querySelectorAll('.entry-checkbox').forEach(cb => {
+                cb.checked = false;
+            });
+            updateSelectedCount();
+        }
+
+        function showProgress(show = true) {
+            const progressDiv = document.getElementById('processingProgress');
+            const processBtn = document.getElementById('processBtn');
+            const processSelectedBtn = document.getElementById('processSelectedBtn');
+            
+            progressDiv.style.display = show ? 'block' : 'none';
+            processBtn.disabled = show;
+            processSelectedBtn.disabled = show || selectedEntries.size === 0;
+            isProcessing = show;
+            
+            if (show) {
+                // Connect to real-time updates
+                connectToStatusUpdates();
+            }
+        }
+
+        function updateProgress(percent, status, details = '') {
+            const progressFill = document.getElementById('progressFill');
+            const statusText = document.getElementById('statusText');
+            const processingDetails = document.getElementById('processingDetails');
+            
+            progressFill.style.width = `${percent}%`;
+            statusText.textContent = status;
+            if (details) {
+                processingDetails.innerHTML = `<small>${details}</small>`;
+            }
+        }
+
+        function connectToStatusUpdates() {
+            if (window.eventSource) {
+                window.eventSource.close();
+            }
+            
+            window.eventSource = new EventSource('/api/stream');
+            
+            window.eventSource.onmessage = function(event) {
+                try {
+                    const data = JSON.parse(event.data);
+                    
+                    if (data.heartbeat) return; // Ignore heartbeats
+                    
+                    // Update progress if there's an active operation
+                    if (data.is_running && data.current_operation) {
+                        const progress = data.progress || {};
+                        const percent = progress.total > 0 ? (progress.current / progress.total) * 100 : 0;
+                        
+                        let details = '';
+                        if (data.current_operation.includes('Processing')) {
+                            details = '📺 Extracting transcripts... 🧠 AI analyzing content... 📊 Generating insights...';
+                        }
+                        
+                        updateProgress(percent, progress.status || 'Processing...', details);
+                    }
+                    
+                    // Show recent logs
+                    if (data.recent_logs && data.recent_logs.length > 0) {
+                        const latestLog = data.recent_logs[data.recent_logs.length - 1];
+                        if (latestLog.category === 'PROCESSING') {
+                            updateProgress(
+                                document.getElementById('progressFill').style.width ? 
+                                parseInt(document.getElementById('progressFill').style.width) : 0,
+                                latestLog.message,
+                                '🔄 AI processing in progress...'
+                            );
+                        }
+                    }
+                    
+                    // Check if operation completed
+                    if (!data.is_running && isProcessing) {
+                        updateProgress(100, 'Processing completed! Refreshing page...');
+                        setTimeout(() => {
+                            location.reload();
+                        }, 2000);
+                    }
+                    
+                } catch (e) {
+                    console.error('Error parsing status update:', e);
+                }
+            };
+            
+            window.eventSource.onerror = function(event) {
+                console.error('EventSource failed:', event);
+            };
+        }
+
+        async function processAllEntries() {
+            if (isProcessing) return;
+            
+            showProgress(true);
+            updateProgress(0, 'Starting AI processing of all entries...', '🚀 Initializing comprehensive analysis...');
+            
+            try {
+                const response = await fetch('/api/process_all_entries', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    updateProgress(10, result.message, '📺 Extracting YouTube transcripts and analyzing content...');
+                } else {
+                    updateProgress(0, `Error: ${result.error}`, '❌ Processing failed');
+                    setTimeout(() => showProgress(false), 3000);
+                }
+                
+            } catch (error) {
+                updateProgress(0, `Error: ${error.message}`, '❌ Network error');
+                setTimeout(() => showProgress(false), 3000);
+            }
+        }
+
+        async function processSelectedEntries() {
+            if (isProcessing || selectedEntries.size === 0) return;
+            
+            showProgress(true);
+            updateProgress(0, `Starting AI processing of ${selectedEntries.size} selected entries...`, '🎯 Preparing targeted analysis...');
+            
+            try {
+                const response = await fetch('/api/process_selected_entries', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        entry_ids: Array.from(selectedEntries)
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    updateProgress(10, result.message, '📺 Extracting transcripts and running AI analysis...');
+                } else {
+                    updateProgress(0, `Error: ${result.error}`, '❌ Processing failed');
+                    setTimeout(() => showProgress(false), 3000);
+                }
+                
+            } catch (error) {
+                updateProgress(0, `Error: ${error.message}`, '❌ Network error');
+                setTimeout(() => showProgress(false), 3000);
+            }
+        }
+
+        async function processSingleEntry(entryId) {
+            if (isProcessing) return;
+            
+            const button = event.target;
+            const originalText = button.textContent;
+            button.textContent = '🔄 Processing...';
+            button.disabled = true;
+            
+            try {
+                const response = await fetch('/api/process_single_entry', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        entry_id: entryId
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    button.textContent = '✅ Processing Started';
+                    setTimeout(() => {
+                        location.reload(); // Refresh to show updated status
+                    }, 3000);
+                } else {
+                    button.textContent = '❌ Failed';
+                    setTimeout(() => {
+                        button.textContent = originalText;
+                        button.disabled = false;
+                    }, 3000);
+                }
+                
+            } catch (error) {
+                button.textContent = '❌ Error';
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.disabled = false;
+                }, 3000);
+            }
+        }
+        
+        // Clean up event source when page unloads
+        window.addEventListener('beforeunload', function() {
+            if (window.eventSource) {
+                window.eventSource.close();
+            }
+        });
+
+        // Initialize
+        updateSelectedCount();
+</script>
+{% endblock %}

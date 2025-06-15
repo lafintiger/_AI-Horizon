@@ -47,7 +47,7 @@ class Settings(BaseSettings):
     reports_dir: str = Field("./data/reports", env="REPORTS_DIR")
     
     class Config:
-        env_file = ".env"
+        env_file = "config.env"
         case_sensitive = False
 
 # Global settings instance

@@ -38,6 +38,13 @@ numpy>=1.24.0
 pandas>=2.0.0
 scikit-learn>=1.2.0
 
+# Excel Processing (for DCWF framework)
+openpyxl>=3.1.0
+xlrd>=2.0.0
+
+# Web Scraping Enhancement
+lxml>=4.9.0
+
 # CLI & Progress Tracking
 click>=8.1.0
 tqdm>=4.64.0

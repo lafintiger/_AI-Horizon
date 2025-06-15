@@ -224,7 +224,7 @@ def classify(limit, unclassified_only, model):
                     pbar.set_description(f"Classifying: {artifact['title'][:30]}...")
                     
                     # Classify artifact
-                    classifications = await classifier.classify_artifact(artifact)
+                    classifications = classifier.classify_artifact(artifact)
                     
                     # Save classifications
                     for classification in classifications:

@@ -1,58 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upload Document - AI-Horizon</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+{% extends "base.html" %}
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            color: #333;
-        }
+{% block title %}Add File - AI-Horizon{% endblock %}
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
+{% block extra_styles %}
+<style>
 
-        .nav-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 15px 30px;
-            margin-bottom: 30px;
-            backdrop-filter: blur(10px);
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 20px;
-        }
-
-        .nav-link {
-            color: white;
-            text-decoration: none;
-            padding: 8px 16px;
-            border-radius: 8px;
-            transition: background 0.3s;
-        }
-
-        .nav-link:hover, .nav-link.active {
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            text-decoration: none;
-        }
 
         .main-content {
             background: rgba(255, 255, 255, 0.95);
@@ -197,16 +149,18 @@
             margin-top: 10px;
             display: none;
         }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="nav-header">
+</style>
+{% endblock %}
+
+{% block content %}
+    <div class="main-content">
+<div class="nav-header">
             <h1 style="color: white; margin: 0;">🚀 AI-Horizon Manual Entry</h1>
             <div class="nav-links">
                 <a href="/" class="nav-link">📊 Status Dashboard</a>
                 <a href="/reports" class="nav-link">📋 Reports</a>
                 <a href="/analysis" class="nav-link">🔍 Analysis</a>
+                <a href="/reprocess" class="nav-link">🔄 Reprocess</a>
                 <a href="/methodology" class="nav-link">📖 Methodology</a>
                 <a href="/cost-analysis" class="nav-link">💰 Cost Analysis</a>
                 <a href="/manual-entry" class="nav-link active">📝 Manual Entry</a>
@@ -334,5 +288,31 @@
             }
         });
     </script>
-</body>
-</html> 
+    </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.getElementById('file').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const fileInfo = document.getElementById('fileInfo');
+            const fileName = document.getElementById('fileName');
+            const fileSize = document.getElementById('fileSize');
+            
+            if (file) {
+                fileName.textContent = file.name;
+                fileSize.textContent = (file.size / 1024 / 1024).toFixed(2) + ' MB';
+                fileInfo.style.display = 'block';
+                
+                // Auto-fill title if empty
+                const titleField = document.getElementById('title');
+                if (!titleField.value) {
+                    const nameWithoutExt = file.name.replace(/\.[^/.]+$/, "");
+                    titleField.value = nameWithoutExt;
+                }
+            } else {
+                fileInfo.style.display = 'none';
+            }
+        });
+</script>
+{% endblock %}

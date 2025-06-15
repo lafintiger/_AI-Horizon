@@ -716,6 +716,65 @@ Output JSON format:
             "loaded_at": datetime.now().isoformat()
         }
     
+    def get_work_role_details(self, role_name: str) -> Optional[Dict[str, Any]]:
+        """Get detailed information about a specific work role."""
+        # Find the work role by name
+        target_role = None
+        for role in self.work_roles.values():
+            if role.role_name.lower() == role_name.lower():
+                target_role = role
+                break
+        
+        if not target_role:
+            return None
+        
+        return {
+            "role_id": target_role.role_id,
+            "role_name": target_role.role_name,
+            "role_description": target_role.role_description,
+            "specialty_area": target_role.specialty_area,
+            "task_count": len(target_role.tasks),
+            "tasks": target_role.tasks,
+            "core_competencies": target_role.core_competencies,
+            "ai_impact_assessment": target_role.ai_impact_assessment
+        }
+    
+    def find_relevant_tasks(self, keywords: List[str], threshold: float = 0.3) -> List[Dict[str, Any]]:
+        """Find DCWF tasks matching specific keywords."""
+        relevant_tasks = []
+        
+        for task in self.tasks.values():
+            # Calculate relevance score based on keyword matches
+            matches = 0
+            total_keywords = len(keywords)
+            
+            for keyword in keywords:
+                keyword_lower = keyword.lower()
+                # Check task description
+                if keyword_lower in task.task_description.lower():
+                    matches += 1
+                # Check task keywords
+                elif any(keyword_lower in tk.lower() for tk in task.keywords):
+                    matches += 1
+            
+            if total_keywords > 0:
+                relevance_score = matches / total_keywords
+                
+                if relevance_score >= threshold:
+                    relevant_tasks.append({
+                        "task_id": task.task_id,
+                        "description": task.task_description,
+                        "work_role": task.work_role,
+                        "specialty_area": task.specialty_area,
+                        "relevance_score": relevance_score,
+                        "keywords": task.keywords
+                    })
+        
+        # Sort by relevance score (highest first)
+        relevant_tasks.sort(key=lambda x: x["relevance_score"], reverse=True)
+        
+        return relevant_tasks
+    
     def export_framework_data(self, output_file: str):
         """Export the indexed framework data to JSON for caching."""
         data = {

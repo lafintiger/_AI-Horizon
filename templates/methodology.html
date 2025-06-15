@@ -1,78 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Research Methodology - AI-Horizon</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+{% extends "base.html" %}
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            color: #333;
-            line-height: 1.6;
-        }
+{% block title %}Methodology - AI-Horizon{% endblock %}
 
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 20px;
-        }
+{% block extra_styles %}
+<style>
 
-        .nav-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 20px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            margin-bottom: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .nav-brand {
-            display: flex;
-            flex-direction: column;
-            color: white;
-        }
-
-        .nav-brand h2 {
-            margin: 0;
-            font-size: 1.5rem;
-        }
-
-        .nav-subtitle {
-            font-size: 0.875rem;
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 20px;
-        }
-
-        .nav-link {
-            color: white;
-            text-decoration: none;
-            font-weight: 600;
-            padding: 8px 12px;
-            border-radius: 6px;
-            transition: background 0.2s;
-        }
-
-        .nav-link:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .nav-link.active {
-            background: rgba(255, 255, 255, 0.2);
-        }
 
         .header {
             text-align: center;
@@ -352,27 +284,13 @@
             background: #fffbf0;
             border-left-color: #d69e2e;
         }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <!-- Navigation Header -->
-        <nav class="nav-header">
-            <div class="nav-brand">
-                <h2>🤖 AI-Horizon</h2>
-                <span class="nav-subtitle">NSF-Grade Cybersecurity Workforce Intelligence</span>
-            </div>
-            <div class="nav-links">
-                <a href="/" class="nav-link">📊 Status Dashboard</a>
-                <a href="/reports" class="nav-link">📋 Reports</a>
-                <a href="/analysis" class="nav-link">🔍 Analysis</a>
-                <a href="/methodology" class="nav-link active">📖 Methodology</a>
-                <a href="/cost-analysis" class="nav-link">💰 Cost Analysis</a>
-                <a href="/manual-entry" class="nav-link">📝 Manual Entry</a>
-                <a href="/browse_entries" class="nav-link">🔍 Browse Data</a>
-                <a href="/settings" class="nav-link">⚙️ Settings</a>
-            </div>
-        </nav>
+</style>
+{% endblock %}
+
+{% block content %}
+    <div class="main-content">
+<!-- Navigation Header -->
+        
 
         <div class="header">
             <h1>📖 Research Methodology</h1>
@@ -861,6 +779,6 @@ def classify_content(title, content):
             </div>
 
         </div>
+    
     </div>
-</body>
-</html> 
+{% endblock %}

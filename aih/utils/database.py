@@ -442,4 +442,34 @@ class DatabaseManager:
                 'source_types': dict(source_types),
                 'categories': dict(category_counts),
                 'last_updated': datetime.now().isoformat()
-            } 
+            }
+    
+    def update_artifact_metadata(self, artifact_id: str, metadata: Dict[str, Any]) -> bool:
+        """
+        Update the metadata for an existing artifact.
+        
+        Args:
+            artifact_id: The ID of the artifact to update
+            metadata: New metadata dictionary
+            
+        Returns:
+            True if artifact was updated, False if not found
+        """
+        with self.get_connection() as conn:
+            cursor = conn.cursor()
+            
+            # Check if artifact exists
+            cursor.execute("SELECT 1 FROM artifacts WHERE id = ?", (artifact_id,))
+            if not cursor.fetchone():
+                logger.warning(f"Artifact {artifact_id} not found for metadata update")
+                return False
+            
+            # Update metadata
+            cursor.execute(
+                "UPDATE artifacts SET raw_metadata = ? WHERE id = ?",
+                (json.dumps(metadata), artifact_id)
+            )
+            
+            conn.commit()
+            logger.info(f"Updated metadata for artifact {artifact_id}")
+            return True 

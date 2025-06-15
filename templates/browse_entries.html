@@ -1,58 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Browse Entries - AI-Horizon</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+{% extends "base.html" %}
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            color: #333;
-        }
+{% block title %}Browse Entries - AI-Horizon{% endblock %}
 
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 20px;
-        }
+{% block extra_styles %}
+<style>
 
-        .nav-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 15px 30px;
-            margin-bottom: 30px;
-            backdrop-filter: blur(10px);
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 20px;
-        }
-
-        .nav-link {
-            color: white;
-            text-decoration: none;
-            padding: 8px 16px;
-            border-radius: 8px;
-            transition: background 0.3s;
-        }
-
-        .nav-link:hover, .nav-link.active {
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            text-decoration: none;
-        }
 
         .main-content {
             background: rgba(255, 255, 255, 0.95);
@@ -192,6 +144,64 @@
         .category-new_tasks { background: #28a745; }
         .category-human_only { background: #ffc107; color: #333; }
 
+        /* Multi-category indicator styles */
+        .multi-category-indicators {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+            margin-bottom: 8px;
+        }
+
+        .category-indicator {
+            width: 16px;
+            height: 16px;
+            border-radius: 3px;
+            border: 1px solid rgba(255,255,255,0.3);
+            position: relative;
+            cursor: help;
+        }
+
+        .category-indicator.replace { background: #dc3545; }
+        .category-indicator.augment { background: #17a2b8; }
+        .category-indicator.new_tasks { background: #28a745; }
+        .category-indicator.human_only { background: #ffc107; }
+
+        .category-indicator:hover::after {
+            content: attr(title);
+            position: absolute;
+            bottom: 120%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            white-space: nowrap;
+            z-index: 1000;
+        }
+
+        .confidence-bar {
+            height: 3px;
+            background: rgba(255,255,255,0.4);
+            border-radius: 2px;
+            margin-top: 2px;
+            overflow: hidden;
+        }
+
+        .confidence-fill {
+            height: 100%;
+            background: rgba(255,255,255,0.8);
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+
+        .category-summary {
+            font-size: 11px;
+            color: #666;
+            margin-top: 4px;
+        }
+
         .quality-badge {
             padding: 4px 8px;
             border-radius: 12px;
@@ -241,22 +251,13 @@
             margin-bottom: 15px;
             color: #ccc;
         }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="nav-header">
-            <h1 style="color: white; margin: 0;">🔍 Browse Entries</h1>
-            <div class="nav-links">
-                <a href="/" class="nav-link">📊 Status Dashboard</a>
-                <a href="/reports" class="nav-link">📋 Reports</a>
-                <a href="/analysis" class="nav-link">🔍 Analysis</a>
-                <a href="/methodology" class="nav-link">📖 Methodology</a>
-                <a href="/cost-analysis" class="nav-link">💰 Cost Analysis</a>
-                <a href="/manual-entry" class="nav-link">📝 Manual Entry</a>
-                <a href="/settings" class="nav-link">⚙️ Settings</a>
-            </div>
-        </div>
+</style>
+{% endblock %}
+
+{% block content %}
+    <div class="main-content">
+<!-- Navigation Header -->
+        
 
         <div class="main-content">
             <h2 style="color: #667eea; margin-bottom: 30px;">📚 Database Entries</h2>
@@ -349,8 +350,28 @@
                                         {% endif %}
                                     </td>
                                     <td>
+                                        {% set ai_categories = metadata.ai_impact_categories %}
                                         {% set ai_category = metadata.ai_impact_category %}
-                                        {% if ai_category %}
+                                        
+                                        {% if ai_categories %}
+                                            <!-- Multi-category indicators -->
+                                            <div class="multi-category-indicators">
+                                                {% for category, data in ai_categories.items() %}
+                                                    {% set confidence = data.confidence if data.confidence is defined else data %}
+                                                    <div class="category-indicator {{ category }}" 
+                                                         title="{{ category.replace('_', ' ').title() }}: {{ '%.1f'|format(confidence * 100) }}% confidence">
+                                                        <div class="confidence-bar">
+                                                            <div class="confidence-fill" style="width: {{ confidence * 100 }}%"></div>
+                                                        </div>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                            <div class="category-summary">
+                                                {{ ai_categories|length }} categories found
+                                            </div>
+                                            <small style="color: #28a745; font-weight: 600;">✅ Multi-category Analysis</small>
+                                        {% elif ai_category %}
+                                            <!-- Legacy single category display -->
                                             <span class="category-badge category-{{ ai_category }}">
                                                 {{ ai_category.replace('_', ' ').title() }}
                                             </span>
@@ -432,9 +453,10 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for entry in automated_entries[:50] %}
+                            {% for entry in automated_entries %}
+                                {% set loop_index = loop.index0 %}
                                 {% set metadata = entry.raw_metadata|from_json if entry.raw_metadata else {} %}
-                                <tr>
+                                <tr{% if loop_index >= 50 %} style="display: none;"{% endif %}>
                                     <td>
                                         <strong>{{ entry.title[:60] }}{% if entry.title|length > 60 %}...{% endif %}</strong>
                                         {% if entry.url %}
@@ -451,10 +473,35 @@
                                         {% endif %}
                                     </td>
                                     <td>
-                                        {% set category = metadata.ai_impact_category or 'general' %}
-                                        <span class="category-badge category-{{ category }}">
-                                            {{ category.replace('_', ' ').title() }}
-                                        </span>
+                                        {% set ai_categories = metadata.ai_impact_categories %}
+                                        {% set ai_category = metadata.ai_impact_category %}
+                                        
+                                        {% if ai_categories %}
+                                            <!-- Multi-category indicators -->
+                                            <div class="multi-category-indicators">
+                                                {% for category, data in ai_categories.items() %}
+                                                    {% set confidence = data.confidence if data.confidence is defined else data %}
+                                                    <div class="category-indicator {{ category }}" 
+                                                         title="{{ category.replace('_', ' ').title() }}: {{ '%.1f'|format(confidence * 100) }}% confidence">
+                                                        <div class="confidence-bar">
+                                                            <div class="confidence-fill" style="width: {{ confidence * 100 }}%"></div>
+                                                        </div>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                            <div class="category-summary">
+                                                {{ ai_categories|length }} categories found
+                                            </div>
+                                        {% elif ai_category %}
+                                            <!-- Legacy single category display -->
+                                            <span class="category-badge category-{{ ai_category }}">
+                                                {{ ai_category.replace('_', ' ').title() }}
+                                            </span>
+                                        {% else %}
+                                            <span class="category-badge category-general">
+                                                General
+                                            </span>
+                                        {% endif %}
                                     </td>
                                     <td>
                                         {% if entry.quality_score is defined %}
@@ -487,9 +534,17 @@
                     </table>
                     
                     {% if automated_entries|length > 50 %}
-                        <p style="text-align: center; margin-top: 20px; color: #666;">
-                            Showing first 50 of {{ automated_entries|length }} automated entries
-                        </p>
+                        <div style="text-align: center; margin-top: 20px;">
+                            <p style="color: #666; margin-bottom: 15px;">
+                                Showing first 50 of {{ automated_entries|length }} automated entries
+                            </p>
+                            <button onclick="showAllAutomatedEntries()" class="btn btn-primary" id="showAllBtn">
+                                📄 Show All {{ automated_entries|length }} Entries
+                            </button>
+                            <button onclick="showFirstFiftyEntries()" class="btn btn-secondary" id="showLessBtn" style="display: none; margin-left: 10px;">
+                                📋 Show First 50 Only
+                            </button>
+                        </div>
                     {% endif %}
                 {% else %}
                     <div class="empty-state">
@@ -573,6 +628,104 @@
             // Add active class to clicked tab
             event.target.classList.add('active');
         }
+        
+        function showAllAutomatedEntries() {
+            // Show all hidden rows
+            const hiddenRows = document.querySelectorAll('#automated-tab tbody tr[style*="display: none"]');
+            hiddenRows.forEach(row => {
+                row.style.display = '';
+            });
+            
+            // Update buttons
+            document.getElementById('showAllBtn').style.display = 'none';
+            document.getElementById('showLessBtn').style.display = 'inline-block';
+            
+            // Update text
+            const statusText = document.querySelector('#automated-tab .pagination-status');
+            if (statusText) {
+                statusText.textContent = 'Showing all {{ automated_entries|length }} automated entries';
+            }
+        }
+        
+        function showFirstFiftyEntries() {
+            // Hide rows after the first 50
+            const allRows = document.querySelectorAll('#automated-tab tbody tr');
+            allRows.forEach((row, index) => {
+                if (index >= 50) {
+                    row.style.display = 'none';
+                }
+            });
+            
+            // Update buttons
+            document.getElementById('showAllBtn').style.display = 'inline-block';
+            document.getElementById('showLessBtn').style.display = 'none';
+            
+            // Update text
+            const statusText = document.querySelector('#automated-tab .pagination-status');
+            if (statusText) {
+                statusText.textContent = 'Showing first 50 of {{ automated_entries|length }} automated entries';
+            }
+        }
     </script>
-</body>
-</html> 
+    </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function showTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            document.getElementById(tabName + '-tab').classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+        
+        function showAllAutomatedEntries() {
+            // Show all hidden rows
+            const hiddenRows = document.querySelectorAll('#automated-tab tbody tr[style*="display: none"]');
+            hiddenRows.forEach(row => {
+                row.style.display = '';
+            });
+            
+            // Update buttons
+            document.getElementById('showAllBtn').style.display = 'none';
+            document.getElementById('showLessBtn').style.display = 'inline-block';
+            
+            // Update text
+            const statusText = document.querySelector('#automated-tab .pagination-status');
+            if (statusText) {
+                statusText.textContent = 'Showing all {{ automated_entries|length }} automated entries';
+            }
+        }
+        
+        function showFirstFiftyEntries() {
+            // Hide rows after the first 50
+            const allRows = document.querySelectorAll('#automated-tab tbody tr');
+            allRows.forEach((row, index) => {
+                if (index >= 50) {
+                    row.style.display = 'none';
+                }
+            });
+            
+            // Update buttons
+            document.getElementById('showAllBtn').style.display = 'inline-block';
+            document.getElementById('showLessBtn').style.display = 'none';
+            
+            // Update text
+            const statusText = document.querySelector('#automated-tab .pagination-status');
+            if (statusText) {
+                statusText.textContent = 'Showing first 50 of {{ automated_entries|length }} automated entries';
+            }
+        }
+</script>
+{% endblock %}

@@ -1,0 +1,354 @@
+{% extends "base.html" %}
+
+{% block title %}Visual Workflow - AI-Horizon{% endblock %}
+
+{% block extra_styles %}
+<style>
+
+
+        /* Navigation Header */
+
+        /* Main Content */
+        .workflow-header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .workflow-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .workflow-header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Workflow Diagram */
+        .workflow-diagram {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
+        }
+
+        .workflow-stage {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .workflow-stage:last-child {
+            margin-bottom: 0;
+        }
+
+        .stage-number {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.5rem;
+            margin-right: 30px;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .stage-content {
+            flex: 1;
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        .stage-title {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .stage-description {
+            color: #666;
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .stage-components {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .component-tag {
+            background: #667eea;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        /* Flow Arrows */
+        .workflow-stage:not(:last-child)::after {
+            content: '↓';
+            position: absolute;
+            left: 30px;
+            bottom: -20px;
+            font-size: 2rem;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        /* Stats Section */
+        .workflow-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #fff, #e0e0e0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+
+            .workflow-header h1 {
+                font-size: 2rem;
+            }
+
+            .workflow-diagram {
+                padding: 20px;
+            }
+
+            .workflow-stage {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .stage-number {
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+
+            .workflow-stage:not(:last-child)::after {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+        }
+</style>
+{% endblock %}
+
+{% block content %}
+    <div class="main-content">
+<!-- Navigation Header -->
+        
+
+        <!-- Header -->
+        <div class="workflow-header">
+            <h1>🔄 AI-Horizon System Workflow</h1>
+            <p>Comprehensive block diagram showing the complete data processing pipeline from collection to intelligence reporting</p>
+        </div>
+
+        <!-- Current System Stats -->
+        <div class="workflow-stats">
+            <div class="stat-card">
+                <div class="stat-number">230+</div>
+                <div class="stat-label">Documents Collected</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">139+</div>
+                <div class="stat-label">Fully Processed</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">6</div>
+                <div class="stat-label">Analysis Tools</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">4</div>
+                <div class="stat-label">AI Impact Categories</div>
+            </div>
+        </div>
+
+        <!-- Workflow Diagram -->
+        <div class="workflow-diagram">
+            <!-- Stage 1: Data Collection -->
+            <div class="workflow-stage">
+                <div class="stage-number">1</div>
+                <div class="stage-content">
+                    <div class="stage-title">
+                        📊 Data Collection & Ingestion
+                    </div>
+                    <div class="stage-description">
+                        Multi-source data collection system gathering cybersecurity workforce intelligence from various channels including automated web scraping, manual curation, and document uploads.
+                    </div>
+                    <div class="stage-components">
+                        <span class="component-tag">🌐 Web Scraping</span>
+                        <span class="component-tag">📝 Manual Entry</span>
+                        <span class="component-tag">📄 Document Upload</span>
+                        <span class="component-tag">🎥 YouTube Transcripts</span>
+                        <span class="component-tag">🔗 URL Processing</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stage 2: Quality Assessment -->
+            <div class="workflow-stage">
+                <div class="stage-number">2</div>
+                <div class="stage-content">
+                    <div class="stage-title">
+                        ⭐ Quality Assessment & Scoring
+                    </div>
+                    <div class="stage-description">
+                        Automated quality evaluation system analyzing content depth, source authority, relevance, and completeness to ensure high-quality dataset for research purposes.
+                    </div>
+                    <div class="stage-components">
+                        <span class="component-tag">📊 Content Depth (25%)</span>
+                        <span class="component-tag">🏛️ Source Authority (30%)</span>
+                        <span class="component-tag">🎯 Relevance (25%)</span>
+                        <span class="component-tag">✅ Completeness (20%)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stage 3: AI Processing -->
+            <div class="workflow-stage">
+                <div class="stage-number">3</div>
+                <div class="stage-content">
+                    <div class="stage-title">
+                        🤖 AI Processing & Categorization
+                    </div>
+                    <div class="stage-description">
+                        Advanced AI-powered analysis system using large language models to categorize content, extract insights, and identify AI impact patterns on cybersecurity workforce.
+                    </div>
+                    <div class="stage-components">
+                        <span class="component-tag">🤖 AI REPLACE</span>
+                        <span class="component-tag">🤝 AI AUGMENT</span>
+                        <span class="component-tag">✨ NEW TASKS</span>
+                        <span class="component-tag">👤 HUMAN-ONLY</span>
+                        <span class="component-tag">🧠 Wisdom Extraction</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stage 4: Data Storage -->
+            <div class="workflow-stage">
+                <div class="stage-number">4</div>
+                <div class="stage-content">
+                    <div class="stage-title">
+                        🗄️ Structured Data Storage
+                    </div>
+                    <div class="stage-description">
+                        Comprehensive database system storing processed content with metadata, quality scores, AI categorizations, and extracted insights for efficient retrieval and analysis.
+                    </div>
+                    <div class="stage-components">
+                        <span class="component-tag">📊 SQLite Database</span>
+                        <span class="component-tag">📋 JSON Metadata</span>
+                        <span class="component-tag">🏷️ Category Tags</span>
+                        <span class="component-tag">⭐ Quality Scores</span>
+                        <span class="component-tag">🧠 Extracted Wisdom</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stage 5: Analysis & Insights -->
+            <div class="workflow-stage">
+                <div class="stage-number">5</div>
+                <div class="stage-content">
+                    <div class="stage-title">
+                        🔍 Advanced Analysis & Intelligence
+                    </div>
+                    <div class="stage-description">
+                        Comprehensive analysis suite generating actionable intelligence through quality distribution analysis, trend monitoring, sentiment tracking, and AI adoption predictions.
+                    </div>
+                    <div class="stage-components">
+                        <span class="component-tag">📊 Quality Analysis</span>
+                        <span class="component-tag">📈 Trend Analysis</span>
+                        <span class="component-tag">💭 Sentiment Tracking</span>
+                        <span class="component-tag">🔮 AI Adoption Predictions</span>
+                        <span class="component-tag">📂 Category Distribution</span>
+                        <span class="component-tag">🖥️ Collection Monitoring</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stage 6: Visualization -->
+            <div class="workflow-stage">
+                <div class="stage-number">6</div>
+                <div class="stage-content">
+                    <div class="stage-title">
+                        📊 Interactive Visualization
+                    </div>
+                    <div class="stage-description">
+                        Professional interactive visualization system powered by Chart.js providing real-time charts, trends, and data exploration capabilities for comprehensive data insights.
+                    </div>
+                    <div class="stage-components">
+                        <span class="component-tag">📊 Chart.js Integration</span>
+                        <span class="component-tag">📈 Time-series Charts</span>
+                        <span class="component-tag">🥧 Distribution Charts</span>
+                        <span class="component-tag">📱 Responsive Design</span>
+                        <span class="component-tag">🔄 Real-time Updates</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stage 7: Reporting -->
+            <div class="workflow-stage">
+                <div class="stage-number">7</div>
+                <div class="stage-content">
+                    <div class="stage-title">
+                        📋 Intelligence Reporting & Summaries
+                    </div>
+                    <div class="stage-description">
+                        Comprehensive reporting system generating detailed intelligence reports, category narratives, and actionable insights for cybersecurity workforce development and NSF research.
+                    </div>
+                    <div class="stage-components">
+                        <span class="component-tag">📄 Student Career Reports</span>
+                        <span class="component-tag">🌐 Web Intelligence Reports</span>
+                        <span class="component-tag">📖 Category Narratives</span>
+                        <span class="component-tag">📊 Executive Summaries</span>
+                        <span class="component-tag">🔗 Citation Links</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+    </div>
+{% endblock %}
