@@ -302,44 +302,43 @@
 
         <div class="dashboard">
             <div class="card">
-                <h3>Current Operation</h3>
-                <div id="currentOperation">
-                    <span class="status-indicator idle" id="statusIndicator"></span>
-                    <span id="operationName">Idle</span>
-                </div>
-                <div id="operationProgress" style="display: none;">
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                <h3>📊 Database Statistics</h3>
+                <div class="stats-grid" id="statsGrid">
+                    <div class="stat-item">
+                        <div class="stat-number" id="totalArtifacts">--</div>
+                        <div class="stat-label">Total Articles</div>
                     </div>
-                    <div id="progressText">0 / 0</div>
-                </div>
-                <div id="operationStatus"></div>
-                
-                <!-- Collection Progress (only shown during active collection) -->
-                <div id="collectionProgress" style="margin-top: 20px; display: none;">
-                    <h4 style="margin-bottom: 15px; color: #4a5568;">Collection Progress</h4>
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="overallProgressFill" style="width: 0%"></div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="replaceCount">--</div>
+                        <div class="stat-label">Replace</div>
                     </div>
-                    <div id="overallProgressText" style="margin-bottom: 15px;">0 / 80 articles collected</div>
-                    
-                    <div id="categoryProgress">
-                        <div class="category-item" id="replaceProgress">
-                            <span class="category-name">Replace:</span>
-                            <span class="category-status">0/20 (Query 0/20)</span>
-                        </div>
-                        <div class="category-item" id="augmentProgress">
-                            <span class="category-name">Augment:</span>
-                            <span class="category-status">0/20 (Query 0/20)</span>
-                        </div>
-                        <div class="category-item" id="newTasksProgress">
-                            <span class="category-name">New Tasks:</span>
-                            <span class="category-status">0/20 (Query 0/20)</span>
-                        </div>
-                        <div class="category-item" id="humanOnlyProgress">
-                            <span class="category-name">Human Only:</span>
-                            <span class="category-status">0/20 (Query 0/20)</span>
-                        </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="augmentCount">--</div>
+                        <div class="stat-label">Augment</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="newTasksCount">--</div>
+                        <div class="stat-label">New Tasks</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="humanOnlyCount">--</div>
+                        <div class="stat-label">Human Only</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="avgQualityScore">--</div>
+                        <div class="stat-label">Avg Quality</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="highQualityCount">--</div>
+                        <div class="stat-label">High Quality</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="recentArtifacts">--</div>
+                        <div class="stat-label">Recent (30d)</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="wisdomExtracted">--</div>
+                        <div class="stat-label">Wisdom Extracted</div>
                     </div>
                 </div>
             </div>
@@ -384,27 +383,44 @@
             </div>
 
             <div class="card">
-                <h3>Database Statistics</h3>
-                <div class="stats-grid" id="statsGrid">
-                    <div class="stat-item">
-                        <div class="stat-number" id="totalArtifacts">--</div>
-                        <div class="stat-label">Total Articles</div>
+                <h3>⚙️ Current Operation</h3>
+                <div id="currentOperation">
+                    <span class="status-indicator idle" id="statusIndicator"></span>
+                    <span id="operationName">Idle</span>
+                </div>
+                <div id="operationProgress" style="display: none;">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill" style="width: 0%"></div>
                     </div>
-                    <div class="stat-item">
-                        <div class="stat-number" id="replaceCount">--</div>
-                        <div class="stat-label">Replace</div>
+                    <div id="progressText">0 / 0</div>
+                </div>
+                <div id="operationStatus"></div>
+                
+                <!-- Collection Progress (only shown during active collection) -->
+                <div id="collectionProgress" style="margin-top: 20px; display: none;">
+                    <h4 style="margin-bottom: 15px; color: #4a5568;">Collection Progress</h4>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="overallProgressFill" style="width: 0%"></div>
                     </div>
-                    <div class="stat-item">
-                        <div class="stat-number" id="augmentCount">--</div>
-                        <div class="stat-label">Augment</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number" id="newTasksCount">--</div>
-                        <div class="stat-label">New Tasks</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number" id="humanOnlyCount">--</div>
-                        <div class="stat-label">Human Only</div>
+                    <div id="overallProgressText" style="margin-bottom: 15px;">0 / 80 articles collected</div>
+                    
+                    <div id="categoryProgress">
+                        <div class="category-item" id="replaceProgress">
+                            <span class="category-name">Replace:</span>
+                            <span class="category-status">0/20 (Query 0/20)</span>
+                        </div>
+                        <div class="category-item" id="augmentProgress">
+                            <span class="category-name">Augment:</span>
+                            <span class="category-status">0/20 (Query 0/20)</span>
+                        </div>
+                        <div class="category-item" id="newTasksProgress">
+                            <span class="category-name">New Tasks:</span>
+                            <span class="category-status">0/20 (Query 0/20)</span>
+                        </div>
+                        <div class="category-item" id="humanOnlyProgress">
+                            <span class="category-name">Human Only:</span>
+                            <span class="category-status">0/20 (Query 0/20)</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -568,6 +584,17 @@
                 document.getElementById('augmentCount').textContent = categories.augment || '0';
                 document.getElementById('newTasksCount').textContent = categories.new_tasks || '0';
                 document.getElementById('humanOnlyCount').textContent = categories.human_only || '0';
+                
+                // Update enhanced statistics
+                const qualityStats = data.stats.quality_stats || {};
+                document.getElementById('avgQualityScore').textContent = 
+                    qualityStats.avg_quality_score ? qualityStats.avg_quality_score.toFixed(3) : '--';
+                document.getElementById('highQualityCount').textContent = 
+                    qualityStats.high_quality_count || '--';
+                document.getElementById('recentArtifacts').textContent = 
+                    data.stats.recent_artifacts_30d || '--';
+                document.getElementById('wisdomExtracted').textContent = 
+                    data.stats.wisdom_extracted_count || '--';
             }
 
             // Update logs

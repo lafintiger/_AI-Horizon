@@ -425,22 +425,101 @@ class DatabaseManager:
             cursor.execute("SELECT COUNT(*) FROM classifications")
             total_classifications = cursor.fetchone()[0]
             
-            # Count by category from metadata
+            # Count by category from metadata (using multi-category analysis)
             cursor.execute("SELECT raw_metadata FROM artifacts WHERE raw_metadata IS NOT NULL")
             category_counts = defaultdict(int)
+            multi_category_stats = defaultdict(int)
+            quality_scores = []
+            source_reliability_counts = defaultdict(int)
+            recent_artifacts = 0
+            
             for (metadata_json,) in cursor.fetchall():
                 try:
                     metadata = json.loads(metadata_json)
-                    category = metadata.get('ai_impact_category', 'unknown')
-                    category_counts[category] += 1
+                    
+                    # Collect quality scores
+                    quality_score = metadata.get('quality_score')
+                    if quality_score is not None:
+                        quality_scores.append(float(quality_score))
+                    
+                    # Collect source reliability data
+                    source_reliability = metadata.get('source_reliability')
+                    if source_reliability:
+                        source_reliability_counts[source_reliability] += 1
+                    
+                    # Check if artifact is recent (last 30 days)
+                    collected_at = metadata.get('collected_at')
+                    if collected_at:
+                        try:
+                            if isinstance(collected_at, str):
+                                collected_date = datetime.fromisoformat(collected_at.replace('Z', '+00:00'))
+                            else:
+                                collected_date = collected_at
+                            if (datetime.now() - collected_date.replace(tzinfo=None)).days <= 30:
+                                recent_artifacts += 1
+                        except:
+                            pass
+                    
+                    # Check for multi-category analysis first (new system)
+                    multi_categories = metadata.get('ai_impact_categories', {})
+                    if multi_categories:
+                        # Count articles that have each category with confidence > 0.3
+                        for category, category_data in multi_categories.items():
+                            # Handle both old format (direct confidence) and new format (nested dict)
+                            if isinstance(category_data, dict):
+                                confidence = category_data.get('confidence', 0)
+                            else:
+                                confidence = category_data
+                            
+                            if confidence > 0.3:  # Only count significant classifications
+                                multi_category_stats[category] += 1
+                    else:
+                        # Fallback to single category (old system)
+                        category = metadata.get('ai_impact_category', 'unknown')
+                        category_counts[category] += 1
+                        
                 except (json.JSONDecodeError, TypeError):
                     category_counts['unknown'] += 1
+            
+            # Use multi-category stats if available, otherwise fall back to single category
+            final_categories = dict(multi_category_stats) if multi_category_stats else dict(category_counts)
+            
+            # Calculate quality statistics
+            quality_stats = {}
+            if quality_scores:
+                quality_stats = {
+                    'avg_quality_score': round(sum(quality_scores) / len(quality_scores), 3),
+                    'min_quality_score': round(min(quality_scores), 3),
+                    'max_quality_score': round(max(quality_scores), 3),
+                    'high_quality_count': len([s for s in quality_scores if s >= 0.8]),
+                    'medium_quality_count': len([s for s in quality_scores if 0.6 <= s < 0.8]),
+                    'low_quality_count': len([s for s in quality_scores if s < 0.6])
+                }
+            
+            # Get recent collection activity
+            cursor.execute("""
+                SELECT COUNT(*) FROM collection_runs 
+                WHERE started_at > datetime('now', '-7 days')
+            """)
+            recent_runs = cursor.fetchone()[0]
+            
+            # Get wisdom extraction count
+            cursor.execute("""
+                SELECT COUNT(*) FROM artifacts 
+                WHERE raw_metadata LIKE '%wisdom%' AND raw_metadata IS NOT NULL
+            """)
+            wisdom_extracted_count = cursor.fetchone()[0]
             
             return {
                 'total_artifacts': total_artifacts,
                 'total_classifications': total_classifications,
                 'source_types': dict(source_types),
-                'categories': dict(category_counts),
+                'categories': final_categories,
+                'quality_stats': quality_stats,
+                'source_reliability': dict(source_reliability_counts),
+                'recent_artifacts_30d': recent_artifacts,
+                'recent_collection_runs_7d': recent_runs,
+                'wisdom_extracted_count': wisdom_extracted_count,
                 'last_updated': datetime.now().isoformat()
             }
     

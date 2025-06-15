@@ -60,6 +60,9 @@ from aih.utils.logging import get_logger
 from aih.utils.cost_tracker import cost_tracker
 from scripts.analysis.implement_quality_ranking import DocumentQualityRanker
 
+# Initialize logger
+logger = get_logger('status_server')
+
 app = Flask(__name__)
 app.secret_key = 'ai-horizon-status-server-secret-key'  # Change in production
 CORS(app)
@@ -378,6 +381,9 @@ status = StatusTracker()
 # Initialize quality ranker globally
 quality_ranker = DocumentQualityRanker()
 
+# Rate limiting tracking
+api_call_timestamps = defaultdict(list)
+
 # Allowed file extensions
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'docx', 'doc'}
 
@@ -445,20 +451,7 @@ def database_stats():
     """Get database statistics."""
     try:
         db = DatabaseManager()
-        artifacts = db.get_artifacts()
-        
-        # Count by category if metadata exists
-        category_counts = {}
-        for artifact in artifacts:
-            metadata = json.loads(artifact.get('raw_metadata', '{}'))
-            category = metadata.get('ai_impact_category', 'unknown')
-            category_counts[category] = category_counts.get(category, 0) + 1
-        
-        stats = {
-            "total_artifacts": len(artifacts),
-            "categories": category_counts,
-            "last_updated": datetime.now().isoformat()
-        }
+        stats = db.get_database_stats()
         
         status.update_stats(stats)
         return jsonify(stats)
@@ -765,6 +758,38 @@ def reports():
 def analysis():
     """Analysis tools page."""
     return render_template('analysis.html')
+
+@app.route('/chat')
+def chat():
+    """Enhanced RAG chat interface for querying collected documents with DCWF integration."""
+    try:
+        from aih.chat.rag_chat import RAGChatSystem
+        
+        # Initialize RAG system with default model
+        rag_system = RAGChatSystem(model="claude-3-7-sonnet-20250219")
+        
+        # Get article summary for context
+        summary = rag_system.get_article_summary()
+        
+        # Get database stats for sidebar
+        db = DatabaseManager()
+        stats = db.get_database_stats()
+        
+        return render_template('chat.html', 
+                             article_summary=summary,
+                             database_stats=stats,
+                             available_models=[
+                                 'claude-3-7-sonnet-20250219',  # Default
+                                 'claude-4-sonnet-20250514',    # Claude 4 Sonnet  
+                                 'claude-4-opus-20250514',      # Claude 4 Opus
+                                 'claude-3-5-sonnet-20241022',  # Previous Claude 3.5
+                                 'gpt-4o',                       # GPT-4o
+                                 'gpt-4',                        # GPT-4
+                                 'gpt-3.5-turbo'                # GPT-3.5 Turbo
+                             ])
+    except Exception as e:
+        logger.error(f"Error loading chat interface: {e}")
+        return render_template('error.html', error=f'Error loading chat interface: {str(e)}')
 
 @app.route('/summaries')
 def summaries():
@@ -1512,11 +1537,7 @@ def too_large(e):
     flash("File is too large! Maximum size is 50MB.", 'error')
     return redirect(request.url), 413
 
-@app.route('/chat')
-def chat_interface():
-    """Chat interface placeholder."""
-    flash('Chat interface will be implemented soon!', 'info')
-    return redirect(url_for('manual_entry'))
+# Chat interface route moved to line 756 - duplicate removed
 
 # ===== END MANUAL ENTRY ROUTES =====
 
@@ -3196,6 +3217,173 @@ Focus on specific, actionable insights for career planning. 300-400 words.
         print(f"Category summary error: {e}")  # Use print instead of logger
         return jsonify({"error": str(e)}), 500
 
+@app.route('/api/chat', methods=['POST'])
+def api_chat():
+    """Enhanced RAG chat API with DCWF integration and advanced filtering."""
+    try:
+        from aih.chat.rag_chat import RAGChatSystem
+        
+        data = request.get_json()
+        query = data.get('query', '').strip()
+        model = data.get('model', 'claude-3-7-sonnet-20250219')
+        filters = data.get('filters', {})
+        
+        if not query:
+            return jsonify({"error": "Query is required"}), 400
+        
+        # Initialize RAG system with selected model
+        rag_system = RAGChatSystem(model=model)
+        
+        # Apply filters if provided
+        context_filters = {}
+        if filters.get('categories'):
+            context_filters['categories'] = filters['categories']
+        if filters.get('date_range'):
+            context_filters['date_range'] = filters['date_range']
+        if filters.get('confidence_threshold'):
+            context_filters['confidence_threshold'] = filters['confidence_threshold']
+        if filters.get('source_types'):
+            context_filters['source_types'] = filters['source_types']
+        
+        # Get enhanced context with DCWF integration
+        context = rag_system.get_enhanced_context(query, filters=context_filters)
+        
+        # Generate response
+        response = rag_system.generate_response(query, context)
+        
+        # Get source information for citations
+        sources = rag_system.get_source_citations(query, context)
+        
+        return jsonify({
+            "response": response,
+            "sources": sources,
+            "context_stats": {
+                "articles_used": len(sources),
+                "model_used": model,
+                "filters_applied": context_filters
+            }
+        })
+        
+    except Exception as e:
+        logger.error(f"Chat API error: {e}")
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/chat/suggestions')
+def api_chat_suggestions():
+    """Get suggested questions based on current database content."""
+    try:
+        from aih.chat.rag_chat import RAGChatSystem
+        
+        rag_system = RAGChatSystem()
+        suggestions = rag_system.get_suggested_questions()
+        
+        return jsonify({"suggestions": suggestions})
+        
+    except Exception as e:
+        logger.error(f"Chat suggestions error: {e}")
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/chat/dcwf_search')
+def api_chat_dcwf_search():
+    """Search DCWF framework for specific roles or tasks."""
+    try:
+        query = request.args.get('query', '').strip()
+        if not query:
+            return jsonify({"error": "Query parameter required"}), 400
+        
+        # Import DCWF framework indexer
+        try:
+            from scripts.analysis.dcwf_framework_indexer import DCWFFrameworkIndexer
+            dcwf_indexer = DCWFFrameworkIndexer()
+            
+            # Search for matching roles and tasks
+            results = dcwf_indexer.search_framework(query)
+            
+            return jsonify({
+                "query": query,
+                "results": results,
+                "total_matches": len(results)
+            })
+            
+        except ImportError:
+            return jsonify({"error": "DCWF framework not available"}), 503
+        
+    except Exception as e:
+        logger.error(f"DCWF search error: {e}")
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/chat/export', methods=['POST'])
+def api_chat_export():
+    """Export chat conversation to various formats."""
+    try:
+        data = request.get_json()
+        conversation = data.get('conversation', [])
+        format_type = data.get('format', 'markdown')  # markdown, json, pdf
+        
+        if not conversation:
+            return jsonify({"error": "No conversation to export"}), 400
+        
+        # Generate export content
+        if format_type == 'markdown':
+            content = generate_markdown_export(conversation)
+            filename = f"chat_export_{datetime.now().strftime('%Y%m%d_%H%M%S')}.md"
+        elif format_type == 'json':
+            content = json.dumps(conversation, indent=2)
+            filename = f"chat_export_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+        else:
+            return jsonify({"error": "Unsupported format"}), 400
+        
+        # Save to exports directory
+        export_dir = Path('data/exports')
+        export_dir.mkdir(exist_ok=True)
+        export_path = export_dir / filename
+        
+        with open(export_path, 'w', encoding='utf-8') as f:
+            f.write(content)
+        
+        return jsonify({
+            "success": True,
+            "filename": filename,
+            "path": str(export_path),
+            "size": len(content)
+        })
+        
+    except Exception as e:
+        logger.error(f"Chat export error: {e}")
+        return jsonify({"error": str(e)}), 500
+
+def generate_markdown_export(conversation):
+    """Generate markdown format for chat export."""
+    content = f"# AI-Horizon Chat Export\n\n"
+    content += f"**Export Date:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
+    content += f"**Total Messages:** {len(conversation)}\n\n"
+    content += "---\n\n"
+    
+    for i, message in enumerate(conversation, 1):
+        role = message.get('role', 'unknown')
+        text = message.get('content', '')
+        timestamp = message.get('timestamp', '')
+        
+        if role == 'user':
+            content += f"## Question {i}\n\n"
+            content += f"**Asked:** {timestamp}\n\n"
+            content += f"{text}\n\n"
+        elif role == 'assistant':
+            content += f"## Response {i}\n\n"
+            content += f"{text}\n\n"
+            
+            # Add sources if available
+            sources = message.get('sources', [])
+            if sources:
+                content += "### Sources\n\n"
+                for source in sources:
+                    content += f"- [{source.get('title', 'Untitled')}]({source.get('url', '#')})\n"
+                content += "\n"
+        
+        content += "---\n\n"
+    
+    return content
+
 @app.route('/reprocess')
 def reprocess_interface():
     """Web interface for comprehensive entry reprocessing."""
@@ -3279,7 +3467,6 @@ def api_reprocess_entries():
 
 def run_server(host='127.0.0.1', port=5000, debug=False):
     """Run the status server."""
-    logger = get_logger('status_server')
     logger.info(f"Starting AI-Horizon Status Server on http://{host}:{port}")
     
     # Connect cost tracker to status tracker
