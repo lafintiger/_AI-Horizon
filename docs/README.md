@@ -92,6 +92,13 @@ python status_server.py --host 0.0.0.0 --port 5000
 - **Quality Control**: Duplicate detection, content validation, source verification
 - **Multi-Modal**: Articles, PDFs, YouTube transcripts, manual entries
 
+### **9. ✨ Configurable Timeframe System - NEW Version 2.1**
+- **Smart Duplicate Prevention**: "Since Last Collection" default prevents redundant data collection
+- **Flexible Options**: Preset timeframes (7 days to 1 year) and custom date ranges
+- **API Integration**: Seamless integration with Perplexity search date filters
+- **Database-Driven**: Queries collection history to determine optimal timeframes
+- **Access**: Collection configuration interface at `/collection_config`
+
 ## 🗄️ **Database Status**
 
 ### **Current Statistics (Version 2.1)**

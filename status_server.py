@@ -470,7 +470,8 @@ def stream():
         
         try:
             # Send initial status
-            yield f"data: {json.dumps(status.get_status())}\n\n"
+            initial_data = json.dumps(status.get_status())
+            yield f"data: {initial_data}\n\n"
             
             while True:
                 try:
@@ -484,7 +485,11 @@ def stream():
         except GeneratorExit:
             status.clients.discard(client_queue)
     
-    return Response(event_stream(), mimetype='text/event-stream')
+    response = Response(event_stream(), mimetype='text/event-stream')
+    response.headers['Cache-Control'] = 'no-cache'
+    response.headers['Connection'] = 'keep-alive'
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    return response
 
 @app.route('/api/start_collection')
 def start_collection():
@@ -614,6 +619,95 @@ def start_student_intelligence():
 def start_comprehensive_collection():
     """Alias for start_collection - comprehensive collection of all categories."""
     return start_collection()
+
+@app.route('/collection_config')
+def collection_config():
+    """Collection configuration page."""
+    return render_template('collection_config.html')
+
+@app.route('/api/start_configured_collection', methods=['POST'])
+def start_configured_collection():
+    """Start collection with custom configuration."""
+    try:
+        config = request.get_json()
+        if not config:
+            return jsonify({'success': False, 'error': 'No configuration provided'})
+        
+        total_articles = config.get('total_articles', 80)
+        custom_prompts = config.get('prompts', {})
+        timeframe_config = config.get('timeframe', {})
+        
+        # Validate configuration
+        if total_articles < 4 or total_articles > 400:
+            return jsonify({'success': False, 'error': 'Total articles must be between 4 and 400'})
+        
+        if total_articles % 4 != 0:
+            return jsonify({'success': False, 'error': 'Total articles must be divisible by 4'})
+        
+        # Calculate articles per category
+        articles_per_category = total_articles // 4
+        
+        # Check if collection is already running
+        if status.is_running:
+            return jsonify({'success': False, 'error': 'Collection already in progress'})
+        
+        # Start collection with custom configuration
+        def run_configured_collection():
+            try:
+                status.set_operation("Comprehensive Collection")
+                
+                # Build log message with configuration details
+                log_parts = [f"Starting configured collection: {total_articles} total articles ({articles_per_category} per category)"]
+                if custom_prompts:
+                    log_parts.append("with custom prompts")
+                if timeframe_config:
+                    timeframe_type = timeframe_config.get('type', 'all_time')
+                    if timeframe_type == 'since_last':
+                        log_parts.append("since last collection")
+                    elif timeframe_type == 'custom_range':
+                        start_date = timeframe_config.get('start_date')
+                        end_date = timeframe_config.get('end_date')
+                        log_parts.append(f"from {start_date} to {end_date}")
+                    else:
+                        log_parts.append(f"timeframe: {timeframe_type}")
+                
+                status.add_log("INFO", ", ".join(log_parts), "COLLECTION")
+                
+                # Import and run the collection directly
+                import asyncio
+                from scripts.collection.collect_comprehensive import collect_comprehensive, set_status_tracker
+                
+                # Set the status tracker in the collection module
+                set_status_tracker(status)
+                
+                # Run the collection with custom parameters
+                if custom_prompts or timeframe_config:
+                    result, category_stats = asyncio.run(collect_comprehensive(articles_per_category, custom_prompts, timeframe_config))
+                else:
+                    result, category_stats = asyncio.run(collect_comprehensive(articles_per_category))
+                
+                # Update final stats
+                status.add_log("INFO", f"Collection completed: {result} total articles", "COLLECTION")
+                for category, count in category_stats.items():
+                    status.add_log("INFO", f"{category.upper()}: {count} articles", "COLLECTION")
+                
+                status.complete_operation(True, f"Successfully collected {result} articles")
+                
+            except Exception as e:
+                error_msg = f"Collection failed: {str(e)}"
+                status.complete_operation(False, f"Operation failed: {error_msg}")
+                status.add_log("ERROR", error_msg, "COLLECTION")
+        
+        # Start collection in background thread
+        import threading
+        collection_thread = threading.Thread(target=run_configured_collection)
+        collection_thread.daemon = True
+        collection_thread.start()
+        
+        return jsonify({'success': True, 'message': f'Collection started with {total_articles} articles'})
+        
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)})
 
 @app.route('/manual_entry')
 def manual_entry():
@@ -3491,6 +3585,40 @@ def run_server(host='127.0.0.1', port=5000, debug=False):
         status.add_log("ERROR", f"Database initialization error: {e}", "SERVER")
     
     app.run(host=host, port=port, debug=debug, threaded=True)
+
+@app.route('/api/last_collection_date')
+def api_last_collection_date():
+    """Get the date of the last successful collection."""
+    try:
+        db = DatabaseManager()
+        
+        # Query for the most recent collection date
+        # Look for artifacts with source_type starting with 'perplexity' (automated collections)
+        with db.get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("""
+                SELECT MAX(collected_at) as last_collection_date
+                FROM artifacts 
+                WHERE source_type LIKE 'perplexity%'
+            """)
+            result = cursor.fetchone()
+        
+        if result and result[0]:
+            return jsonify({
+                'success': True,
+                'last_collection_date': result[0]
+            })
+        else:
+            return jsonify({
+                'success': True,
+                'last_collection_date': None
+            })
+            
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        })
 
 if __name__ == "__main__":
     import argparse

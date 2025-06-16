@@ -97,6 +97,12 @@ config.env                    # Environment configuration
 - **Visual Workflow**: 7-stage process diagram at `/workflow`
 - **Professional Design**: Modern styling with responsive layouts
 
+### **6. ✨ Configurable Timeframe System** (Version 2.1)
+- **Smart Duplicate Prevention**: "Since Last Collection" default prevents redundant data collection
+- **Flexible Options**: Preset timeframes (7 days to 1 year) and custom date ranges
+- **API Integration**: Seamless integration with Perplexity search date filters
+- **Access**: Collection configuration interface at `/collection_config`
+
 ---
 
 ## 🔧 **Quick Operations**
@@ -150,7 +156,8 @@ python scripts/reprocess_all_entries.py --all --limit 5
 ✅ **Version 2.1 Enhancements**: Category narratives, visual workflow, enhanced navigation  
 ✅ **Professional Organization**: Complete file structure reorganization  
 ✅ **Interactive Visualizations**: 24+ Chart.js charts operational  
-✅ **Quality Integration**: Real-time quality scoring system
+✅ **Quality Integration**: Real-time quality scoring system  
+✅ **Timeframe Configuration**: Smart duplicate prevention with configurable date filtering (June 16, 2025)
 
 ---
 

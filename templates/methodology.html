@@ -417,7 +417,11 @@
                     </div>
                     <div class="tech-item">
                         <h5>🔍 Collection Engine</h5>
-                        <p>Perplexity API integration with real URL extraction, multi-query strategies, and intelligent duplicate detection.</p>
+                        <p>Perplexity API integration with real URL extraction, multi-query strategies, intelligent duplicate detection, and configurable timeframe filtering.</p>
+                    </div>
+                    <div class="tech-item">
+                        <h5>📅 Timeframe System</h5>
+                        <p>Smart date filtering with database-driven "since last collection" logic, preset timeframes, custom ranges, and Perplexity date syntax integration.</p>
                     </div>
                     <div class="tech-item">
                         <h5>📊 Quality Ranking</h5>
@@ -524,25 +528,54 @@
             <div class="section">
                 <h2>📊 Enhanced Data Collection Methodology</h2>
                 <p>
-                    Our multi-source, multi-modal collection strategy captures both explicit workforce discussions and implicit organizational changes, providing comprehensive intelligence about AI's practical impact on cybersecurity work.
+                    Our multi-source, multi-modal collection strategy captures both explicit workforce discussions and implicit organizational changes, providing comprehensive intelligence about AI's practical impact on cybersecurity work. The system includes sophisticated timeframe filtering to prevent duplicate collection and ensure focus on fresh, relevant content.
                 </p>
+
+                <h3>Timeframe Configuration System</h3>
+                <div class="highlight-box">
+                    <h4>🕒 Smart Duplicate Prevention</h4>
+                    <p>Advanced timeframe filtering system prevents redundant collection while ensuring comprehensive coverage. The system tracks collection history and provides intelligent date range options to focus on new content since the last collection run.</p>
+                </div>
+
+                <div class="methodology-steps">
+                    <div class="step-card">
+                        <div class="step-number">T1</div>
+                        <h4>Since Last Collection</h4>
+                        <p>Smart default that queries database for most recent collection date and searches only for content published after that date. Prevents duplicates and focuses on fresh content.</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">T2</div>
+                        <h4>Preset Timeframes</h4>
+                        <p>Configurable preset options: 7 days, 30 days, 3 months, 6 months, 1 year. Optimized for different research scenarios and collection frequencies.</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">T3</div>
+                        <h4>Custom Date Ranges</h4>
+                        <p>Flexible start and end date selection for targeted historical analysis or specific event-driven collection periods.</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">T4</div>
+                        <h4>All-Time Collection</h4>
+                        <p>Comprehensive collection mode with no date restrictions for initial database population or complete topic coverage.</p>
+                    </div>
+                </div>
 
                 <h3>Collection Strategies</h3>
                 <div class="methodology-steps">
                     <div class="step-card">
                         <div class="step-number">1</div>
                         <h4>Comprehensive Collection</h4>
-                        <p>Multi-query approach: 7 queries per category, 20 articles per query, sophisticated duplicate detection. Captures broad industry perspective.</p>
+                        <p>Multi-query approach: 7 queries per category, 20 articles per query, sophisticated duplicate detection. Captures broad industry perspective with timeframe filtering.</p>
                     </div>
                     <div class="step-card">
                         <div class="step-number">2</div>
                         <h4>Targeted High-Value</h4>
-                        <p>Independent cybersecurity sources, expert commentary, industry insider perspectives. Focuses on credible, authoritative voices.</p>
+                        <p>Independent cybersecurity sources, expert commentary, industry insider perspectives. Focuses on credible, authoritative voices with date-based filtering.</p>
                     </div>
                     <div class="step-card">
                         <div class="step-number">3</div>
                         <h4>Student Career Intelligence</h4>
-                        <p>2025 graduate-focused collection, actionable career guidance, skills emphasis over theoretical discussions.</p>
+                        <p>2025 graduate-focused collection, actionable career guidance, skills emphasis over theoretical discussions. Timeframe-aware to capture latest trends.</p>
                     </div>
                     <div class="step-card">
                         <div class="step-number">4</div>
@@ -584,6 +617,7 @@
 
                 <h3>Automated Processing Workflow</h3>
                 <ol>
+                    <li><strong>Timeframe Filtering:</strong> Configurable date range filtering with smart "since last collection" logic to prevent duplicates and focus on fresh content</li>
                     <li><strong>Content Ingestion:</strong> Support for URLs, files (PDF, TXT, DOCX), YouTube videos with metadata extraction</li>
                     <li><strong>Quality Validation:</strong> Content length analysis, technical term density scoring, source credibility assessment</li>
                     <li><strong>Category Classification:</strong> Keyword-based initial categorization with confidence scoring</li>

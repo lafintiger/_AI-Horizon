@@ -141,17 +141,27 @@ class PerplexityConnector(BaseConnector):
         Args:
             base_query: Base search query
             category: AI impact category
-            timeframe: Time period
+            timeframe: Time period or filter (e.g., "2024", "after:2024-01-01", "after:2024-01-01 before:2024-12-31")
             
         Returns:
             Enhanced query string
         """
+        # Start with base query
+        query_parts = [base_query]
+        
+        # Add timeframe if provided
+        if timeframe:
+            if timeframe.startswith('after:') or timeframe.startswith('before:') or 'after:' in timeframe:
+                # Use Perplexity's date filter syntax directly
+                query_parts.append(timeframe)
+            elif timeframe and timeframe != "all_time":
+                # For simple timeframes like "2024", "2024-2025", append as context
+                query_parts.append(timeframe)
+        
         # Use template if category is recognized
         if category in SEARCH_TEMPLATES:
-            template_query = SEARCH_TEMPLATES[category].format(timeframe=timeframe)
-            combined_query = f"{template_query} {base_query}"
-        else:
-            combined_query = f"{base_query} {timeframe}"
+            template_query = SEARCH_TEMPLATES[category].format(timeframe=timeframe or "2024")
+            query_parts.insert(0, template_query)
         
         # Add context for better results
         context_additions = [
@@ -161,11 +171,12 @@ class PerplexityConnector(BaseConnector):
             "recent studies reports"
         ]
         
-        enhanced_query = f"{combined_query} {' '.join(context_additions)}"
+        # Combine all parts
+        enhanced_query = f"{' '.join(query_parts)} {' '.join(context_additions)}"
         
         # Limit query length
-        if len(enhanced_query) > 200:
-            enhanced_query = enhanced_query[:200] + "..."
+        if len(enhanced_query) > 250:
+            enhanced_query = enhanced_query[:250] + "..."
         
         return enhanced_query
     
