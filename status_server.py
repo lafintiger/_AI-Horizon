@@ -3379,7 +3379,23 @@ def api_start_reprocessing():
             }), 400
         
         status.set_operation("Comprehensive Entry Reprocessing")
-        status.add_log("INFO", f"Starting reprocessing with options: {algorithms}", "REPROCESS")
+        
+        # Get unprocessed count for logging
+        try:
+            from scripts.reprocess_all_entries import ComprehensiveReprocessor
+            temp_reprocessor = ComprehensiveReprocessor()
+            unprocessed_count = temp_reprocessor.get_unprocessed_count(options)
+            total_articles = len(temp_reprocessor.db.get_artifacts())
+            
+            if force_reprocess:
+                status.add_log("INFO", f"🔥 Force mode: Starting reprocessing with options: {algorithms}", "REPROCESS")
+                status.add_log("INFO", f"📊 Processing all {total_articles} articles (force mode)", "REPROCESS")
+            else:
+                status.add_log("INFO", f"🎯 Smart mode: Starting reprocessing with options: {algorithms}", "REPROCESS")
+                status.add_log("INFO", f"📊 Found {unprocessed_count} unprocessed articles out of {total_articles} total", "REPROCESS")
+        except Exception as e:
+            status.add_log("INFO", f"Starting reprocessing with options: {algorithms}", "REPROCESS")
+            logger.error(f"Error getting unprocessed count for logging: {e}")
         
         def run_reprocessing():
             try:
@@ -3619,6 +3635,45 @@ def api_last_collection_date():
             'success': False,
             'error': str(e)
         })
+
+@app.route('/api/unprocessed_count', methods=['POST'])
+def api_unprocessed_count():
+    """Get count of unprocessed articles for selected algorithms."""
+    try:
+        data = request.get_json()
+        algorithms = data.get('algorithms', [])
+        
+        # Map frontend algorithm names to backend options
+        selected_algorithms = {
+            'quality_scoring': 'quality_scoring' in algorithms,
+            'categorization': 'ai_categorization' in algorithms,
+            'multicategory': 'multi_category' in algorithms,
+            'wisdom': 'wisdom_extraction' in algorithms,
+            'content_enhancement': 'content_enhancement' in algorithms,
+            'metadata_standardization': 'metadata_standardization' in algorithms
+        }
+        
+        # Import and use the reprocessor to get counts
+        from scripts.reprocess_all_entries import ComprehensiveReprocessor
+        reprocessor = ComprehensiveReprocessor()
+        
+        # Get total articles count
+        all_artifacts = reprocessor.db.get_artifacts()
+        total_articles = len(all_artifacts)
+        
+        # Get unprocessed count
+        unprocessed_count = reprocessor.get_unprocessed_count(selected_algorithms)
+        
+        return jsonify({
+            'success': True,
+            'unprocessed_count': unprocessed_count,
+            'total_articles': total_articles,
+            'selected_algorithms': list(algorithms)
+        })
+        
+    except Exception as e:
+        logger.error(f"Unprocessed count API error: {e}")
+        return jsonify({'success': False, 'error': str(e)}), 500
 
 if __name__ == "__main__":
     import argparse

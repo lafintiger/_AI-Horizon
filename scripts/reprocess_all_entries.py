@@ -197,16 +197,47 @@ class ComprehensiveReprocessor:
                              limit: Optional[int] = None) -> Dict:
         """
         Reprocess all entries with selected algorithms.
+        
+        Args:
+            quality_scoring: Whether to update quality scores
+            categorization: Whether to update AI impact categorization
+            multicategory: Whether to update multi-category analysis
+            wisdom: Whether to extract wisdom
+            content_enhancement: Whether to enhance content
+            metadata_standardization: Whether to standardize metadata
+            force: If True, reprocess all articles. If False, only process unprocessed articles
+            limit: Maximum number of articles to process
         """
         logger.info("🔄 Starting comprehensive entry reprocessing...")
         
         # Get all artifacts
-        artifacts = self.db.get_artifacts()
-        if limit:
-            artifacts = artifacts[:limit]
-            logger.info(f"🎯 Processing limited set: {limit} entries")
+        all_artifacts = self.db.get_artifacts()
         
-        logger.info(f"📋 Found {len(artifacts)} entries to process")
+        # Filter artifacts based on processing status (unless force is True)
+        if force:
+            artifacts = all_artifacts
+            logger.info(f"🔥 Force mode: processing all {len(artifacts)} entries")
+        else:
+            artifacts = self._filter_unprocessed_artifacts(all_artifacts, {
+                'quality_scoring': quality_scoring,
+                'categorization': categorization,
+                'multicategory': multicategory,
+                'wisdom': wisdom,
+                'content_enhancement': content_enhancement,
+                'metadata_standardization': metadata_standardization
+            })
+            logger.info(f"🎯 Smart mode: found {len(artifacts)} unprocessed entries out of {len(all_artifacts)} total")
+        
+        # Apply limit if specified
+        if limit and len(artifacts) > limit:
+            artifacts = artifacts[:limit]
+            logger.info(f"📊 Limited to {limit} entries (oldest first)")
+        
+        if not artifacts:
+            logger.info("✅ No entries need processing!")
+            return self._generate_final_report()
+        
+        logger.info(f"📋 Processing {len(artifacts)} entries...")
         
         # Reset statistics
         self.stats = {key: 0 for key in self.stats}
@@ -255,20 +286,97 @@ class ComprehensiveReprocessor:
                 
                 # Save updated metadata if any changes were made
                 if updated:
-                    self.db.update_artifact_metadata(artifact_id, metadata)
-                    self.stats['total_processed'] += 1
-                    logger.info(f"   ✅ Updated successfully")
-                else:
-                    self.stats['skipped'] += 1
-                    logger.info(f"   ⏭️  No updates needed")
+                    updated_artifact = {
+                        'id': artifact_id,
+                        'url': artifact.get('url', ''),
+                        'title': artifact.get('title', ''),
+                        'content': artifact.get('content', ''),
+                        'source_type': artifact.get('source_type', ''),
+                        'collected_at': artifact.get('collected_at'),
+                        'metadata': metadata
+                    }
                     
+                    self.db.save_artifact(updated_artifact)
+                    logger.info(f"   💾 Artifact updated in database")
+                
+                self.stats['total_processed'] += 1
+                
             except Exception as e:
+                logger.error(f"   ❌ Error processing artifact {artifact_id}: {e}")
                 self.stats['errors'] += 1
-                logger.error(f"   ❌ Error processing {artifact_id}: {e}")
                 continue
         
-        # Generate final report
+        # Generate and return final report
         return self._generate_final_report()
+    
+    def _filter_unprocessed_artifacts(self, artifacts: List[Dict], selected_algorithms: Dict[str, bool]) -> List[Dict]:
+        """
+        Filter artifacts to only include those that need processing for the selected algorithms.
+        
+        Args:
+            artifacts: List of all artifacts
+            selected_algorithms: Dictionary of algorithm names and whether they're selected
+            
+        Returns:
+            List of artifacts that need processing (oldest first)
+        """
+        unprocessed = []
+        
+        for artifact in artifacts:
+            try:
+                metadata = json.loads(artifact.get('raw_metadata', '{}'))
+                needs_processing = False
+                
+                # Check each selected algorithm
+                if selected_algorithms.get('quality_scoring') and not metadata.get('quality_score'):
+                    needs_processing = True
+                
+                if selected_algorithms.get('categorization') and not metadata.get('ai_impact_category'):
+                    needs_processing = True
+                
+                if selected_algorithms.get('multicategory') and not metadata.get('ai_impact_categories'):
+                    needs_processing = True
+                
+                if selected_algorithms.get('wisdom') and not metadata.get('extracted_wisdom'):
+                    needs_processing = True
+                
+                if selected_algorithms.get('content_enhancement'):
+                    # Check if content is enhanced (has substantial content)
+                    content_length = len(artifact.get('content', ''))
+                    if content_length < 500:  # Arbitrary threshold for "enhanced" content
+                        needs_processing = True
+                
+                if selected_algorithms.get('metadata_standardization'):
+                    # Check if metadata has been standardized
+                    if not metadata.get('processing_flags'):
+                        needs_processing = True
+                
+                if needs_processing:
+                    unprocessed.append(artifact)
+                    
+            except Exception as e:
+                logger.error(f"Error checking processing status for artifact {artifact.get('id', 'unknown')}: {e}")
+                # Include in unprocessed list if we can't determine status
+                unprocessed.append(artifact)
+        
+        # Sort by collected_at (oldest first) to prioritize older unprocessed articles
+        unprocessed.sort(key=lambda x: x.get('collected_at', ''), reverse=False)
+        
+        return unprocessed
+    
+    def get_unprocessed_count(self, selected_algorithms: Dict[str, bool]) -> int:
+        """
+        Get count of articles that need processing for the selected algorithms.
+        
+        Args:
+            selected_algorithms: Dictionary of algorithm names and whether they're selected
+            
+        Returns:
+            Number of unprocessed articles
+        """
+        all_artifacts = self.db.get_artifacts()
+        unprocessed = self._filter_unprocessed_artifacts(all_artifacts, selected_algorithms)
+        return len(unprocessed)
     
     def _update_quality_score(self, artifact: Dict, metadata: Dict, force: bool) -> bool:
         """Update quality score for an artifact."""

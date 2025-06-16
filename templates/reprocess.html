@@ -272,7 +272,13 @@
         <div class="card">
             <div class="alert alert-warning">
                 <strong>⚠️ Important:</strong>
-                This will reprocess entries using current algorithms. Use with caution in production. Consider testing with a limited number of entries first.
+                This will reprocess entries using current algorithms. By default, only unprocessed articles will be processed to avoid duplicates. Use "Force Reprocess All" to override this behavior.
+            </div>
+
+            <div class="alert alert-info" id="smartProcessingInfo" style="display: none;">
+                <strong>🎯 Smart Processing:</strong>
+                <span id="unprocessedCount">Calculating...</span> unprocessed articles found for selected algorithms.
+                <div id="unprocessedBreakdown" style="margin-top: 10px; font-size: 0.9em;"></div>
             </div>
 
             <div class="section-title">
@@ -398,6 +404,104 @@
             } else {
                 card.classList.remove('selected');
             }
+            
+            // Update unprocessed count when options change
+            updateUnprocessedCount();
+        }
+
+        function updateUnprocessedCount() {
+            const selectedOptions = [];
+            const checkboxes = document.querySelectorAll('.option-card input[type="checkbox"]:checked');
+            
+            checkboxes.forEach(cb => {
+                selectedOptions.push(cb.id);
+            });
+
+            if (selectedOptions.length === 0) {
+                document.getElementById('smartProcessingInfo').style.display = 'none';
+                return;
+            }
+
+            // Show the info box and set loading state
+            document.getElementById('smartProcessingInfo').style.display = 'block';
+            document.getElementById('unprocessedCount').textContent = 'Calculating...';
+            document.getElementById('unprocessedBreakdown').innerHTML = '';
+
+            // Fetch unprocessed count from server
+            fetch('/api/unprocessed_count', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    algorithms: selectedOptions
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const count = data.unprocessed_count;
+                    const total = data.total_articles;
+                    
+                    document.getElementById('unprocessedCount').textContent = 
+                        `${count} of ${total} articles need processing`;
+                    
+                    // Show breakdown if available
+                    if (data.breakdown) {
+                        let breakdownHtml = '<strong>Breakdown:</strong> ';
+                        const breakdownItems = [];
+                        
+                        if (data.breakdown.quality_scoring > 0) {
+                            breakdownItems.push(`${data.breakdown.quality_scoring} need quality scoring`);
+                        }
+                        if (data.breakdown.categorization > 0) {
+                            breakdownItems.push(`${data.breakdown.categorization} need categorization`);
+                        }
+                        if (data.breakdown.multicategory > 0) {
+                            breakdownItems.push(`${data.breakdown.multicategory} need multi-category analysis`);
+                        }
+                        if (data.breakdown.wisdom > 0) {
+                            breakdownItems.push(`${data.breakdown.wisdom} need wisdom extraction`);
+                        }
+                        if (data.breakdown.content_enhancement > 0) {
+                            breakdownItems.push(`${data.breakdown.content_enhancement} need content enhancement`);
+                        }
+                        if (data.breakdown.metadata_standardization > 0) {
+                            breakdownItems.push(`${data.breakdown.metadata_standardization} need metadata standardization`);
+                        }
+                        
+                        if (breakdownItems.length > 0) {
+                            breakdownHtml += breakdownItems.join(', ');
+                            document.getElementById('unprocessedBreakdown').innerHTML = breakdownHtml;
+                        }
+                    }
+                    
+                    // Update button text based on force mode
+                    const forceReprocess = document.getElementById('force_reprocess').checked;
+                    const button = document.getElementById('startReprocessBtn');
+                    
+                    if (forceReprocess) {
+                        button.innerHTML = `🔥 Force Reprocess All ${total} Articles`;
+                    } else if (count === 0) {
+                        button.innerHTML = `✅ All Articles Already Processed`;
+                        button.disabled = true;
+                    } else {
+                        button.innerHTML = `🎯 Process ${count} Unprocessed Articles`;
+                        button.disabled = false;
+                    }
+                } else {
+                    document.getElementById('unprocessedCount').textContent = 'Error calculating count';
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching unprocessed count:', error);
+                document.getElementById('unprocessedCount').textContent = 'Error calculating count';
+            });
+        }
+
+        function updateButtonText() {
+            // Update button text when force checkbox changes
+            updateUnprocessedCount();
         }
 
         function startReprocessing() {
