@@ -512,6 +512,7 @@ class DatabaseManager:
             
             return {
                 'total_artifacts': total_artifacts,
+                'total_articles': total_artifacts,  # Add this for template compatibility
                 'total_classifications': total_classifications,
                 'source_types': dict(source_types),
                 'categories': final_categories,

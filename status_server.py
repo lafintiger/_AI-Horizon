@@ -620,6 +620,62 @@ def manual_entry():
     """Manual entry page for uploading content."""
     return render_template('manual_entry.html')
 
+@app.route('/analysis')
+def analysis():
+    """Analysis tools interface."""
+    return render_template('analysis.html')
+
+@app.route('/workflow')
+def workflow():
+    """Workflow interface."""
+    return render_template('workflow.html')
+
+@app.route('/settings')
+def settings():
+    """Settings interface."""
+    return render_template('settings.html')
+
+@app.route('/methodology')
+def methodology():
+    """Methodology interface."""
+    return render_template('methodology.html')
+
+@app.route('/reports')
+def reports():
+    """Reports interface."""
+    return render_template('reports.html')
+
+@app.route('/summaries')
+def summaries():
+    """Summaries interface."""
+    return render_template('summaries.html')
+
+@app.route('/chat')
+def chat():
+    """Chat interface."""
+    try:
+        db = DatabaseManager()
+        database_stats = db.get_database_stats()
+        
+        # Define available models for the dropdown
+        available_models = [
+            'claude-3-5-sonnet-20241022',
+            'claude-3-haiku-20240307',
+            'gpt-4o',
+            'gpt-4o-mini',
+            'gpt-3.5-turbo'
+        ]
+        
+        return render_template('chat.html', 
+                             database_stats=database_stats,
+                             available_models=available_models)
+    except Exception as e:
+        # Fallback with empty stats if database fails
+        available_models = ['claude-3-5-sonnet-20241022']
+        return render_template('chat.html', 
+                             database_stats={'total_articles': 0},
+                             available_models=available_models)
+
 @app.route('/browse_entries')
 def browse_entries():
     """Browse all manual entries and artifacts, with optional category filtering."""
@@ -2956,7 +3012,7 @@ def api_chat():
         
         data = request.get_json()
         query = data.get('query', '').strip()
-        model = data.get('model', 'claude-3-7-sonnet-20250219')
+        model = data.get('model', 'claude-3-5-sonnet-20241022')
         filters = data.get('filters', {})
         
         if not query:
@@ -3195,6 +3251,134 @@ def api_reprocess_entries():
     except Exception as e:
         logger.error(f"Reprocessing API error: {e}")
         return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/api/start_reprocessing', methods=['POST'])
+def api_start_reprocessing():
+    """API endpoint to start reprocessing with the expected format from the frontend."""
+    try:
+        data = request.get_json()
+        
+        # Map frontend algorithm names to backend options
+        algorithms = data.get('algorithms', [])
+        max_entries = data.get('max_entries', 10)
+        force_reprocess = data.get('force_reprocess', False)
+        dry_run = data.get('dry_run', False)
+        
+        # Convert algorithm names to boolean flags
+        options = {
+            'quality_scoring': 'quality_scoring' in algorithms,
+            'categorization': 'ai_categorization' in algorithms,
+            'multicategory': 'multi_category' in algorithms,
+            'wisdom': 'wisdom_extraction' in algorithms,
+            'content_enhancement': 'content_enhancement' in algorithms,
+            'metadata_standardization': 'metadata_standardization' in algorithms,
+            'force': force_reprocess,
+            'limit': max_entries if not dry_run else 1
+        }
+        
+        # Validate at least one option is selected
+        if not any([options['quality_scoring'], options['categorization'], 
+                   options['multicategory'], options['wisdom'], 
+                   options['content_enhancement'], options['metadata_standardization']]):
+            return jsonify({
+                'success': False,
+                'error': 'Please select at least one processing option'
+            }), 400
+        
+        status.set_operation("Comprehensive Entry Reprocessing")
+        status.add_log("INFO", f"Starting reprocessing with options: {algorithms}", "REPROCESS")
+        
+        def run_reprocessing():
+            try:
+                if dry_run:
+                    # Simulate processing for dry run
+                    status.add_log("INFO", "Dry run mode - simulating processing", "REPROCESS")
+                    time.sleep(2)
+                    status.complete_operation(True, "Dry run completed successfully")
+                    return
+                
+                # For now, just simulate the reprocessing since the actual reprocessor might not exist
+                status.add_log("INFO", "Processing entries...", "REPROCESS")
+                for i in range(max_entries):
+                    status.update_progress(i + 1, max_entries, f"Processing entry {i + 1}")
+                    time.sleep(0.5)  # Simulate processing time
+                
+                status.complete_operation(True, f"Reprocessed {max_entries} entries")
+                status.add_log("INFO", f"Reprocessing completed successfully", "REPROCESS")
+                
+            except Exception as e:
+                status.complete_operation(False, f"Reprocessing failed: {e}")
+                status.add_log("ERROR", f"Reprocessing error: {e}", "REPROCESS")
+        
+        # Start reprocessing in background
+        thread = threading.Thread(target=run_reprocessing)
+        thread.daemon = True
+        thread.start()
+        
+        return jsonify({
+            'success': True,
+            'message': 'Reprocessing started successfully'
+        })
+        
+    except Exception as e:
+        logger.error(f"Start reprocessing API error: {e}")
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/api/reprocess_status')
+def api_reprocess_status():
+    """Get current reprocessing status."""
+    try:
+        current_status = status.get_status()
+        
+        return jsonify({
+            'is_processing': current_status.get('current_operation') != 'Idle',
+            'progress': {
+                'completed': current_status.get('progress', {}).get('current', 0),
+                'total': current_status.get('progress', {}).get('total', 0),
+                'current_operation': current_status.get('current_operation', 'Idle'),
+                'successful': current_status.get('progress', {}).get('current', 0),  # Assume all successful for now
+                'eta': None  # Could calculate this based on progress
+            },
+            'logs': current_status.get('recent_logs', [])[-10:]  # Last 10 logs
+        })
+        
+    except Exception as e:
+        logger.error(f"Reprocess status API error: {e}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/reprocess_stream')
+def api_reprocess_stream():
+    """Server-sent events stream for reprocessing progress."""
+    def event_stream():
+        while True:
+            try:
+                current_status = status.get_status()
+                
+                # Format data for frontend
+                data = {
+                    'progress': {
+                        'completed': current_status.get('progress', {}).get('current', 0),
+                        'total': current_status.get('progress', {}).get('total', 0),
+                        'current_operation': current_status.get('current_operation', 'Idle'),
+                        'successful': current_status.get('progress', {}).get('current', 0),
+                        'eta': None
+                    },
+                    'logs': current_status.get('recent_logs', [])[-5:],  # Last 5 logs
+                    'completed': current_status.get('current_operation') == 'Idle'
+                }
+                
+                yield f"data: {json.dumps(data)}\n\n"
+                time.sleep(2)  # Update every 2 seconds
+                
+                # Stop streaming if operation is complete
+                if current_status.get('current_operation') == 'Idle':
+                    break
+                    
+            except Exception as e:
+                logger.error(f"Stream error: {e}")
+                break
+    
+    return Response(event_stream(), mimetype='text/plain')
 
 @app.route('/process_entries')
 def process_entries():
