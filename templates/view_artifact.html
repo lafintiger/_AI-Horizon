@@ -54,7 +54,7 @@
                             </tr>
                             <tr>
                                 <td><strong>Added:</strong></td>
-                                <td>{{ artifact.collected_at.strftime('%Y-%m-%d %H:%M:%S') if artifact.collected_at else 'Unknown' }}</td>
+                                <td>{{ artifact.collected_at if artifact.collected_at else 'Unknown' }}</td>
                             </tr>
                             <tr>
                                 <td><strong>Source Type:</strong></td>
@@ -62,7 +62,7 @@
                             </tr>
                             <tr>
                                 <td><strong>Content Length:</strong></td>
-                                <td>{{ artifact.content|length:,() }} characters</td>
+                                <td>{{ "{:,}".format(artifact.content|length) }} characters</td>
                             </tr>
                         </table>
                     </div>

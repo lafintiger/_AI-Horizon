@@ -1218,3 +1218,5 @@
 2025-06-15 16:39:57 | ERROR    | scripts.manual_entry.manual_entry_processor:ai_categorize_content:214 - Failed to parse AI response as JSON
 2025-06-15 16:40:04 | ERROR    | scripts.manual_entry.manual_entry_processor:ai_categorize_content:214 - Failed to parse AI response as JSON
 2025-06-15 16:40:10 | ERROR    | scripts.manual_entry.manual_entry_processor:ai_categorize_content:214 - Failed to parse AI response as JSON
+2025-06-16 01:39:18 | ERROR    | __main__:view_entry:3411 - View entry error: 'metadata' is undefined
+2025-06-16 01:39:51 | ERROR    | __main__:view_entry:3411 - View entry error: 'metadata' is undefined

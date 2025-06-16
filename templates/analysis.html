@@ -280,36 +280,47 @@
         }
         
         .result-item {
-            margin-bottom: 10px;
-            padding: 8px 0;
-            border-bottom: 1px solid #ecf0f1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .result-item:last-child {
+            border-bottom: none;
         }
         
         .result-label {
-            font-weight: bold;
-            color: #34495e;
-            display: inline-block;
-            width: 150px;
+            font-weight: 500;
+            color: #4a5568;
+            flex: 1;
         }
         
         .result-value {
-            color: #667eea;
             font-weight: bold;
+            color: #2d3748;
+            text-align: right;
+            flex: 1;
         }
         
         .report-link {
             display: inline-block;
             margin-top: 15px;
             padding: 10px 20px;
-            background: #27ae60;
+            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
             color: white;
             text-decoration: none;
-            border-radius: 5px;
-            transition: background 0.3s ease;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.3s ease;
         }
         
         .report-link:hover {
-            background: #219a52;
+            background: linear-gradient(135deg, #3182ce 0%, #2c5282 100%);
+            transform: translateY(-1px);
+            color: white;
+            text-decoration: none;
         }
         
         .navigation {
@@ -1387,25 +1398,80 @@
                 const data = await response.json();
                 
                 if (data.success) {
-                    // Display results
-                    document.getElementById('overallSentiment').textContent = data.summary.overall_sentiment;
-                    document.getElementById('opportunityRatio').textContent = data.summary.opportunity_threat_ratio;
-                    document.getElementById('dominantNarrative').textContent = data.summary.dominant_narrative;
-                    document.getElementById('topSkill').textContent = data.summary.top_skill;
-                    document.getElementById('employerSentiment').textContent = data.summary.employer_sentiment;
-                    document.getElementById('employeeSentiment').textContent = data.summary.employee_sentiment;
+                    // Display results using the correct API response structure
+                    const metrics = data.metrics || {};
                     
-                    // Set report link
-                    const reportPath = data.report_file.replace(/\\/g, '/');
-                    document.getElementById('sentimentReportLink').href = `/api/view_report?path=${encodeURIComponent(reportPath)}`;
+                    // Update elements if they exist
+                    const overallSentimentEl = document.getElementById('overallSentiment');
+                    if (overallSentimentEl) {
+                        overallSentimentEl.textContent = metrics.overall_sentiment || 'N/A';
+                    }
+                    
+                    const opportunityRatioEl = document.getElementById('opportunityRatio');
+                    if (opportunityRatioEl) {
+                        opportunityRatioEl.textContent = metrics.opportunity_threat_ratio || 'N/A';
+                    }
+                    
+                    const dominantNarrativeEl = document.getElementById('dominantNarrative');
+                    if (dominantNarrativeEl) {
+                        dominantNarrativeEl.textContent = metrics.dominant_narrative || 'N/A';
+                    }
+                    
+                    const topSkillEl = document.getElementById('topSkill');
+                    if (topSkillEl) {
+                        topSkillEl.textContent = metrics.top_skill || 'N/A';
+                    }
+                    
+                    const employerSentimentEl = document.getElementById('employerSentiment');
+                    if (employerSentimentEl) {
+                        employerSentimentEl.textContent = metrics.employer_sentiment || 'N/A';
+                    }
+                    
+                    const employeeSentimentEl = document.getElementById('employeeSentiment');
+                    if (employeeSentimentEl) {
+                        employeeSentimentEl.textContent = metrics.employee_sentiment || 'N/A';
+                    }
+                    
+                    // Set report link if element exists
+                    const reportLinkEl = document.getElementById('sentimentReportLink');
+                    if (reportLinkEl && data.report_file) {
+                        const reportPath = data.report_file.replace(/\\/g, '/');
+                        reportLinkEl.href = `/api/view_report?path=${encodeURIComponent(reportPath)}`;
+                    }
+                    
+                    // If no specific result elements exist, create a generic results display
+                    if (!overallSentimentEl) {
+                        results.innerHTML = `
+                            <h3>🎯 Job Market Sentiment Analysis Results</h3>
+                            <div class="result-item">
+                                <span class="result-label">Overall Sentiment:</span>
+                                <span class="result-value">${metrics.overall_sentiment || 'N/A'}</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">Top Skill:</span>
+                                <span class="result-value">${metrics.top_skill || 'N/A'}</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">Confidence Level:</span>
+                                <span class="result-value">${metrics.confidence_level || 'N/A'}</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">Analysis Time:</span>
+                                <span class="result-value">${new Date().toLocaleString()}</span>
+                            </div>
+                            ${data.report_file ? `<a href="/api/view_report?path=${encodeURIComponent(data.report_file)}" class="report-link" target="_blank">📄 View Detailed Report</a>` : ''}
+                        `;
+                    }
                     
                     results.style.display = 'block';
                 } else {
-                    alert('Sentiment analysis failed: ' + data.error);
+                    results.innerHTML = `<div class="error">Sentiment analysis failed: ${data.error || 'Unknown error'}</div>`;
+                    results.style.display = 'block';
                 }
             } catch (error) {
                 console.error('Error:', error);
-                alert('Error running sentiment analysis: ' + error.message);
+                results.innerHTML = `<div class="error">Error running sentiment analysis: ${error.message}</div>`;
+                results.style.display = 'block';
             } finally {
                 loading.style.display = 'none';
                 button.disabled = false;
@@ -1433,16 +1499,34 @@
                 const data = await response.json();
                 
                 if (data.success) {
-                    // Display results using the metrics from the API response
-                    document.getElementById('adoptionAnalyzed').textContent = data.metrics?.total_analyzed || 'N/A';
-                    document.getElementById('adoptionPhase').textContent = data.metrics?.adoption_phase || 'N/A';
-                    document.getElementById('transformationSpeed').textContent = data.metrics?.transformation_speed || 'N/A';
-                    document.getElementById('topSkills').textContent = data.metrics?.top_skills || 'N/A';
+                    // Display results using the correct API response structure
+                    const metrics = data.metrics || {};
                     
-                    // Populate completed features
+                    // Update elements if they exist
+                    const adoptionAnalyzedEl = document.getElementById('adoptionAnalyzed');
+                    if (adoptionAnalyzedEl) {
+                        adoptionAnalyzedEl.textContent = metrics.total_analyzed || 'N/A';
+                    }
+                    
+                    const adoptionPhaseEl = document.getElementById('adoptionPhase');
+                    if (adoptionPhaseEl) {
+                        adoptionPhaseEl.textContent = metrics.adoption_phase || 'N/A';
+                    }
+                    
+                    const transformationSpeedEl = document.getElementById('transformationSpeed');
+                    if (transformationSpeedEl) {
+                        transformationSpeedEl.textContent = metrics.transformation_speed || 'N/A';
+                    }
+                    
+                    const topSkillsEl = document.getElementById('topSkills');
+                    if (topSkillsEl) {
+                        topSkillsEl.textContent = metrics.top_skills || 'N/A';
+                    }
+                    
+                    // Populate completed features if element exists
                     const featuresContainer = document.getElementById('completedFeatures');
-                    featuresContainer.innerHTML = '';
-                    if (data.features) {
+                    if (featuresContainer && data.features) {
+                        featuresContainer.innerHTML = '';
                         data.features.forEach(feature => {
                             const li = document.createElement('li');
                             li.textContent = feature;
@@ -1450,17 +1534,53 @@
                         });
                     }
                     
-                    // Set report link
-                    const reportPath = data.report_file.replace(/\\/g, '/');
-                    document.getElementById('adoptionReportLink').href = `/api/view_report?path=${encodeURIComponent(reportPath)}`;
+                    // Set report link if element exists
+                    const reportLinkEl = document.getElementById('adoptionReportLink');
+                    if (reportLinkEl && data.report_file) {
+                        const reportPath = data.report_file.replace(/\\/g, '/');
+                        reportLinkEl.href = `/api/view_report?path=${encodeURIComponent(reportPath)}`;
+                    }
+                    
+                    // If no specific result elements exist, create a generic results display
+                    if (!adoptionAnalyzedEl) {
+                        results.innerHTML = `
+                            <h3>🚀 AI Adoption Predictions Results</h3>
+                            <div class="result-item">
+                                <span class="result-label">Analysis Status:</span>
+                                <span class="result-value">Completed Successfully</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">Features Analyzed:</span>
+                                <span class="result-value">${data.features ? data.features.length : 0} features</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">Analysis Time:</span>
+                                <span class="result-value">${new Date().toLocaleString()}</span>
+                            </div>
+                            ${data.report_file ? `<a href="/api/view_report?path=${encodeURIComponent(data.report_file)}" class="report-link" target="_blank">📄 View Detailed Report</a>` : ''}
+                        `;
+                        
+                        if (data.features && data.features.length > 0) {
+                            results.innerHTML += `
+                                <div class="result-item">
+                                    <span class="result-label">Completed Features:</span>
+                                    <ul style="margin-top: 10px;">
+                                        ${data.features.map(feature => `<li>${feature}</li>`).join('')}
+                                    </ul>
+                                </div>
+                            `;
+                        }
+                    }
                     
                     results.style.display = 'block';
                 } else {
-                    alert('Predictions analysis failed: ' + (data.error || 'Unknown error'));
+                    results.innerHTML = `<div class="error">Predictions analysis failed: ${data.error || 'Unknown error'}</div>`;
+                    results.style.display = 'block';
                 }
             } catch (error) {
                 console.error('Error:', error);
-                alert('Error running predictions analysis: ' + error.message);
+                results.innerHTML = `<div class="error">Error running predictions analysis: ${error.message}</div>`;
+                results.style.display = 'block';
             } finally {
                 loading.style.display = 'none';
                 button.disabled = false;
@@ -1474,7 +1594,11 @@
             
             button.disabled = true;
             button.innerHTML = '⏳ Generating...';
-            results.style.display = 'none';
+            
+            // Show results div if it exists
+            if (results) {
+                results.style.display = 'none';
+            }
             
             try {
                 const response = await fetch('/api/run_comprehensive_category_narratives', {
@@ -1487,28 +1611,101 @@
                 
                 const data = await response.json();
                 
-                if (data.error) {
-                    alert(`Error: ${data.error}`);
-                } else {
-                    // Update metrics
-                    document.getElementById('narrativesCategoriesAnalyzed').textContent = data.metrics?.categories_analyzed || '-';
-                    document.getElementById('narrativesTotalArticles').textContent = data.metrics?.total_articles || '-';
-                    document.getElementById('narrativesAvgPerCategory').textContent = data.metrics?.avg_articles_per_category || '-';
+                if (data.success) {
+                    // Update metrics if elements exist
+                    const metrics = data.metrics || {};
                     
-                    // Show results
-                    results.style.display = 'block';
-                    
-                    // Update report link if available
-                    if (data.report_file) {
-                        const reportLink = document.getElementById('narrativesReportLink');
-                        reportLink.href = `/api/download_report?file=${encodeURIComponent(data.report_file)}`;
-                        reportLink.style.display = 'inline';
+                    const narrativesCategoriesAnalyzedEl = document.getElementById('narrativesCategoriesAnalyzed');
+                    if (narrativesCategoriesAnalyzedEl) {
+                        narrativesCategoriesAnalyzedEl.textContent = metrics.categories_analyzed || 'N/A';
                     }
                     
-                    alert('Comprehensive category narratives analysis completed successfully!');
+                    const narrativesTotalArticlesEl = document.getElementById('narrativesTotalArticles');
+                    if (narrativesTotalArticlesEl) {
+                        narrativesTotalArticlesEl.textContent = metrics.total_articles || 'N/A';
+                    }
+                    
+                    const narrativesAvgPerCategoryEl = document.getElementById('narrativesAvgPerCategory');
+                    if (narrativesAvgPerCategoryEl) {
+                        narrativesAvgPerCategoryEl.textContent = metrics.avg_articles_per_category || 'N/A';
+                    }
+                    
+                    // Update report link if element exists
+                    const reportLinkEl = document.getElementById('narrativesReportLink');
+                    if (reportLinkEl && data.report_file) {
+                        reportLinkEl.href = `/api/download_report?file=${encodeURIComponent(data.report_file)}`;
+                        reportLinkEl.style.display = 'inline';
+                    }
+                    
+                    // If no specific result elements exist, create a generic results display
+                    if (!narrativesCategoriesAnalyzedEl && results) {
+                        results.innerHTML = `
+                            <h3>📚 Comprehensive Category Narratives Results</h3>
+                            <div class="result-item">
+                                <span class="result-label">Analysis Status:</span>
+                                <span class="result-value">Completed Successfully</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">Categories Analyzed:</span>
+                                <span class="result-value">${metrics.categories_analyzed || 'N/A'}</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">Total Articles:</span>
+                                <span class="result-value">${metrics.total_articles || 'N/A'}</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">Avg Articles per Category:</span>
+                                <span class="result-value">${metrics.avg_articles_per_category || 'N/A'}</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">Features Analyzed:</span>
+                                <span class="result-value">${data.features ? data.features.length : 0} features</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">Analysis Time:</span>
+                                <span class="result-value">${new Date().toLocaleString()}</span>
+                            </div>
+                            ${data.report_file ? `<a href="/api/download_report?file=${encodeURIComponent(data.report_file)}" class="report-link" target="_blank">📄 Download Report</a>` : ''}
+                        `;
+                        
+                        if (data.features && data.features.length > 0) {
+                            results.innerHTML += `
+                                <div class="result-item">
+                                    <span class="result-label">Completed Features:</span>
+                                    <ul style="margin-top: 10px;">
+                                        ${data.features.map(feature => `<li>${feature}</li>`).join('')}
+                                    </ul>
+                                </div>
+                            `;
+                        }
+                    }
+                    
+                    // Show results
+                    if (results) {
+                        results.style.display = 'block';
+                    }
+                    
+                    // Show success message
+                    if (!narrativesCategoriesAnalyzedEl) {
+                        alert('Comprehensive category narratives analysis completed successfully!');
+                    }
+                } else {
+                    const errorMsg = `Analysis failed: ${data.error || 'Unknown error'}`;
+                    if (results) {
+                        results.innerHTML = `<div class="error">${errorMsg}</div>`;
+                        results.style.display = 'block';
+                    } else {
+                        alert(errorMsg);
+                    }
                 }
             } catch (error) {
-                alert(`Error: ${error.message}`);
+                const errorMsg = `Error: ${error.message}`;
+                if (results) {
+                    results.innerHTML = `<div class="error">${errorMsg}</div>`;
+                    results.style.display = 'block';
+                } else {
+                    alert(errorMsg);
+                }
             } finally {
                 button.disabled = false;
                 button.innerHTML = '🚀 Generate Narratives';
@@ -1656,7 +1853,11 @@
             // Show loading state
             button.innerHTML = '⏳ Analyzing...';
             button.disabled = true;
-            resultsDiv.style.display = 'block';
+            
+            // Show results div if it exists
+            if (resultsDiv) {
+                resultsDiv.style.display = 'block';
+            }
             
             fetch('/api/run_category_distribution_insights', {
                 method: 'POST',
@@ -1668,31 +1869,96 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    // Update metrics
-                    document.getElementById('categoryArticlesAnalyzed').textContent = data.metrics?.total_analyzed || 'N/A';
-                    document.getElementById('categoryBalanceScore').textContent = data.metrics?.distribution_balance || 'N/A';
-                    document.getElementById('categoryPredictionConfidence').textContent = 'High'; // From enhanced analysis
+                    // Update metrics if elements exist
+                    const metrics = data.metrics || {};
                     
-                    // Update global metrics
-                    document.getElementById('categoryDistributionCategories').textContent = data.metrics?.categories_covered || '5';
-                    document.getElementById('categoryDistributionBalance').textContent = data.metrics?.distribution_balance || '0.70';
-                    
-                    // Set report link
-                    const reportLink = document.getElementById('categoryDistributionReportLink');
-                    if (data.report_file) {
-                        reportLink.href = '/api/view_report?path=' + encodeURIComponent(data.report_file);
+                    const categoryArticlesAnalyzedEl = document.getElementById('categoryArticlesAnalyzed');
+                    if (categoryArticlesAnalyzedEl) {
+                        categoryArticlesAnalyzedEl.textContent = metrics.total_analyzed || 'N/A';
                     }
                     
-                    // Load visualization data for interactive charts
-                    loadCategoryVisualizationData();
+                    const categoryBalanceScoreEl = document.getElementById('categoryBalanceScore');
+                    if (categoryBalanceScoreEl) {
+                        categoryBalanceScoreEl.textContent = metrics.distribution_balance || 'N/A';
+                    }
+                    
+                    const categoryPredictionConfidenceEl = document.getElementById('categoryPredictionConfidence');
+                    if (categoryPredictionConfidenceEl) {
+                        categoryPredictionConfidenceEl.textContent = 'High'; // From enhanced analysis
+                    }
+                    
+                    // Update global metrics if elements exist
+                    const categoryDistributionCategoriesEl = document.getElementById('categoryDistributionCategories');
+                    if (categoryDistributionCategoriesEl) {
+                        categoryDistributionCategoriesEl.textContent = metrics.categories_covered || '5';
+                    }
+                    
+                    const categoryDistributionBalanceEl = document.getElementById('categoryDistributionBalance');
+                    if (categoryDistributionBalanceEl) {
+                        categoryDistributionBalanceEl.textContent = metrics.distribution_balance || '0.70';
+                    }
+                    
+                    // Set report link if element exists
+                    const reportLinkEl = document.getElementById('categoryDistributionReportLink');
+                    if (reportLinkEl && data.report_file) {
+                        reportLinkEl.href = '/api/view_report?path=' + encodeURIComponent(data.report_file);
+                    }
+                    
+                    // If no specific result elements exist, create a generic results display
+                    if (!categoryArticlesAnalyzedEl && resultsDiv) {
+                        resultsDiv.innerHTML = `
+                            <h3>📊 Category Distribution Analysis Results</h3>
+                            <div class="result-item">
+                                <span class="result-label">Analysis Status:</span>
+                                <span class="result-value">Completed Successfully</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">Features Analyzed:</span>
+                                <span class="result-value">${data.features ? data.features.length : 0} features</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">Analysis Time:</span>
+                                <span class="result-value">${new Date().toLocaleString()}</span>
+                            </div>
+                            ${data.report_file ? `<a href="/api/view_report?path=${encodeURIComponent(data.report_file)}" class="report-link" target="_blank">📄 View Detailed Report</a>` : ''}
+                        `;
+                        
+                        if (data.features && data.features.length > 0) {
+                            resultsDiv.innerHTML += `
+                                <div class="result-item">
+                                    <span class="result-label">Completed Features:</span>
+                                    <ul style="margin-top: 10px;">
+                                        ${data.features.map(feature => `<li>${feature}</li>`).join('')}
+                                    </ul>
+                                </div>
+                            `;
+                        }
+                    }
+                    
+                    // Load visualization data for interactive charts if function exists
+                    if (typeof loadCategoryVisualizationData === 'function') {
+                        loadCategoryVisualizationData();
+                    }
                     
                 } else {
-                    alert('Analysis failed: ' + (data.error || 'Unknown error'));
+                    const errorMsg = 'Analysis failed: ' + (data.error || 'Unknown error');
+                    if (resultsDiv) {
+                        resultsDiv.innerHTML = `<div class="error">${errorMsg}</div>`;
+                        resultsDiv.style.display = 'block';
+                    } else {
+                        alert(errorMsg);
+                    }
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('Analysis failed: ' + error.message);
+                const errorMsg = 'Analysis failed: ' + error.message;
+                if (resultsDiv) {
+                    resultsDiv.innerHTML = `<div class="error">${errorMsg}</div>`;
+                    resultsDiv.style.display = 'block';
+                } else {
+                    alert(errorMsg);
+                }
             })
             .finally(() => {
                 button.innerHTML = '🚀 Run Advanced Analysis';
@@ -1760,6 +2026,8 @@
                     confidence: [0.85, 0.78, 0.82, 0.75]
                 }
             };
+            
+            console.log('Category visualization data loaded:', window.categoryVisualizationData);
         }
         
         function initializeCategoryCharts() {
@@ -2001,34 +2269,33 @@
                 // Store data globally for chart initialization
                 window.vizData = data;
                 
+                // Wait for Chart.js to be fully loaded before initializing
+                if (typeof Chart === 'undefined') {
+                    console.log('Waiting for Chart.js to load...');
+                    setTimeout(() => loadVisualizationData(type), 500);
+                    return;
+                }
+                
                 // Initialize the first chart (overview)
-                setTimeout(() => initializeChart('overview'), 100);
+                setTimeout(() => initializeChart('overview'), 200);
                 
             } catch (error) {
                 console.error('Error fetching visualization data:', error);
                 
                 // Use mock data for demonstration
                 window.vizData = generateMockData(type);
-                setTimeout(() => initializeChart('overview'), 100);
+                
+                // Wait for Chart.js before using mock data too
+                if (typeof Chart === 'undefined') {
+                    setTimeout(() => loadVisualizationData(type), 500);
+                    return;
+                }
+                
+                setTimeout(() => initializeChart('overview'), 200);
             }
         }
         
-        function initializeChart(chartType) {
-            const canvasId = chartType + 'Chart';
-            const canvas = document.getElementById(canvasId);
-            
-            if (!canvas) return;
-            
-            const ctx = canvas.getContext('2d');
-            
-            // Destroy existing chart if it exists
-            if (vizCharts[chartType]) {
-                vizCharts[chartType].destroy();
-            }
-            
-            // Create new chart based on type and current analysis
-            vizCharts[chartType] = createChart(ctx, chartType, currentVizType);
-        }
+        // initializeChart function moved to enhanced version below
         
         function createChart(ctx, chartType, analysisType) {
             const data = window.vizData || {};
@@ -2268,7 +2535,119 @@
                     }, 100);
                 }, index * 200);
             });
+            
+            // Check if Chart.js is loaded
+            if (typeof Chart === 'undefined') {
+                console.error('Chart.js library not loaded! Charts will not work.');
+            } else {
+                console.log('Chart.js loaded successfully');
+                // Test chart creation
+                testChartCreation();
+            }
         });
+        
+        // Test function to verify Chart.js is working
+        function testChartCreation() {
+            console.log('Testing chart creation...');
+            // This will help us verify if Chart.js is working
+            try {
+                const testCanvas = document.createElement('canvas');
+                testCanvas.width = 100;
+                testCanvas.height = 100;
+                const testCtx = testCanvas.getContext('2d');
+                
+                const testChart = new Chart(testCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Test'],
+                        datasets: [{
+                            data: [100],
+                            backgroundColor: ['#27ae60']
+                        }]
+                    },
+                    options: {
+                        responsive: false,
+                        plugins: {
+                            legend: { display: false }
+                        }
+                    }
+                });
+                
+                testChart.destroy();
+                console.log('✅ Chart.js test successful - charts should work!');
+            } catch (error) {
+                console.error('❌ Chart.js test failed:', error);
+            }
+        }
+        
+        // Enhanced chart initialization with error handling
+        function initializeChart(chartType) {
+            const canvasId = chartType + 'Chart';
+            const canvas = document.getElementById(canvasId);
+            
+            if (!canvas) {
+                console.error(`Canvas element not found: ${canvasId}`);
+                return;
+            }
+            
+            if (typeof Chart === 'undefined') {
+                console.error('Chart.js not loaded, cannot create chart');
+                return;
+            }
+            
+            const ctx = canvas.getContext('2d');
+            
+            // Destroy existing chart if it exists
+            if (vizCharts[chartType]) {
+                vizCharts[chartType].destroy();
+            }
+            
+            try {
+                // Create new chart based on type and current analysis
+                vizCharts[chartType] = createChart(ctx, chartType, currentVizType);
+                console.log(`Chart created successfully: ${chartType}`);
+            } catch (error) {
+                console.error(`Error creating chart ${chartType}:`, error);
+            }
+        }
+        
+        // Enhanced category chart initialization
+        function initializeSpecificChart(chartType) {
+            const data = window.categoryVisualizationData;
+            if (!data) {
+                loadCategoryVisualizationData();
+                return;
+            }
+            
+            if (typeof Chart === 'undefined') {
+                console.error('Chart.js not loaded, cannot create category chart');
+                return;
+            }
+            
+            try {
+                switch(chartType) {
+                    case 'distribution':
+                        initializeDistributionChart();
+                        break;
+                    case 'evolution':
+                        initializeEvolutionChart();
+                        break;
+                    case 'network':
+                        initializeNetworkChart();
+                        break;
+                    case 'predictions':
+                        initializePredictionsChart();
+                        break;
+                }
+                console.log(`Category chart created successfully: ${chartType}`);
+            } catch (error) {
+                console.error(`Error creating category chart ${chartType}:`, error);
+            }
+        }
     </script>
+    
+    <!-- Chart.js Library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+    
     </div>
 {% endblock %}

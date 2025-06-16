@@ -770,7 +770,6 @@ def browse_entries():
                              total_manual=len(manual_entries),
                              total_automated=len(automated_entries),
                              category_filter=category_filter)
-            
     except Exception as e:
         import traceback
         return f"Error loading browse entries: {str(e)}", 500
@@ -3297,18 +3296,43 @@ def api_start_reprocessing():
                     status.complete_operation(True, "Dry run completed successfully")
                     return
                 
-                # For now, just simulate the reprocessing since the actual reprocessor might not exist
-                status.add_log("INFO", "Processing entries...", "REPROCESS")
-                for i in range(max_entries):
-                    status.update_progress(i + 1, max_entries, f"Processing entry {i + 1}")
-                    time.sleep(0.5)  # Simulate processing time
+                # Import and use the actual reprocessor
+                from scripts.reprocess_all_entries import ComprehensiveReprocessor
                 
-                status.complete_operation(True, f"Reprocessed {max_entries} entries")
-                status.add_log("INFO", f"Reprocessing completed successfully", "REPROCESS")
+                status.add_log("INFO", "Initializing comprehensive reprocessor...", "REPROCESS")
+                reprocessor = ComprehensiveReprocessor()
+                
+                # Run actual reprocessing
+                status.add_log("INFO", f"Processing up to {max_entries} entries...", "REPROCESS")
+                report = reprocessor.reprocess_all_entries(
+                    quality_scoring=options['quality_scoring'],
+                    categorization=options['categorization'],
+                    multicategory=options['multicategory'],
+                    wisdom=options['wisdom'],
+                    content_enhancement=options['content_enhancement'],
+                    metadata_standardization=options['metadata_standardization'],
+                    force=options['force'],
+                    limit=options['limit']
+                )
+                
+                # Log results
+                stats = report.get('statistics', {})
+                total_processed = stats.get('total_processed', 0)
+                wisdom_updated = stats.get('wisdom_updated', 0)
+                errors = stats.get('errors', 0)
+                
+                status.add_log("INFO", f"Reprocessing completed: {total_processed} entries processed", "REPROCESS")
+                status.add_log("INFO", f"Wisdom extracted for {wisdom_updated} entries", "REPROCESS")
+                
+                if errors > 0:
+                    status.add_log("WARNING", f"Encountered {errors} errors during processing", "REPROCESS")
+                
+                status.complete_operation(True, f"Reprocessed {total_processed} entries successfully")
                 
             except Exception as e:
                 status.complete_operation(False, f"Reprocessing failed: {e}")
                 status.add_log("ERROR", f"Reprocessing error: {e}", "REPROCESS")
+                logger.error(f"Reprocessing failed: {e}")
         
         # Start reprocessing in background
         thread = threading.Thread(target=run_reprocessing)
@@ -3395,24 +3419,50 @@ def view_entry(artifact_id):
         if not artifact:
             return f"Artifact not found: {artifact_id}", 404
         
-        # Calculate quality score if not already present
+        # Add quality score if not present
         if 'quality_score' not in artifact:
-            try:
-                quality_score, detailed_scores = quality_ranker.calculate_document_score(artifact)
-                artifact['quality_score'] = round(quality_score, 3)
-                artifact['quality_grade'] = (
-                    'Excellent' if quality_score >= 0.8 else
-                    'Good' if quality_score >= 0.6 else
-                    'Fair' if quality_score >= 0.4 else 'Poor'
-                )
-            except Exception as e:
-                artifact['quality_score'] = 0.0
-                artifact['quality_grade'] = 'Unknown'
+            artifact['quality_score'] = 0.0
+            artifact['quality_grade'] = 'Unknown'
         
-        return render_template('view_artifact.html', artifact=artifact)
+        # Ensure collected_at is a string for template compatibility
+        if 'collected_at' in artifact and artifact['collected_at']:
+            # If it's already a string, keep it as is
+            if not isinstance(artifact['collected_at'], str):
+                artifact['collected_at'] = str(artifact['collected_at'])
+        
+        # Extract metadata for template
+        metadata = {}
+        if artifact.get('raw_metadata'):
+            try:
+                import json
+                if isinstance(artifact['raw_metadata'], str):
+                    metadata = json.loads(artifact['raw_metadata'])
+                else:
+                    metadata = artifact['raw_metadata']
+            except (json.JSONDecodeError, TypeError):
+                metadata = {}
+        
+        return render_template('view_entry.html', artifact=artifact, metadata=metadata)
         
     except Exception as e:
+        logger.error(f"View entry error: {e}")
         return f"Error viewing artifact: {str(e)}", 500
+
+@app.route('/delete_artifact/<artifact_id>', methods=['POST'])
+def delete_artifact(artifact_id):
+    """Delete an artifact."""
+    try:
+        db = DatabaseManager()
+        success = db.delete_artifact(artifact_id)
+        
+        if success:
+            status.add_log("INFO", f"Deleted artifact: {artifact_id}", "MANUAL")
+            return redirect(url_for('browse_entries'))
+        else:
+            return f"Failed to delete artifact: {artifact_id}", 404
+            
+    except Exception as e:
+        return f"Error deleting artifact: {str(e)}", 500
 
 def run_server(host='127.0.0.1', port=5000, debug=False):
     """Run the status server."""
