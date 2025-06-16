@@ -3675,6 +3675,53 @@ def api_unprocessed_count():
         logger.error(f"Unprocessed count API error: {e}")
         return jsonify({'success': False, 'error': str(e)}), 500
 
+@app.route('/predictive_analytics')
+def predictive_analytics():
+    """Predictive Analytics Engine page."""
+    return render_template('predictive_analytics.html')
+
+@app.route('/api/predictive_analytics', methods=['POST'])
+def api_predictive_analytics():
+    """Handle predictive analytics requests."""
+    try:
+        data = request.get_json()
+        prediction_type = data.get('prediction_type')
+        timeframe = data.get('timeframe')
+        
+        logger.info(f"Predictive analytics request: {prediction_type} for {timeframe}")
+        
+        # For now, return sample data structure
+        # This will be expanded with actual ML models
+        sample_response = {
+            'status': 'success',
+            'prediction_type': prediction_type,
+            'timeframe': timeframe,
+            'confidence': 0.75,
+            'data_points_analyzed': 239,
+            'predictions': {
+                'job_roles': [
+                    {
+                        'role': 'SOC Analyst Level 1',
+                        'current_automation': 0.25,
+                        'predicted_automation': 0.65,
+                        'confidence_interval': [0.55, 0.75],
+                        'key_drivers': ['ML threat detection', 'Automated response systems']
+                    }
+                ]
+            },
+            'methodology': 'Time series analysis with confidence intervals',
+            'last_updated': datetime.now().isoformat()
+        }
+        
+        return jsonify(sample_response)
+        
+    except Exception as e:
+        logger.error(f"Predictive analytics API error: {e}")
+        return jsonify({
+            'status': 'error',
+            'message': str(e)
+        }), 500
+
 if __name__ == "__main__":
     import argparse
     
