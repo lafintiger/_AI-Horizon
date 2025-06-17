@@ -3682,7 +3682,7 @@ def predictive_analytics():
 
 @app.route('/api/predictive_analytics', methods=['POST'])
 def api_predictive_analytics():
-    """Handle predictive analytics requests."""
+    """Handle predictive analytics requests using real ML models."""
     try:
         data = request.get_json()
         prediction_type = data.get('prediction_type')
@@ -3690,30 +3690,81 @@ def api_predictive_analytics():
         
         logger.info(f"Predictive analytics request: {prediction_type} for {timeframe}")
         
-        # For now, return sample data structure
-        # This will be expanded with actual ML models
-        sample_response = {
-            'status': 'success',
-            'prediction_type': prediction_type,
-            'timeframe': timeframe,
-            'confidence': 0.75,
-            'data_points_analyzed': 239,
-            'predictions': {
-                'job_roles': [
-                    {
-                        'role': 'SOC Analyst Level 1',
-                        'current_automation': 0.25,
-                        'predicted_automation': 0.65,
-                        'confidence_interval': [0.55, 0.75],
-                        'key_drivers': ['ML threat detection', 'Automated response systems']
-                    }
-                ]
-            },
-            'methodology': 'Time series analysis with confidence intervals',
-            'last_updated': datetime.now().isoformat()
-        }
+        # Import and initialize ML analytics
+        sys.path.append(str(Path(__file__).parent / 'scripts' / 'analysis'))
+        from ml_predictive_analytics import MLPredictiveAnalytics
         
-        return jsonify(sample_response)
+        analytics = MLPredictiveAnalytics()
+        
+        # Load data if not already loaded
+        if not analytics.load_and_prepare_data():
+            return jsonify({
+                'status': 'error',
+                'message': 'Failed to load article data for analysis'
+            }), 500
+        
+        # Generate real predictions based on article data
+        if prediction_type == 'job_roles':
+            result = analytics.predict_job_automation(timeframe)
+            return jsonify({
+                'status': 'success',
+                'prediction_type': prediction_type,
+                'timeframe': timeframe,
+                'confidence': result['model_confidence'],
+                'data_points_analyzed': len(analytics.articles_data),
+                'predictions': result['predictions'],
+                'methodology': result['methodology'],
+                'data_source': result['data_source'],
+                'last_updated': datetime.now().isoformat()
+            })
+            
+        elif prediction_type == 'skills':
+            result = analytics.predict_skills_demand(timeframe)
+            return jsonify({
+                'status': 'success',
+                'prediction_type': prediction_type,
+                'timeframe': timeframe,
+                'confidence': result['model_confidence'],
+                'data_points_analyzed': len(analytics.articles_data),
+                'predictions': result['skill_trends'],
+                'methodology': result['methodology'],
+                'data_source': result['data_source'],
+                'last_updated': datetime.now().isoformat()
+            })
+            
+        elif prediction_type == 'industry':
+            result = analytics.predict_industry_adoption(timeframe)
+            return jsonify({
+                'status': 'success',
+                'prediction_type': prediction_type,
+                'timeframe': timeframe,
+                'confidence': result['model_confidence'],
+                'data_points_analyzed': len(analytics.articles_data),
+                'predictions': result['adoption_by_sector'],
+                'methodology': result['methodology'],
+                'data_source': result['data_source'],
+                'overall_trend': result['overall_trend'],
+                'last_updated': datetime.now().isoformat()
+            })
+            
+        elif prediction_type == 'technology':
+            result = analytics.predict_technology_impact(timeframe)
+            return jsonify({
+                'status': 'success',
+                'prediction_type': prediction_type,
+                'timeframe': timeframe,
+                'confidence': result['model_confidence'],
+                'data_points_analyzed': len(analytics.articles_data),
+                'predictions': result['technology_trends'],
+                'methodology': result['methodology'],
+                'data_source': result['data_source'],
+                'last_updated': datetime.now().isoformat()
+            })
+        
+        return jsonify({
+            'status': 'error',
+            'message': f'Invalid prediction type: {prediction_type}'
+        }), 400
         
     except Exception as e:
         logger.error(f"Predictive analytics API error: {e}")
