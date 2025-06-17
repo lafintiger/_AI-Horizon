@@ -1,0 +1,29 @@
+[GENERAL]
+SIMILARITY_MEASURE = "cosine"
+KEEP_ALIVE = "5m"
+
+[MODELS.OPENAI]
+API_KEY = ""
+
+[MODELS.GROQ]
+API_KEY = ""
+
+[MODELS.ANTHROPIC]
+API_KEY = ""
+
+[MODELS.GEMINI]
+API_KEY = ""
+
+[MODELS.CUSTOM_OPENAI]
+API_KEY = ""
+API_URL = ""
+MODEL_NAME = ""
+
+[MODELS.OLLAMA]
+API_URL = "http://host.docker.internal:11434"
+
+[MODELS.DEEPSEEK]
+API_KEY = ""
+
+[API_ENDPOINTS]
+SEARXNG = "http://searxng:8080" 

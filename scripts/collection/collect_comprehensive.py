@@ -14,7 +14,7 @@ from typing import Optional
 # Add project root to path
 sys.path.append(str(Path(__file__).parent.parent.parent))
 
-from aih.gather.perplexity import PerplexityConnector
+from aih.gather.searxng_direct import SearXNGDirectConnector
 from aih.utils.database import DatabaseManager
 from aih.utils.logging import get_logger
 
@@ -39,7 +39,7 @@ def add_log(level: str, message: str, category: str = "COLLECTION"):
 async def collect_comprehensive(articles_per_category=20, custom_prompts=None, timeframe_config=None):
     """Run comprehensive collection across all categories."""
     logger = get_logger('comprehensive_collection')
-    collector = PerplexityConnector()
+    collector = SearXNGDirectConnector()
     db = DatabaseManager()
     
     # Calculate total articles

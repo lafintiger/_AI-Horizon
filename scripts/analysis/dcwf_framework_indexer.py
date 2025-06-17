@@ -224,4 +224,54 @@ class DCWFFrameworkIndexer:
             "total_knowledge_skills": total_knowledge_skills,
             "unique_specialty_areas": len(specialty_areas),
             "specialty_areas": list(specialty_areas)
-        } 
+        }
+    
+    def infer_dcwf_impacts(self, content: str) -> Dict[str, Any]:
+        """
+        Infer potential DCWF impacts from content.
+        
+        Args:
+            content: Content to analyze for DCWF impacts
+            
+        Returns:
+            Dictionary with DCWF impact analysis
+        """
+        # Search for relevant work roles
+        relevant_roles = self.search_framework(content)
+        
+        analysis = {
+            "relevant_work_roles": [role["work_role_name"] for role in relevant_roles[:3]],
+            "tasks_at_risk": [],
+            "tasks_to_augment": [],
+            "new_capabilities": []
+        }
+        
+        # Analyze content for automation keywords
+        automation_keywords = ["automat", "ai-powered", "machine learning", "algorithm", "without human"]
+        augmentation_keywords = ["assist", "enhance", "support", "aid", "improve"]
+        
+        content_lower = content.lower()
+        
+        for role in relevant_roles[:3]:  # Top 3 relevant roles
+            for task in role.get("tasks", []):
+                task_lower = task.lower()
+                
+                # Check if task might be automated
+                if any(keyword in content_lower for keyword in automation_keywords):
+                    if any(word in task_lower for word in ["assess", "analyze", "monitor", "scan"]):
+                        analysis["tasks_at_risk"].append({
+                            "task": task,
+                            "work_role": role["work_role_name"],
+                            "risk_level": "high"
+                        })
+                
+                # Check if task might be augmented
+                if any(keyword in content_lower for keyword in augmentation_keywords):
+                    if any(word in task_lower for word in ["plan", "develop", "coordinate", "manage"]):
+                        analysis["tasks_to_augment"].append({
+                            "task": task,
+                            "work_role": role["work_role_name"],
+                            "augmentation_potential": "high"
+                        })
+        
+        return analysis 

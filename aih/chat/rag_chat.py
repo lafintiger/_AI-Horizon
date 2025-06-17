@@ -17,6 +17,7 @@ import anthropic
 from aih.config import settings
 from aih.utils.database import DatabaseManager
 from aih.utils.logging import get_logger
+from aih.utils.ollama_client import OllamaClient
 
 logger = get_logger(__name__)
 
@@ -28,17 +29,20 @@ class RAGChatSystem:
     intelligent responses based on the content.
     """
     
-    def __init__(self, model: str = "claude-3-5-sonnet-20241022"):
+    def __init__(self, model: str = "local"):
         """
         Initialize RAG chat system.
         
         Args:
-            model: LLM model to use ("gpt-4", "gpt-3.5-turbo", "claude-3-5-sonnet-20241022")
+            model: LLM model to use ("local", "gpt-4", "gpt-3.5-turbo", "claude-3-5-sonnet-20241022")
         """
         self.model = model
         self.db = DatabaseManager()
         
-        # Initialize LLM clients
+        # Initialize local Ollama client (preferred)
+        self.ollama_client = OllamaClient()
+        
+        # Initialize external LLM clients (fallback)
         if settings.openai_api_key:
             self.openai_client = OpenAI(api_key=settings.openai_api_key)
         else:
@@ -203,9 +207,41 @@ Guidelines:
 Please provide a comprehensive answer based on the article content, citing specific sources where appropriate."""
 
         try:
-            if self.model.startswith("claude"):
+            logger.info(f"Generating response with model: {self.model}")
+            
+            if self.model == "local" or self.model.startswith("local:"):
+                # Use local Ollama models (preferred)
+                specific_model = None
+                if self.model.startswith("local:"):
+                    specific_model = self.model[6:]  # Remove "local:" prefix
+                    logger.info(f"Using specific local model: {specific_model}")
+                else:
+                    logger.info("Using default local Ollama model")
+                
+                full_prompt = f"{system_prompt}\n\n{user_prompt}"
+                
+                if specific_model:
+                    # Use specific model by calling generate method directly
+                    ollama_response = self.ollama_client.generate(
+                        prompt=full_prompt, 
+                        model=specific_model,
+                        task_type="chat",
+                        max_tokens=2000,
+                        temperature=0.3
+                    )
+                else:
+                    # Use default chat model
+                    ollama_response = self.ollama_client.chat_response(full_prompt, context="")
+                
+                response = ollama_response.content if hasattr(ollama_response, 'content') else str(ollama_response)
+                logger.info(f"Local model response generated successfully (length: {len(response)} chars)")
+                return response
+                
+            elif self.model.startswith("claude"):
+                logger.info(f"Attempting to use Claude model: {self.model}")
                 if not self.anthropic_client:
-                    return "❌ Claude API key not configured. Please check your configuration."
+                    logger.warning("Claude API key not configured, falling back to local models")
+                    return "❌ Claude API key not configured. Using local models instead."
                 
                 response = self.anthropic_client.messages.create(
                     model=self.model,
@@ -216,8 +252,10 @@ Please provide a comprehensive answer based on the article content, citing speci
                 return response.content[0].text
                 
             elif self.model.startswith("gpt"):
+                logger.info(f"Attempting to use OpenAI model: {self.model}")
                 if not self.openai_client:
-                    return "❌ OpenAI API key not configured. Please check your configuration."
+                    logger.warning("OpenAI API key not configured, falling back to local models")
+                    return "❌ OpenAI API key not configured. Using local models instead."
                 
                 response = self.openai_client.chat.completions.create(
                     model=self.model,
@@ -230,11 +268,23 @@ Please provide a comprehensive answer based on the article content, citing speci
                 )
                 return response.choices[0].message.content
             else:
-                return f"❌ Unsupported model: {self.model}"
+                logger.warning(f"Unsupported model: {self.model}, falling back to local models")
+                return f"❌ Unsupported model: {self.model}. Using local models instead."
                 
         except Exception as e:
-            logger.error(f"Error generating response: {e}")
-            return f"❌ Error generating response: {str(e)}"
+            logger.error(f"Error generating response with {self.model}: {e}")
+            # Fallback to local models
+            try:
+                logger.info("Falling back to local models...")
+                full_prompt = f"{system_prompt}\n\n{user_prompt}"
+                
+                # Use default local chat model for fallback
+                ollama_response = self.ollama_client.chat_response(full_prompt, context="")
+                response = ollama_response.content if hasattr(ollama_response, 'content') else str(ollama_response)
+                return f"🤖 Local Model Response:\n\n{response}"
+            except Exception as fallback_error:
+                logger.error(f"Local model fallback failed: {fallback_error}")
+                return f"❌ Error generating response: {str(e)}"
     
     def chat(self, query: str, category_filter: Optional[str] = None) -> Dict[str, Any]:
         """

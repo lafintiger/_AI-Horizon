@@ -14,7 +14,7 @@ from typing import Optional
 # Add project root to path
 sys.path.append(str(Path(__file__).parent))
 
-from aih.gather.perplexity import PerplexityConnector
+from aih.gather.searxng_direct import SearXNGDirectConnector
 from aih.utils.database import DatabaseManager
 from aih.utils.logging import get_logger
 
@@ -39,7 +39,7 @@ def add_log(level: str, message: str, category: str = "TARGETED_COLLECTION"):
 async def collect_targeted_sources():
     """Run targeted collection from high-value sources."""
     logger = get_logger('targeted_collection')
-    collector = PerplexityConnector()
+    collector = SearXNGDirectConnector()
     db = DatabaseManager()
     
     # HIGH-VALUE SOURCE-TARGETED SEARCHES

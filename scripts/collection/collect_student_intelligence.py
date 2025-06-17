@@ -19,7 +19,7 @@ from typing import Optional
 # Add project root to path
 sys.path.append(str(Path(__file__).parent))
 
-from aih.gather.perplexity import PerplexityConnector
+from aih.gather.searxng_direct import SearXNGDirectConnector
 from aih.utils.database import DatabaseManager
 from aih.utils.logging import get_logger
 
@@ -44,7 +44,7 @@ def add_log(level: str, message: str, category: str = "STUDENT_INTEL"):
 async def collect_student_intelligence():
     """Collect actionable career intelligence for graduating students."""
     logger = get_logger('student_intelligence')
-    collector = PerplexityConnector()
+    collector = SearXNGDirectConnector()
     db = DatabaseManager()
     
     # STUDENT-FOCUSED CAREER INTELLIGENCE SEARCHES
