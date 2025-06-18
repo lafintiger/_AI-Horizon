@@ -62,15 +62,15 @@ class TrendAnalyzer:
                 # Calculate quality score
                 quality_score, _ = self.quality_ranker.calculate_document_score(artifact)
                 
-                # Parse date
-                created_at = artifact.get('created_at')
-                if not created_at:
+                # Parse date - use collected_at instead of created_at
+                collected_at = artifact.get('collected_at')
+                if not collected_at:
                     continue
                     
-                if isinstance(created_at, str):
-                    date_obj = datetime.fromisoformat(created_at.replace('Z', '+00:00'))
+                if isinstance(collected_at, str):
+                    date_obj = datetime.fromisoformat(collected_at.replace('Z', '+00:00'))
                 else:
-                    date_obj = created_at
+                    date_obj = collected_at
                 
                 month_key = date_obj.strftime('%Y-%m')
                 
@@ -78,14 +78,32 @@ class TrendAnalyzer:
                 monthly_quality[month_key]['scores'].append(quality_score)
                 monthly_quality[month_key]['count'] += 1
                 
-                # Category-specific trends
+                # Category-specific trends - get from classification if available
+                category = 'unknown'
                 try:
+                    # First try raw_metadata
                     metadata = json.loads(artifact.get('raw_metadata', '{}'))
                     category = metadata.get('ai_impact_category', 'unknown')
-                    category_monthly_quality[category][month_key]['scores'].append(quality_score)
-                    category_monthly_quality[category][month_key]['count'] += 1
+                    
+                    # If not found, try to classify based on content
+                    if category == 'unknown' and artifact.get('title') and artifact.get('content'):
+                        # Simple keyword-based classification
+                        text = (artifact.get('title', '') + ' ' + artifact.get('content', '')).lower()
+                        if any(word in text for word in ['automat', 'replace', 'eliminate']):
+                            category = 'replace'
+                        elif any(word in text for word in ['assist', 'augment', 'enhance', 'support']):
+                            category = 'augment'
+                        elif any(word in text for word in ['new', 'creat', 'emerg', 'novel']):
+                            category = 'new_tasks'
+                        elif any(word in text for word in ['human', 'person', 'manual', 'experience']):
+                            category = 'human_only'
+                        else:
+                            category = 'general'
                 except:
-                    continue
+                    category = 'general'
+                    
+                category_monthly_quality[category][month_key]['scores'].append(quality_score)
+                category_monthly_quality[category][month_key]['count'] += 1
                     
             except Exception as e:
                 continue
@@ -129,9 +147,11 @@ class TrendAnalyzer:
                 improvement = recent_avg - early_avg
                 quality_trends['quality_improvement'] = round(improvement, 3)
                 
-                if improvement > 0.05:
+                # Lower thresholds for shorter time periods
+                threshold = 0.02 if len(sorted_months) < 4 else 0.05
+                if improvement > threshold:
                     quality_trends['trend_direction'] = 'improving'
-                elif improvement < -0.05:
+                elif improvement < -threshold:
                     quality_trends['trend_direction'] = 'declining'
         
         # Process category trends
@@ -176,14 +196,14 @@ class TrendAnalyzer:
         for artifact in self.artifacts:
             try:
                 # Parse date
-                created_at = artifact.get('created_at')
-                if not created_at:
+                collected_at = artifact.get('collected_at')
+                if not collected_at:
                     continue
                     
-                if isinstance(created_at, str):
-                    date_obj = datetime.fromisoformat(created_at.replace('Z', '+00:00'))
+                if isinstance(collected_at, str):
+                    date_obj = datetime.fromisoformat(collected_at.replace('Z', '+00:00'))
                 else:
-                    date_obj = created_at
+                    date_obj = collected_at
                 
                 month_key = date_obj.strftime('%Y-%m')
                 
@@ -201,13 +221,29 @@ class TrendAnalyzer:
                     if term in text_content:
                         monthly_keywords[month_key][term] += 1
                 
-                # Extract potential topics from metadata
+                # Extract potential topics from metadata or classify content
+                category = 'unknown'
                 try:
                     metadata = json.loads(artifact.get('raw_metadata', '{}'))
                     category = metadata.get('ai_impact_category', 'unknown')
-                    monthly_topics[month_key][category] += 1
+                    
+                    # If not found, try to classify based on content
+                    if category == 'unknown' and artifact.get('title') and artifact.get('content'):
+                        # Simple keyword-based classification
+                        if any(word in text_content for word in ['automat', 'replace', 'eliminate']):
+                            category = 'replace'
+                        elif any(word in text_content for word in ['assist', 'augment', 'enhance', 'support']):
+                            category = 'augment'
+                        elif any(word in text_content for word in ['new', 'creat', 'emerg', 'novel']):
+                            category = 'new_tasks'
+                        elif any(word in text_content for word in ['human', 'person', 'manual', 'experience']):
+                            category = 'human_only'
+                        else:
+                            category = 'general'
                 except:
-                    continue
+                    category = 'general'
+                    
+                monthly_topics[month_key][category] += 1
                     
             except Exception as e:
                 continue
@@ -248,9 +284,14 @@ class TrendAnalyzer:
                 topic_evolution['topic_distribution'][month] = distribution
         
         # Identify emerging and declining terms
-        if len(sorted_months) >= 6:  # Need at least 6 months of data
-            recent_months = sorted_months[-3:]
-            early_months = sorted_months[:3]
+        if len(sorted_months) >= 2:  # Need at least 2 months of data
+            # Use available months for comparison
+            if len(sorted_months) >= 4:
+                recent_months = sorted_months[-2:]
+                early_months = sorted_months[:2]
+            else:
+                recent_months = sorted_months[-1:]
+                early_months = sorted_months[:1]
             
             for term in key_terms:
                 recent_freq = statistics.mean([
@@ -263,13 +304,15 @@ class TrendAnalyzer:
                 ])
                 
                 change = recent_freq - early_freq
-                if change > 0.01:  # Threshold for emergence
+                # Lower thresholds for shorter time periods
+                emergence_threshold = 0.005 if len(sorted_months) < 4 else 0.01
+                if change > emergence_threshold:  # Threshold for emergence
                     topic_evolution['emerging_terms'].append({
                         'term': term,
                         'change': round(change, 4),
                         'recent_frequency': round(recent_freq, 4)
                     })
-                elif change < -0.01:  # Threshold for decline
+                elif change < -emergence_threshold:  # Threshold for decline
                     topic_evolution['declining_terms'].append({
                         'term': term,
                         'change': round(change, 4),
@@ -296,14 +339,14 @@ class TrendAnalyzer:
         
         for artifact in self.artifacts:
             try:
-                created_at = artifact.get('created_at')
-                if not created_at:
+                collected_at = artifact.get('collected_at')
+                if not collected_at:
                     continue
                     
-                if isinstance(created_at, str):
-                    date_obj = datetime.fromisoformat(created_at.replace('Z', '+00:00'))
+                if isinstance(collected_at, str):
+                    date_obj = datetime.fromisoformat(collected_at.replace('Z', '+00:00'))
                 else:
-                    date_obj = created_at
+                    date_obj = collected_at
                 
                 # Date keys
                 day_key = date_obj.strftime('%Y-%m-%d')
@@ -379,8 +422,12 @@ class TrendAnalyzer:
             daily_values = list(daily_collections.values())
             if len(daily_values) > 1:
                 cv = statistics.stdev(daily_values) / statistics.mean(daily_values) if statistics.mean(daily_values) > 0 else 1
-                consistency_score = max(0, 1 - cv)  # Higher consistency = lower coefficient of variation
+                # Adjust for smaller datasets - normalize CV
+                normalized_cv = min(cv, 2.0)  # Cap CV at 2.0 for very small datasets
+                consistency_score = max(0, 1 - (normalized_cv / 2.0))  # Scale to 0-1
                 collection_patterns['consistency_score'] = round(consistency_score, 3)
+            else:
+                collection_patterns['consistency_score'] = 1.0  # Perfect consistency with one data point
         
         print(f"   📊 Collection consistency: {collection_patterns['consistency_score']:.3f}")
         print(f"   📈 Monthly trend: {collection_patterns.get('collection_velocity', {}).get('trend', 'unknown')}")
@@ -401,14 +448,14 @@ class TrendAnalyzer:
         
         for artifact in self.artifacts:
             try:
-                created_at = artifact.get('created_at')
-                if not created_at:
+                collected_at = artifact.get('collected_at')
+                if not collected_at:
                     continue
                     
-                if isinstance(created_at, str):
-                    date_obj = datetime.fromisoformat(created_at.replace('Z', '+00:00'))
+                if isinstance(collected_at, str):
+                    date_obj = datetime.fromisoformat(collected_at.replace('Z', '+00:00'))
                 else:
-                    date_obj = created_at
+                    date_obj = collected_at
                 
                 month_key = date_obj.strftime('%Y-%m')
                 
@@ -438,13 +485,29 @@ class TrendAnalyzer:
                 monthly_sentiment[month_key]['total'] += 1
                 
                 # Category sentiment
+                category = 'unknown'
                 try:
                     metadata = json.loads(artifact.get('raw_metadata', '{}'))
                     category = metadata.get('ai_impact_category', 'unknown')
-                    category_sentiment[category][month_key][sentiment] += 1
-                    category_sentiment[category][month_key]['total'] += 1
+                    
+                    # If not found, try to classify based on content
+                    if category == 'unknown' and artifact.get('title') and artifact.get('content'):
+                        # Simple keyword-based classification
+                        if any(word in text_content for word in ['automat', 'replace', 'eliminate']):
+                            category = 'replace'
+                        elif any(word in text_content for word in ['assist', 'augment', 'enhance', 'support']):
+                            category = 'augment'
+                        elif any(word in text_content for word in ['new', 'creat', 'emerg', 'novel']):
+                            category = 'new_tasks'
+                        elif any(word in text_content for word in ['human', 'person', 'manual', 'experience']):
+                            category = 'human_only'
+                        else:
+                            category = 'general'
                 except:
-                    continue
+                    category = 'general'
+                    
+                category_sentiment[category][month_key][sentiment] += 1
+                category_sentiment[category][month_key]['total'] += 1
                     
             except Exception as e:
                 continue
@@ -509,7 +572,7 @@ class TrendAnalyzer:
         sentiment_trends = self.analyze_sentiment_trends()
         
         # Get analysis period safely
-        valid_dates = [a.get('created_at', '') for a in self.artifacts if a.get('created_at')]
+        valid_dates = [a.get('collected_at', '') for a in self.artifacts if a.get('collected_at')]
         if valid_dates:
             min_date = min(valid_dates)
             max_date = max(valid_dates)
