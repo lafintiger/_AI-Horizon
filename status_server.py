@@ -29,7 +29,7 @@ The server integrates with:
 - Cost tracking for API usage monitoring
 
 Usage:
-    python status_server.py --host 0.0.0.0 --port 5000 [--debug]
+    python status_server.py --host 0.0.0.0 --port 8000 [--debug]
 """
 
 # Standard library imports
@@ -3574,7 +3574,7 @@ def delete_artifact(artifact_id):
     except Exception as e:
         return f"Error deleting artifact: {str(e)}", 500
 
-def run_server(host='127.0.0.1', port=5000, debug=False):
+def run_server(host='127.0.0.1', port=8000, debug=False):
     """Run the status server."""
     logger.info(f"Starting AI-Horizon Status Server on http://{host}:{port}")
     
@@ -3778,7 +3778,7 @@ if __name__ == "__main__":
     
     parser = argparse.ArgumentParser(description='AI-Horizon Status Server')
     parser.add_argument('--host', default='127.0.0.1', help='Host to bind to')
-    parser.add_argument('--port', type=int, default=5000, help='Port to bind to')
+    parser.add_argument('--port', type=int, default=8000, help='Port to bind to')
     parser.add_argument('--debug', action='store_true', help='Enable debug mode')
     
     args = parser.parse_args()

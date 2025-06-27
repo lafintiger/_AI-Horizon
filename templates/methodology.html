@@ -785,6 +785,207 @@ def classify_content(title, content):
                 </div>
             </div>
 
+            <!-- Mathematical Foundations -->
+            <div class="section">
+                <h2>📐 Mathematical Foundations & Formulas</h2>
+                <p>
+                    Complete documentation of all mathematical formulas, equations, and algorithms used throughout the AI-Horizon system for transparency, reproducibility, and peer review.
+                </p>
+
+                <details style="margin-bottom: 20px;">
+                    <summary style="font-weight: 600; color: #2c3e50; cursor: pointer; margin-bottom: 15px; font-size: 1.1rem;">
+                        🧮 Quality Scoring Algorithms
+                    </summary>
+                    
+                    <h4>📏 Document Quality Score</h4>
+                    <div class="formula-box" style="background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; padding: 20px; margin: 15px 0; font-family: 'Courier New', monospace;">
+<strong>Overall Quality Score:</strong>
+Q = 0.25 × S<sub>credibility</sub> + 0.25 × S<sub>content</sub> + 0.20 × S<sub>temporal</sub> + 0.15 × S<sub>balance</sub> + 0.15 × S<sub>uniqueness</sub>
+
+<strong>Component Calculations:</strong>
+• S<sub>credibility</sub> = Base<sub>source</sub> + Σ(Domain<sub>bonus</sub>) + Authority<sub>modifier</sub>
+• S<sub>content</sub> = 0.3 × Length<sub>norm</sub> + 0.2 × Keyword<sub>density</sub> + 0.2 × Readability + 0.3 × Structure
+• S<sub>temporal</sub> = e<sup>(-age_days/365)</sup> × Relevance<sub>factor</sub>
+• S<sub>balance</sub> = 1.0 - |Category<sub>ratio</sub> - Target<sub>ratio</sub>|
+• S<sub>uniqueness</sub> = 1.0 - max(Similarity<sub>scores</sub>)
+
+<strong>Where:</strong>
+- Length<sub>norm</sub> = min(1.0, content_length / optimal_length)
+- Keyword<sub>density</sub> = (Σ TF-IDF<sub>keywords</sub>) / total_words
+- Readability = Flesch-Kincaid normalized score
+- Authority<sub>modifier</sub> ∈ {0.95 (academic), 0.9 (government), 0.8 (industry), 0.6 (blog)}
+                    </div>
+
+                    <h4>🎯 Confidence Scoring</h4>
+                    <div class="formula-box" style="background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; padding: 20px; margin: 15px 0; font-family: 'Courier New', monospace;">
+<strong>Classification Confidence:</strong>
+C = σ(W<sub>indicators</sub>) × Q<sub>modifier</sub>
+
+<strong>Where:</strong>
+• σ(x) = 1/(1 + e<sup>-x</sup>) (sigmoid function)
+• W<sub>indicators</sub> = Σ(TF-IDF<sub>keyword</sub> × Weight<sub>category</sub>)
+• Q<sub>modifier</sub> = √(Quality<sub>score</sub>) (quality-based confidence adjustment)
+
+<strong>Category Weights:</strong>
+- Replace indicators: automated, eliminate, replace → Weight = 1.2
+- Augment indicators: enhance, assist, collaborate → Weight = 1.0  
+- New Tasks indicators: create, emerge, novel → Weight = 1.1
+- Human-Only indicators: judgment, creative, strategic → Weight = 1.3
+                    </div>
+                </details>
+
+                <details style="margin-bottom: 20px;">
+                    <summary style="font-weight: 600; color: #2c3e50; cursor: pointer; margin-bottom: 15px; font-size: 1.1rem;">
+                        🔮 Predictive Analytics Formulas
+                    </summary>
+                    
+                    <h4>📈 AI Adoption Curve Modeling</h4>
+                    <div class="formula-box" style="background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; padding: 20px; margin: 15px 0; font-family: 'Courier New', monospace;">
+<strong>Logistic Growth Model:</strong>
+A(t) = L / (1 + e<sup>-k(t-t₀)</sup>)
+
+<strong>Where:</strong>
+• A(t) = Adoption percentage at time t
+• L = Maximum adoption level (carrying capacity)
+• k = Growth rate parameter (derived from current trends)
+• t₀ = Inflection point (50% adoption time)
+• t = Time in months from baseline
+
+<strong>Parameter Estimation:</strong>
+• L = min(95%, max(Current<sub>trends</sub>) × 1.2)
+• k = ln(9) / (t₉₀ - t₁₀) where t₉₀, t₁₀ are 90% and 10% adoption times
+• t₀ = (t₉₀ + t₁₀) / 2
+                    </div>
+
+                    <h4>⚡ Job Role Automation Probability</h4>
+                    <div class="formula-box" style="background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; padding: 20px; margin: 15px 0; font-family: 'Courier New', monospace;">
+<strong>Task Automation Score:</strong>
+P<sub>automation</sub>(role) = Σ(Task<sub>i</sub> × Weight<sub>i</sub> × AI<sub>capability</sub>) / Σ(Weight<sub>i</sub>)
+
+<strong>DCWF Integration:</strong>
+• Task<sub>i</sub> ∈ {0, 0.25, 0.5, 0.75, 1.0} (automation potential)
+• Weight<sub>i</sub> = Importance<sub>DCWF</sub> × Frequency<sub>execution</sub>
+• AI<sub>capability</sub> = Current<sub>tech</sub> × Projected<sub>improvement</sub>
+
+<strong>Confidence Intervals:</strong>
+CI = P<sub>automation</sub> ± t<sub>α/2</sub> × SE
+SE = √(Var(Task<sub>scores</sub>) / n<sub>tasks</sub> + Model<sub>uncertainty</sub>)
+                    </div>
+
+                    <h4>📊 Skills Demand Forecasting</h4>
+                    <div class="formula-box" style="background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; padding: 20px; margin: 15px 0; font-family: 'Courier New', monospace;">
+<strong>Time Series Forecasting (ARIMA):</strong>
+X<sub>t</sub> = c + φ₁X<sub>t-1</sub> + φ₂X<sub>t-2</sub> + ... + θ₁ε<sub>t-1</sub> + θ₂ε<sub>t-2</sub> + ... + ε<sub>t</sub>
+
+<strong>Skill Demand Growth Rate:</strong>
+Growth<sub>rate</sub> = (Mentions<sub>current</sub> - Mentions<sub>baseline</sub>) / Mentions<sub>baseline</sub> × 100%
+
+<strong>Weighted Trend Analysis:</strong>
+Trend<sub>weighted</sub> = Σ(Mention<sub>i</sub> × Recency<sub>weight</sub> × Source<sub>authority</sub>) / Σ(Weights)
+Recency<sub>weight</sub> = e<sup>(-age_days/90)</sup>
+                    </div>
+                </details>
+
+                <details style="margin-bottom: 20px;">
+                    <summary style="font-weight: 600; color: #2c3e50; cursor: pointer; margin-bottom: 15px; font-size: 1.1rem;">
+                        🎯 DCWF Task Impact Analysis
+                    </summary>
+                    
+                    <h4>🏗️ Work Role Impact Scoring</h4>
+                    <div class="formula-box" style="background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; padding: 20px; margin: 15px 0; font-family: 'Courier New', monospace;">
+<strong>DCWF Role Vulnerability Score:</strong>
+V<sub>role</sub> = Σ(Task<sub>automation</sub> × Task<sub>criticality</sub> × Task<sub>frequency</sub>) / Total<sub>tasks</sub>
+
+<strong>Task Categorization Confidence:</strong>
+C<sub>task</sub> = (Explicit<sub>evidence</sub> × 1.0 + Inferred<sub>evidence</sub> × 0.7) / Total<sub>possible</sub>
+
+<strong>Transformation Level Calculation:</strong>
+• Minimal: C<sub>task</sub> < 0.2
+• Low: 0.2 ≤ C<sub>task</sub> < 0.4  
+• Moderate: 0.4 ≤ C<sub>task</sub> < 0.7
+• High: 0.7 ≤ C<sub>task</sub> < 1.0
+• Very High: C<sub>task</sub> ≥ 1.0
+
+<strong>AI Impact Distribution:</strong>
+Impact<sub>category</sub> = Σ(Task<sub>matches</sub> × Confidence<sub>weights</sub>) / Total<sub>DCWF_tasks</sub>
+                    </div>
+                </details>
+
+                <details style="margin-bottom: 20px;">
+                    <summary style="font-weight: 600; color: #2c3e50; cursor: pointer; margin-bottom: 15px; font-size: 1.1rem;">
+                        📈 Statistical Analysis Methods
+                    </summary>
+                    
+                    <h4>📊 Correlation Analysis</h4>
+                    <div class="formula-box" style="background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; padding: 20px; margin: 15px 0; font-family: 'Courier New', monospace;">
+<strong>Pearson Correlation Coefficient:</strong>
+r = Σ((X<sub>i</sub> - X̄)(Y<sub>i</sub> - Ȳ)) / √(Σ(X<sub>i</sub> - X̄)² × Σ(Y<sub>i</sub> - Ȳ)²)
+
+<strong>Category Relationship Strength:</strong>
+R<sub>categories</sub> = |r<sub>replace,augment</sub>| + |r<sub>newtasks,human</sub>| / 2
+
+<strong>Statistical Significance Testing:</strong>
+t = r × √(n-2) / √(1-r²)
+p-value = 2 × P(T > |t|) where T ~ t<sub>n-2</sub>
+                    </div>
+
+                    <h4>🎲 Uncertainty Quantification</h4>
+                    <div class="formula-box" style="background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; padding: 20px; margin: 15px 0; font-family: 'Courier New', monospace;">
+<strong>Monte Carlo Simulation:</strong>
+Prediction<sub>range</sub> = [Percentile<sub>5</sub>(Simulations), Percentile<sub>95</sub>(Simulations)]
+
+<strong>Bayesian Confidence Updates:</strong>
+P(H|E) = P(E|H) × P(H) / P(E)
+
+Where:
+• H = Hypothesis (e.g., "task will be automated")
+• E = Evidence (new articles, industry reports)
+• P(H|E) = Updated probability given evidence
+• P(E|H) = Likelihood of evidence given hypothesis
+• P(H) = Prior probability
+• P(E) = Total probability of evidence
+                    </div>
+                </details>
+
+                <details style="margin-bottom: 20px;">
+                    <summary style="font-weight: 600; color: #2c3e50; cursor: pointer; margin-bottom: 15px; font-size: 1.1rem;">
+                        🔍 Text Analysis & NLP Formulas
+                    </summary>
+                    
+                    <h4>📝 TF-IDF Weighting</h4>
+                    <div class="formula-box" style="background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; padding: 20px; margin: 15px 0; font-family: 'Courier New', monospace;">
+<strong>Term Frequency - Inverse Document Frequency:</strong>
+TF-IDF(t,d) = TF(t,d) × IDF(t)
+
+<strong>Where:</strong>
+• TF(t,d) = f<sub>t,d</sub> / max{f<sub>t',d</sub> : t' ∈ d}
+• IDF(t) = log(N / |{d ∈ D : t ∈ d}|)
+• f<sub>t,d</sub> = frequency of term t in document d
+• N = total number of documents
+• |{d ∈ D : t ∈ d}| = number of documents containing term t
+
+<strong>Semantic Similarity (Cosine):</strong>
+sim(d₁,d₂) = (d₁ · d₂) / (||d₁|| × ||d₂||)
+                    </div>
+
+                    <h4>📖 Readability Assessment</h4>
+                    <div class="formula-box" style="background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; padding: 20px; margin: 15px 0; font-family: 'Courier New', monospace;">
+<strong>Flesch-Kincaid Grade Level:</strong>
+FKGL = 0.39 × (Words/Sentences) + 11.8 × (Syllables/Words) - 15.59
+
+<strong>Normalized Readability Score:</strong>
+R<sub>norm</sub> = max(0, min(1, (Target<sub>grade</sub> - FKGL) / Range<sub>acceptable</sub>))
+
+Where Target<sub>grade</sub> = 12-14 for cybersecurity professionals
+                    </div>
+                </details>
+
+                <div class="transparency-box">
+                    <h4>🔬 Academic Validation</h4>
+                    <p>All formulas are based on established academic research with citations available in the system. Statistical methods follow standard practices in computational linguistics and workforce analytics. Formula parameters are calibrated using expert judgment and validated against known outcomes in the cybersecurity domain.</p>
+                </div>
+            </div>
+
             <!-- Limitations and Future Enhancements -->
             <div class="section">
                 <h2>⚠️ Current Limitations & Planned Enhancements</h2>
