@@ -35,7 +35,7 @@ class Settings(BaseSettings):
     
     # Classification
     default_confidence_threshold: float = Field(0.6, env="DEFAULT_CONFIDENCE_THRESHOLD")
-    default_llm_model: str = Field("claude-3-7-sonnet-20250219", env="DEFAULT_LLM_MODEL")
+    default_llm_model: str = Field("claude-3-5-sonnet-20241022", env="DEFAULT_LLM_MODEL")
     
     # Rate Limiting
     max_api_calls_per_minute: int = Field(10, env="MAX_API_CALLS_PER_MINUTE")
@@ -47,7 +47,7 @@ class Settings(BaseSettings):
     reports_dir: str = Field("./data/reports", env="REPORTS_DIR")
     
     class Config:
-        env_file = ".env"
+        env_file = "config.env"
         case_sensitive = False
 
 # Global settings instance

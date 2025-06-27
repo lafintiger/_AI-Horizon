@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}AI-Horizon{% endblock %}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Professional Navigation Header */
+        .nav-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 15px 30px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: white;
+            text-decoration: none;
+        }
+
+        .nav-brand-icon {
+            font-size: 2rem;
+        }
+
+        .nav-brand-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .nav-brand h2 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: #ffffff;
+            text-shadow: 0 3px 6px rgba(0, 0, 0, 0.8), 0 1px 3px rgba(0, 0, 0, 0.6);
+            letter-spacing: 0.5px;
+        }
+
+        .nav-subtitle {
+            font-size: 0.875rem;
+            color: #ffffff;
+            font-weight: 600;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 1px 2px rgba(0, 0, 0, 0.6);
+            letter-spacing: 0.3px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            flex-wrap: nowrap;
+            justify-content: space-between;
+            flex: 1;
+            margin-left: 20px;
+            overflow-x: auto;
+            width: 100%;
+        }
+
+        .nav-group {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 3px;
+            min-width: 85px;
+            flex-shrink: 0;
+            flex: 1;
+        }
+
+        .nav-group-label {
+            font-size: 0.6rem;
+            color: #000000;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 3px;
+            border-bottom: 1px solid #333333;
+            padding-bottom: 1px;
+            width: 100%;
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+        }
+
+        .nav-link {
+            color: #000000;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 4px 6px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            font-size: 0.7rem;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            width: 100%;
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            color: #000000;
+        }
+
+        .nav-link.active {
+            background: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+            font-weight: 700;
+            color: #000000;
+        }
+
+        .nav-link-icon {
+            font-size: 0.85rem;
+            width: 14px;
+            text-align: center;
+        }
+
+        /* Force single row navigation */
+        .nav-header {
+            min-height: 80px;
+        }
+        
+        .nav-links {
+            max-width: calc(100vw - 300px);
+        }
+
+        /* Responsive Navigation */
+        @media (max-width: 1600px) {
+            .nav-links {
+                gap: 10px;
+            }
+            .nav-group {
+                min-width: 80px;
+            }
+            .nav-group-label {
+                font-size: 0.55rem;
+            }
+            .nav-link {
+                font-size: 0.65rem;
+                padding: 3px 5px;
+            }
+        }
+        
+        @media (max-width: 1400px) {
+            .nav-links {
+                gap: 8px;
+            }
+            .nav-group {
+                min-width: 75px;
+            }
+            .nav-group-label {
+                font-size: 0.5rem;
+            }
+            .nav-link {
+                font-size: 0.6rem;
+                padding: 3px 4px;
+            }
+        }
+        
+        @media (max-width: 1200px) {
+            .nav-links {
+                gap: 10px;
+            }
+            .nav-group {
+                min-width: 80px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-header {
+                flex-direction: column;
+                gap: 20px;
+                padding: 20px;
+            }
+            
+            .nav-links {
+                margin-left: 0;
+                justify-content: center;
+                gap: 20px;
+            }
+            
+            .nav-group {
+                min-width: 100px;
+            }
+        }
+
+        /* Main Content Area */
+        .main-content {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* Page-specific content styles will be added by individual pages */
+    </style>
+    {% block extra_styles %}{% endblock %}
+    {% block head_extra %}{% endblock %}
+</head>
+<body>
+    <div class="container">
+        <!-- Professional Navigation Header -->
+        <nav class="nav-header">
+            <a href="/" class="nav-brand">
+                <div class="nav-brand-icon">🤖</div>
+                <div class="nav-brand-text">
+                    <h2>AI-Horizon</h2>
+                    <div class="nav-subtitle">Cybersecurity Workforce Intelligence</div>
+                </div>
+            </a>
+            
+            <div class="nav-links">
+                <!-- Data Gathering Section -->
+                <div class="nav-group">
+                    <div class="nav-group-label">📊 Data Gathering</div>
+                    <a href="/" class="nav-link {% if request.endpoint == 'status' %}active{% endif %}">
+                        <span class="nav-link-icon">📋</span>
+                        Dashboard
+                    </a>
+                    <a href="/manual_entry" class="nav-link {% if request.endpoint == 'manual_entry' %}active{% endif %}">
+                        <span class="nav-link-icon">✏️</span>
+                        Manual Entry
+                    </a>
+                </div>
+
+                <!-- Processing Section -->
+                <div class="nav-group">
+                    <div class="nav-group-label">⚙️ Processing</div>
+                    <a href="/reprocess" class="nav-link {% if request.endpoint == 'reprocess' %}active{% endif %}">
+                        <span class="nav-link-icon">🔄</span>
+                        Reprocessing
+                    </a>
+                </div>
+
+                <!-- Browse & Review Section -->
+                <div class="nav-group">
+                    <div class="nav-group-label">📚 Browse & Review</div>
+                    <a href="/browse_entries" class="nav-link {% if request.endpoint == 'browse_entries' %}active{% endif %}">
+                        <span class="nav-link-icon">📖</span>
+                        Browse Entries
+                    </a>
+                </div>
+
+                <!-- Analysis Section -->
+                <div class="nav-group">
+                    <div class="nav-group-label">🔬 Analysis</div>
+                    <a href="/analysis" class="nav-link {% if request.endpoint == 'analysis' %}active{% endif %}">
+                        <span class="nav-link-icon">📊</span>
+                        Analysis Tools
+                    </a>
+                    <a href="/chat" class="nav-link {% if request.endpoint == 'chat' %}active{% endif %}">
+                        <span class="nav-link-icon">💬</span>
+                        AI Chat
+                    </a>
+                    <a href="/predictive_analytics" class="nav-link {% if request.endpoint == 'predictive_analytics' %}active{% endif %}">
+                        <span class="nav-link-icon">🔮</span>
+                        Predictive Analytics
+                    </a>
+                </div>
+
+                <!-- Reports Section -->
+                <div class="nav-group">
+                    <div class="nav-group-label">📄 Reports</div>
+                    <a href="/reports" class="nav-link {% if request.endpoint == 'reports' %}active{% endif %}">
+                        <span class="nav-link-icon">📋</span>
+                        Reports
+                    </a>
+                    <a href="/summaries" class="nav-link {% if request.endpoint == 'summaries' %}active{% endif %}">
+                        <span class="nav-link-icon">📝</span>
+                        Summaries
+                    </a>
+                </div>
+
+                <!-- Reference Section -->
+                <div class="nav-group">
+                    <div class="nav-group-label">📚 Reference</div>
+                    <a href="/methodology" class="nav-link {% if request.endpoint == 'methodology' %}active{% endif %}">
+                        <span class="nav-link-icon">📖</span>
+                        Methodology
+                    </a>
+                    <a href="/workflow" class="nav-link {% if request.endpoint == 'workflow' %}active{% endif %}">
+                        <span class="nav-link-icon">🔄</span>
+                        Workflow
+                    </a>
+                </div>
+
+                <!-- Settings Section -->
+                <div class="nav-group">
+                    <div class="nav-group-label">⚙️ Settings</div>
+                    <a href="/settings" class="nav-link {% if request.endpoint == 'settings' %}active{% endif %}">
+                        <span class="nav-link-icon">⚙️</span>
+                        Settings
+                    </a>
+                    <a href="/cost-analysis" class="nav-link {% if request.endpoint == 'cost_analysis' %}active{% endif %}">
+                        <span class="nav-link-icon">💰</span>
+                        Cost Analysis
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        {% block content %}{% endblock %}
+    </div>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html> 

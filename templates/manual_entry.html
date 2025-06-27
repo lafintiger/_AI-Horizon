@@ -1,58 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manual Entry - AI-Horizon</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+{% extends "base.html" %}
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            color: #333;
-        }
+{% block title %}Manual Entry - AI-Horizon{% endblock %}
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
+{% block extra_styles %}
+<style>
 
-        .nav-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 15px 30px;
-            margin-bottom: 30px;
-            backdrop-filter: blur(10px);
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 20px;
-        }
-
-        .nav-link {
-            color: white;
-            text-decoration: none;
-            padding: 8px 16px;
-            border-radius: 8px;
-            transition: background 0.3s;
-        }
-
-        .nav-link:hover, .nav-link.active {
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            text-decoration: none;
-        }
 
         .main-content {
             background: rgba(255, 255, 255, 0.95);
@@ -188,23 +140,13 @@
             border-color: #bee5eb;
             color: #0c5460;
         }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="nav-header">
-            <h1 style="color: white; margin: 0;">🚀 AI-Horizon Manual Entry</h1>
-            <div class="nav-links">
-                <a href="/" class="nav-link">📊 Status Dashboard</a>
-                <a href="/reports" class="nav-link">📋 Reports</a>
-                <a href="/analysis" class="nav-link">🔍 Analysis</a>
-                <a href="/methodology" class="nav-link">📖 Methodology</a>
-                <a href="/cost-analysis" class="nav-link">💰 Cost Analysis</a>
-                <a href="{{ url_for('browse_entries') }}" class="nav-link">📂 Browse Entries</a>
-                <a href="/manual-entry" class="nav-link active">📝 Manual Entry</a>
-                <a href="/settings" class="nav-link">⚙️ Settings</a>
-            </div>
-        </div>
+</style>
+{% endblock %}
+
+{% block content %}
+    <div class="main-content">
+<!-- Navigation Header -->
+        
 
         <div class="main-content">
             <h2 style="color: #667eea; margin-bottom: 30px;">📝 Manual Entry Dashboard</h2>
@@ -306,11 +248,7 @@
                 </div>
             </div>
 
-            <div style="margin-top: 30px; text-align: center;">
-                <a href="/" class="btn btn-primary" style="background: #6c757d;">
-                    ← Back to Main Dashboard
-                </a>
-            </div>
+
         </div>
     </div>
 
@@ -346,5 +284,40 @@
         // Refresh stats every 30 seconds
         setInterval(loadStats, 30000);
     </script>
-</body>
-</html> 
+    </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Load database statistics
+        async function loadStats() {
+            try {
+                const response = await fetch('/api/database_stats');
+                const data = await response.json();
+                
+                document.getElementById('totalArtifacts').textContent = data.total_artifacts || 0;
+                
+                // Count manual entries (placeholder - would need API enhancement)
+                const manualCount = Math.floor((data.total_artifacts || 0) * 0.1); // Estimate
+                document.getElementById('manualEntries').textContent = manualCount;
+                
+                // Today's entries (placeholder)
+                document.getElementById('todayEntries').textContent = Math.floor(Math.random() * 5);
+                
+                // Categorized entries
+                const categorized = Object.values(data.categories || {}).reduce((a, b) => a + b, 0);
+                document.getElementById('categorizedEntries').textContent = categorized;
+                
+            } catch (error) {
+                console.error('Failed to load stats:', error);
+                document.getElementById('totalArtifacts').textContent = 'Error';
+            }
+        }
+
+        // Load stats on page load
+        loadStats();
+        
+        // Refresh stats every 30 seconds
+        setInterval(loadStats, 30000);
+</script>
+{% endblock %}

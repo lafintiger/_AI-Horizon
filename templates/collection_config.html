@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collection Configuration - AI-Horizon</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .nav-bar {
+            background: #f7fafc;
+            padding: 15px 30px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .nav-bar a {
+            color: #4299e1;
+            text-decoration: none;
+            margin-right: 20px;
+            font-weight: 500;
+        }
+
+        .nav-bar a:hover {
+            color: #2b6cb0;
+        }
+
+        .config-content {
+            padding: 40px;
+        }
+
+        .config-section {
+            margin-bottom: 40px;
+            padding: 30px;
+            background: #f8fafc;
+            border-radius: 10px;
+            border-left: 4px solid #4299e1;
+        }
+
+        .config-section h2 {
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .config-section p {
+            color: #4a5568;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .form-group input[type="number"] {
+            width: 200px;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input[type="number"]:focus {
+            outline: none;
+            border-color: #4299e1;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+        }
+
+        .articles-per-category {
+            background: #e6fffa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            border: 1px solid #81e6d9;
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .category-card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            border: 2px solid #e2e8f0;
+            transition: border-color 0.2s;
+        }
+
+        .category-card:hover {
+            border-color: #4299e1;
+        }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .category-icon {
+            font-size: 1.5rem;
+        }
+
+        .category-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .category-description {
+            color: #4a5568;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .prompt-textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            resize: vertical;
+            transition: border-color 0.2s;
+        }
+
+        .prompt-textarea:focus {
+            outline: none;
+            border-color: #4299e1;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+        }
+
+        .prompt-count {
+            font-size: 0.8rem;
+            color: #718096;
+            margin-top: 5px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(66, 153, 225, 0.3);
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+
+        .btn-secondary:hover {
+            background: #cbd5e0;
+        }
+
+        .btn-reset {
+            background: #fed7d7;
+            color: #c53030;
+        }
+
+        .btn-reset:hover {
+            background: #feb2b2;
+        }
+
+        .expandable-section {
+            margin-top: 20px;
+        }
+
+        .expand-toggle {
+            background: none;
+            border: none;
+            color: #4299e1;
+            cursor: pointer;
+            font-weight: 600;
+            padding: 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .expand-toggle:hover {
+            color: #2b6cb0;
+        }
+
+        .expandable-content {
+            display: none;
+            margin-top: 15px;
+        }
+
+        .expandable-content.expanded {
+            display: block;
+        }
+
+        .status-message {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .status-message.success {
+            background: #c6f6d5;
+            color: #22543d;
+            border: 1px solid #9ae6b4;
+        }
+
+        .status-message.error {
+            background: #fed7d7;
+            color: #c53030;
+            border: 1px solid #feb2b2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Collection Configuration</h1>
+            <p>Configure your comprehensive article collection parameters</p>
+        </div>
+
+        <div class="nav-bar">
+            <a href="/">📊 Dashboard</a>
+            <a href="/browse_entries">📚 Browse Entries</a>
+            <a href="/analysis">📈 Analysis</a>
+        </div>
+
+        <div class="config-content">
+            <div id="statusMessage" class="status-message"></div>
+
+            <form id="collectionForm">
+                <!-- Article Count Configuration -->
+                <div class="config-section">
+                    <h2>📊 Article Collection Settings</h2>
+                    <p>Configure how many articles to collect across the four AI impact categories.</p>
+                    
+                    <div class="form-group">
+                        <label for="totalArticles">Total Articles to Collect:</label>
+                        <input type="number" id="totalArticles" name="totalArticles" value="80" min="4" max="400" step="4">
+                        <div class="articles-per-category">
+                            <strong>Articles per category: <span id="articlesPerCategory">20</span></strong>
+                            <br><small>Will be distributed equally across Replace, Augment, New Tasks, and Human-Only categories</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Timeframe Configuration -->
+                <div class="config-section">
+                    <h2>📅 Timeframe Configuration</h2>
+                    <p>Control the date range for article collection to avoid duplicates and focus on fresh content.</p>
+                    
+                    <div class="form-group">
+                        <label for="timeframeType">Search Timeframe:</label>
+                        <select id="timeframeType" name="timeframeType" style="width: 300px; padding: 12px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 1rem;">
+                            <option value="since_last">Since Last Collection (Smart Default)</option>
+                            <option value="last_7_days">Last 7 Days</option>
+                            <option value="last_30_days">Last 30 Days</option>
+                            <option value="last_3_months">Last 3 Months</option>
+                            <option value="last_6_months">Last 6 Months</option>
+                            <option value="last_year">Last Year</option>
+                            <option value="all_time">All Time (No Date Filter)</option>
+                            <option value="custom_range">Custom Date Range</option>
+                        </select>
+                    </div>
+
+                    <div id="customDateRange" style="display: none; margin-top: 15px;">
+                        <div style="display: flex; gap: 20px; align-items: center;">
+                            <div>
+                                <label for="startDate">Start Date:</label>
+                                <input type="date" id="startDate" name="startDate" style="padding: 8px; border: 2px solid #e2e8f0; border-radius: 8px;">
+                            </div>
+                            <div>
+                                <label for="endDate">End Date:</label>
+                                <input type="date" id="endDate" name="endDate" style="padding: 8px; border: 2px solid #e2e8f0; border-radius: 8px;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="timeframeInfo" style="background: #e6fffa; padding: 15px; border-radius: 8px; margin-top: 15px; border: 1px solid #81e6d9;">
+                        <div id="timeframeDescription">
+                            <strong>Since Last Collection:</strong> Automatically searches for articles published since your last successful collection. This prevents duplicates and focuses on fresh content.
+                        </div>
+                        <div id="lastCollectionDate" style="margin-top: 10px; font-size: 0.9rem; color: #4a5568;">
+                            <em>Loading last collection date...</em>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Prompt Configuration -->
+                <div class="config-section">
+                    <h2>🎯 Search Prompt Configuration</h2>
+                    <p>Customize the search prompts for each AI impact category. Each category uses multiple search queries to ensure comprehensive coverage.</p>
+                    
+                    <div class="expandable-section">
+                        <button type="button" class="expand-toggle" onclick="togglePrompts()">
+                            <span id="toggleIcon">▶</span> Show/Edit Search Prompts
+                        </button>
+                        <div id="promptsContent" class="expandable-content">
+                            <div class="category-grid">
+                                <!-- Replace Category -->
+                                <div class="category-card">
+                                    <div class="category-header">
+                                        <span class="category-icon">🤖</span>
+                                        <span class="category-title">REPLACE</span>
+                                    </div>
+                                    <div class="category-description">
+                                        Tasks and roles being completely automated or replaced by AI systems
+                                    </div>
+                                    <textarea class="prompt-textarea" name="replace_prompts" id="replace_prompts">CEO mandates AI adoption all employees required to use AI tools 2024 2025
+company AI-first policy employee performance reviews AI usage
+AI deployment reducing headcount layoffs automation 2024
+enterprise AI implementation workflow automation efficiency gains
+AI tools mandatory employee training performance expectations</textarea>
+                                    <div class="prompt-count">5 search queries (one per line)</div>
+                                </div>
+
+                                <!-- Augment Category -->
+                                <div class="category-card">
+                                    <div class="category-header">
+                                        <span class="category-icon">🤝</span>
+                                        <span class="category-title">AUGMENT</span>
+                                    </div>
+                                    <div class="category-description">
+                                        Human-AI collaboration enhancing capabilities and productivity
+                                    </div>
+                                    <textarea class="prompt-textarea" name="augment_prompts" id="augment_prompts">employee AI copilot tools enhancing productivity performance 2024
+AI assistants helping workers improve efficiency enterprise
+company provides AI tools to augment employee capabilities
+AI-enhanced workflows human oversight decision making 2024
+enterprise AI tools supporting employee performance goals</textarea>
+                                    <div class="prompt-count">5 search queries (one per line)</div>
+                                </div>
+
+                                <!-- New Tasks Category -->
+                                <div class="category-card">
+                                    <div class="category-header">
+                                        <span class="category-icon">⭐</span>
+                                        <span class="category-title">NEW TASKS</span>
+                                    </div>
+                                    <div class="category-description">
+                                        New job roles and responsibilities created due to AI technology
+                                    </div>
+                                    <textarea class="prompt-textarea" name="new_tasks_prompts" id="new_tasks_prompts">AI governance officer new job roles enterprise 2024 2025
+prompt engineering specialist hiring demand enterprise
+AI ethics coordinator new positions company compliance
+machine learning operations engineer MLOps jobs 2024
+AI trainer specialist new roles enterprise hiring</textarea>
+                                    <div class="prompt-count">5 search queries (one per line)</div>
+                                </div>
+
+                                <!-- Human Only Category -->
+                                <div class="category-card">
+                                    <div class="category-header">
+                                        <span class="category-icon">👤</span>
+                                        <span class="category-title">HUMAN ONLY</span>
+                                    </div>
+                                    <div class="category-description">
+                                        Tasks requiring uniquely human expertise, creativity, and judgment
+                                    </div>
+                                    <textarea class="prompt-textarea" name="human_only_prompts" id="human_only_prompts">strategic planning requires human creativity AI cannot replace
+crisis management human judgment leadership skills essential
+stakeholder relationship building human trust empathy required
+complex negotiations human intuition emotional intelligence
+ethical decision making human values moral reasoning</textarea>
+                                    <div class="prompt-count">5 search queries (one per line)</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <button type="button" class="btn btn-reset" onclick="resetToDefaults()">
+                        🔄 Reset to Defaults
+                    </button>
+                    <a href="/" class="btn btn-secondary">
+                        ← Back to Dashboard
+                    </a>
+                    <button type="submit" class="btn btn-primary" id="startCollectionBtn">
+                        🚀 Start Collection
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Update articles per category when total changes
+        document.getElementById('totalArticles').addEventListener('input', function() {
+            const total = parseInt(this.value) || 80;
+            const perCategory = Math.floor(total / 4);
+            document.getElementById('articlesPerCategory').textContent = perCategory;
+        });
+
+        // Handle timeframe selection changes
+        document.getElementById('timeframeType').addEventListener('change', function() {
+            const customRange = document.getElementById('customDateRange');
+            const timeframeInfo = document.getElementById('timeframeDescription');
+            
+            if (this.value === 'custom_range') {
+                customRange.style.display = 'block';
+                timeframeInfo.innerHTML = '<strong>Custom Date Range:</strong> Search for articles published within your specified date range.';
+            } else {
+                customRange.style.display = 'none';
+                updateTimeframeDescription(this.value);
+            }
+        });
+
+        // Update timeframe description based on selection
+        function updateTimeframeDescription(timeframeType) {
+            const descriptions = {
+                'since_last': '<strong>Since Last Collection:</strong> Automatically searches for articles published since your last successful collection. This prevents duplicates and focuses on fresh content.',
+                'last_7_days': '<strong>Last 7 Days:</strong> Search for articles published in the past week.',
+                'last_30_days': '<strong>Last 30 Days:</strong> Search for articles published in the past month.',
+                'last_3_months': '<strong>Last 3 Months:</strong> Search for articles published in the past 3 months.',
+                'last_6_months': '<strong>Last 6 Months:</strong> Search for articles published in the past 6 months.',
+                'last_year': '<strong>Last Year:</strong> Search for articles published in the past 12 months.',
+                'all_time': '<strong>All Time:</strong> No date restrictions. May return many duplicate articles from previous collections.'
+            };
+            
+            document.getElementById('timeframeDescription').innerHTML = descriptions[timeframeType] || descriptions['since_last'];
+        }
+
+        // Load last collection date
+        async function loadLastCollectionDate() {
+            try {
+                const response = await fetch('/api/last_collection_date');
+                const data = await response.json();
+                
+                const lastDateEl = document.getElementById('lastCollectionDate');
+                if (data.last_collection_date) {
+                    const date = new Date(data.last_collection_date);
+                    lastDateEl.innerHTML = `<strong>Last collection:</strong> ${date.toLocaleDateString()} at ${date.toLocaleTimeString()}`;
+                } else {
+                    lastDateEl.innerHTML = '<em>No previous collections found. "Since Last Collection" will search all available articles.</em>';
+                }
+            } catch (error) {
+                console.error('Failed to load last collection date:', error);
+                document.getElementById('lastCollectionDate').innerHTML = '<em>Unable to load last collection date.</em>';
+            }
+        }
+
+        // Load last collection date on page load
+        loadLastCollectionDate();
+
+        // Toggle prompts visibility
+        function togglePrompts() {
+            const content = document.getElementById('promptsContent');
+            const icon = document.getElementById('toggleIcon');
+            
+            if (content.classList.contains('expanded')) {
+                content.classList.remove('expanded');
+                icon.textContent = '▶';
+            } else {
+                content.classList.add('expanded');
+                icon.textContent = '▼';
+            }
+        }
+
+        // Reset to default values
+        function resetToDefaults() {
+            if (confirm('Reset all settings to defaults? This will overwrite any custom prompts.')) {
+                document.getElementById('totalArticles').value = 80;
+                document.getElementById('articlesPerCategory').textContent = 20;
+                document.getElementById('timeframeType').value = 'since_last';
+                updateTimeframeDescription('since_last');
+                document.getElementById('customDateRange').style.display = 'none';
+                
+                // Reset prompts to defaults (already set in HTML)
+                location.reload();
+            }
+        }
+
+        // Show status message
+        function showStatus(message, type = 'success') {
+            const statusEl = document.getElementById('statusMessage');
+            statusEl.textContent = message;
+            statusEl.className = `status-message ${type}`;
+            statusEl.style.display = 'block';
+            
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                statusEl.style.display = 'none';
+            }, 5000);
+        }
+
+        // Handle form submission
+        document.getElementById('collectionForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const config = {
+                total_articles: parseInt(formData.get('totalArticles')),
+                timeframe: {
+                    type: formData.get('timeframeType'),
+                    start_date: formData.get('startDate'),
+                    end_date: formData.get('endDate')
+                },
+                prompts: {
+                    replace: formData.get('replace_prompts').split('\n').filter(line => line.trim()),
+                    augment: formData.get('augment_prompts').split('\n').filter(line => line.trim()),
+                    new_tasks: formData.get('new_tasks_prompts').split('\n').filter(line => line.trim()),
+                    human_only: formData.get('human_only_prompts').split('\n').filter(line => line.trim())
+                }
+            };
+
+            // Validate configuration
+            if (config.total_articles < 4 || config.total_articles > 400) {
+                showStatus('Total articles must be between 4 and 400', 'error');
+                return;
+            }
+
+            if (config.total_articles % 4 !== 0) {
+                showStatus('Total articles must be divisible by 4 for equal distribution', 'error');
+                return;
+            }
+
+            // Validate custom date range
+            if (config.timeframe.type === 'custom_range') {
+                if (!config.timeframe.start_date || !config.timeframe.end_date) {
+                    showStatus('Please specify both start and end dates for custom range', 'error');
+                    return;
+                }
+                if (new Date(config.timeframe.start_date) > new Date(config.timeframe.end_date)) {
+                    showStatus('Start date must be before end date', 'error');
+                    return;
+                }
+            }
+
+            // Check that all categories have prompts
+            for (const [category, prompts] of Object.entries(config.prompts)) {
+                if (prompts.length === 0) {
+                    showStatus(`${category.replace('_', ' ').toUpperCase()} category must have at least one search prompt`, 'error');
+                    return;
+                }
+            }
+
+            // Disable button and show loading
+            const submitBtn = document.getElementById('startCollectionBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '⏳ Starting Collection...';
+
+            // Send configuration to server
+            fetch('/api/start_configured_collection', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(config)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showStatus('Collection started successfully! Redirecting to dashboard...', 'success');
+                    setTimeout(() => {
+                        window.location.href = '/';
+                    }, 2000);
+                } else {
+                    throw new Error(data.error || 'Failed to start collection');
+                }
+            })
+            .catch(error => {
+                showStatus(`Error: ${error.message}`, 'error');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '🚀 Start Collection';
+            });
+        });
+
+        // Update prompt counts
+        document.querySelectorAll('.prompt-textarea').forEach(textarea => {
+            textarea.addEventListener('input', function() {
+                const lines = this.value.split('\n').filter(line => line.trim()).length;
+                const countEl = this.nextElementSibling;
+                countEl.textContent = `${lines} search queries (one per line)`;
+            });
+        });
+    </script>
+</body>
+</html> 

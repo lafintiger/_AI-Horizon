@@ -53,6 +53,15 @@ class RAGChatSystem:
         self.encoding = tiktoken.get_encoding("cl100k_base")
         
         logger.info(f"RAG Chat System initialized with model: {model}")
+        
+        # Initialize DCWF framework if available
+        self.dcwf_indexer = None
+        try:
+            from scripts.analysis.dcwf_framework_indexer import DCWFFrameworkIndexer
+            self.dcwf_indexer = DCWFFrameworkIndexer()
+            logger.info("DCWF Framework integration enabled")
+        except ImportError:
+            logger.warning("DCWF Framework not available")
     
     def search_articles(self, query: str, limit: int = 10) -> List[Dict[str, Any]]:
         """
@@ -314,4 +323,138 @@ Please provide a comprehensive answer based on the article content, citing speci
             "total_content_chars": total_content,
             "avg_content_length": total_content // len(filtered_articles) if filtered_articles else 0,
             "available_for_chat": len(filtered_articles) > 0
-        } 
+        }
+    
+    def get_enhanced_context(self, query: str, filters: Dict[str, Any] = None) -> str:
+        """Get enhanced context with advanced filtering and DCWF integration."""
+        if filters is None:
+            filters = {}
+        
+        # Get articles with enhanced search
+        articles = self.search_articles_enhanced(query, filters)
+        
+        # Prepare enhanced context
+        context_parts = []
+        context_parts.append("# Enhanced Cybersecurity Workforce Intelligence Context\n")
+        
+        # Add DCWF context if available and relevant
+        if self.dcwf_indexer and any(term in query.lower() for term in ['role', 'task', 'dcwf', 'framework', 'job']):
+            dcwf_context = self.get_dcwf_context(query)
+            if dcwf_context:
+                context_parts.append(dcwf_context)
+        
+        # Add article context
+        article_context = self.prepare_context(articles, max_tokens=5000)
+        context_parts.append(article_context)
+        
+        # Add filter information
+        if filters:
+            filter_info = f"\n## Applied Filters:\n"
+            for key, value in filters.items():
+                filter_info += f"- **{key}**: {value}\n"
+            context_parts.append(filter_info)
+        
+        return "\n".join(context_parts)
+    
+    def search_articles_enhanced(self, query: str, filters: Dict[str, Any] = None) -> List[Dict[str, Any]]:
+        """Enhanced article search with advanced filtering."""
+        if filters is None:
+            filters = {}
+        
+        # Start with basic search
+        articles = self.search_articles(query, limit=50)
+        
+        # Apply category filters
+        if filters.get('categories'):
+            categories = filters['categories']
+            if isinstance(categories, str):
+                categories = [categories]
+            articles = [a for a in articles if any(cat in a.get('source_type', '') for cat in categories)]
+        
+        # Apply confidence threshold
+        if filters.get('confidence_threshold'):
+            threshold = float(filters['confidence_threshold'])
+            articles = [a for a in articles if a.get('score', 0) >= threshold]
+        
+        return articles[:20]
+    
+    def get_dcwf_context(self, query: str) -> str:
+        """Get relevant DCWF framework context for the query."""
+        if not self.dcwf_indexer:
+            return ""
+        
+        try:
+            dcwf_results = self.dcwf_indexer.search_framework(query)
+            if not dcwf_results:
+                return ""
+            
+            context = "\n## DCWF Framework Context\n"
+            context += "**DoD Cybersecurity Workforce Framework (DCWF) Relevant Information:**\n\n"
+            
+            for i, result in enumerate(dcwf_results[:5], 1):
+                context += f"**{i}. {result.get('work_role_name', 'Unknown Role')}**\n"
+                context += f"- **Role ID**: {result.get('work_role_id', 'N/A')}\n"
+                context += f"- **Description**: {result.get('role_description', 'N/A')[:200]}...\n"
+                
+                tasks = result.get('tasks', [])
+                if tasks:
+                    context += f"- **Key Tasks**: {', '.join(tasks[:3])}...\n"
+                context += "\n"
+            
+            return context
+        except Exception as e:
+            logger.error(f"Error getting DCWF context: {e}")
+            return ""
+    
+    def get_source_citations(self, query: str, context: str) -> List[Dict[str, Any]]:
+        """Extract source citations from the context."""
+        articles = self.search_articles(query, limit=10)
+        
+        citations = []
+        for item in articles:
+            article = item['article']
+            citations.append({
+                'title': item['title'],
+                'url': item['url'],
+                'source_type': item['source_type'],
+                'collected_at': item['collected_at'],
+                'relevance_score': item['score'],
+                'content_preview': item['content_preview'],
+                'metadata': {
+                    'id': article.get('id'),
+                    'source': article.get('source', 'Unknown'),
+                    'quality_score': article.get('quality_score', 0)
+                }
+            })
+        
+        return citations
+    
+    def get_suggested_questions(self) -> List[str]:
+        """Generate suggested questions based on current database content."""
+        stats = self.db.get_database_stats()
+        
+        suggestions = [
+            "What cybersecurity tasks are being replaced by AI?",
+            "How is AI augmenting human cybersecurity work?",
+            "What new cybersecurity roles are being created by AI?",
+            "Which cybersecurity tasks remain uniquely human?",
+            "How should cybersecurity students prepare for an AI-driven future?",
+            "What are the latest trends in AI-powered security tools?",
+            "How is AI changing incident response procedures?",
+            "What skills are most important for AI-augmented cybersecurity work?",
+            "How are organizations adapting their security teams for AI integration?",
+            "What are the ethical considerations of AI in cybersecurity?"
+        ]
+        
+        # Add category-specific suggestions based on available data
+        categories = stats.get('categories', {})
+        if categories.get('replace', 0) > 0:
+            suggestions.append("Show me specific examples of AI replacing cybersecurity tasks")
+        if categories.get('augment', 0) > 0:
+            suggestions.append("How is AI enhancing human cybersecurity capabilities?")
+        if categories.get('new_tasks', 0) > 0:
+            suggestions.append("What new cybersecurity jobs are emerging due to AI?")
+        if categories.get('human_only', 0) > 0:
+            suggestions.append("What cybersecurity work will always require human expertise?")
+        
+        return suggestions[:12]  # Return top 12 suggestions 

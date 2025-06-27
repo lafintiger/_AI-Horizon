@@ -1,20 +1,35 @@
 """
 Artifact classification for AI-Horizon pipeline.
 
-Classifies artifacts into the four AI impact categories using LLM analysis.
+Classifies artifacts into the four AI impact categories using LLM analysis
+enhanced with DCWF (DoD Cyber Workforce Framework) task and role mapping.
 """
 
 import re
+import sys
 from datetime import datetime
+from pathlib import Path
 from typing import Dict, List, Any, Optional
 from dataclasses import dataclass
 
 from anthropic import Anthropic
 from openai import OpenAI
 
+# Add project root to path for DCWF indexer import
+sys.path.append(str(Path(__file__).parent.parent.parent))
+
 from aih.config import settings, AI_IMPACT_CATEGORIES
 from aih.utils.logging import get_logger, log_api_call
 from aih.utils.rate_limiter import rate_limiter
+
+# Import DCWF framework indexer for enhanced classification
+try:
+    from scripts.analysis.dcwf_framework_indexer import DCWFFrameworkIndexer
+    DCWF_AVAILABLE = True
+except ImportError as e:
+    logger = get_logger(__name__)
+    logger.warning(f"DCWF Framework Indexer not available: {e}")
+    DCWF_AVAILABLE = False
 
 logger = get_logger(__name__)
 
@@ -27,10 +42,14 @@ class Classification:
     supporting_evidence: List[str]
     model_used: str
     classified_at: datetime
+    dcwf_analysis: Optional[Dict[str, Any]] = None  # NEW: DCWF-specific analysis
 
 class ArtifactClassifier:
     """
-    Classifies artifacts into AI impact categories.
+    Classifies artifacts into AI impact categories with DCWF framework integration.
+    
+    Enhanced with DoD Cyber Workforce Framework (DCWF) analysis to provide
+    precise mapping to specific cybersecurity work roles and tasks.
     
     Categories:
     - replace: Tasks/jobs AI will replace
@@ -41,7 +60,7 @@ class ArtifactClassifier:
     
     def __init__(self, model_name: str = None):
         """
-        Initialize classifier.
+        Initialize classifier with DCWF framework integration.
         
         Args:
             model_name: LLM model to use for classification
@@ -59,34 +78,57 @@ class ArtifactClassifier:
                 raise ValueError("OpenAI API key required for GPT models")
             self.client = OpenAI(api_key=settings.openai_api_key)
             self.client_type = "openai"
+        
+        # Initialize DCWF framework indexer for enhanced analysis
+        self.dcwf_indexer = None
+        if DCWF_AVAILABLE:
+            try:
+                self.dcwf_indexer = DCWFFrameworkIndexer()
+                logger.info(f"✅ DCWF Framework loaded: {self.dcwf_indexer.get_framework_summary()['total_work_roles']} work roles, {self.dcwf_indexer.get_framework_summary()['total_tasks']} tasks")
+            except Exception as e:
+                logger.warning(f"⚠️  Failed to load DCWF Framework: {e}")
+                self.dcwf_indexer = None
+        else:
+            logger.warning("⚠️  DCWF Framework integration disabled - install dependencies")
     
-    async def classify_artifact(self, artifact_data: Dict[str, Any], 
-                              multi_class: bool = True) -> List[Classification]:
+    def classify_artifact(self, artifact_data: Dict[str, Any], 
+                         multi_class: bool = True) -> List[Classification]:
         """
-        Classify an artifact into AI impact categories.
+        Classify an artifact into AI impact categories with DCWF analysis.
         
         Args:
             artifact_data: Artifact dictionary with content and metadata
             multi_class: If True, allows multiple classifications per artifact
             
         Returns:
-            List of Classification objects (single item if multi_class=False)
+            List of Classification objects with DCWF analysis included
         """
-        logger.info(f"Classifying artifact: {artifact_data.get('title', 'Untitled')[:50]}...")
+        logger.info(f"🔍 Classifying artifact: {artifact_data.get('title', 'Untitled')[:50]}...")
         
         try:
-            # Build classification prompt
-            classification_prompt = self._build_classification_prompt(
-                artifact_data, multi_class
+            # Step 1: Perform DCWF analysis if available
+            dcwf_analysis = None
+            if self.dcwf_indexer:
+                try:
+                    content = artifact_data.get('content', '')
+                    dcwf_analysis = self.dcwf_indexer.infer_dcwf_impacts(content)
+                    logger.info(f"📊 DCWF Analysis: {len(dcwf_analysis.get('relevant_work_roles', []))} relevant work roles identified")
+                except Exception as e:
+                    logger.warning(f"⚠️  DCWF analysis failed: {e}")
+                    dcwf_analysis = None
+            
+            # Step 2: Build enhanced classification prompt with DCWF context
+            classification_prompt = self._build_enhanced_classification_prompt(
+                artifact_data, multi_class, dcwf_analysis
             )
             
-            # Get LLM analysis
+            # Step 3: Get LLM analysis
             rate_limiter.wait_if_needed(self.client_type)
             
             if self.client_type == "anthropic":
                 response = self.client.messages.create(
                     model=self.model_name,
-                    max_tokens=1500,
+                    max_tokens=2000,  # Increased for DCWF analysis
                     temperature=0.2,  # Lower temperature for more consistent classification
                     messages=[{"role": "user", "content": classification_prompt}]
                 )
@@ -96,7 +138,7 @@ class ArtifactClassifier:
                 response = self.client.chat.completions.create(
                     model=self.model_name,
                     messages=[{"role": "user", "content": classification_prompt}],
-                    max_tokens=1500,
+                    max_tokens=2000,
                     temperature=0.2
                 )
                 content = response.choices[0].message.content
@@ -112,16 +154,16 @@ class ArtifactClassifier:
                 cost=estimated_cost
             )
             
-            # Parse classification response
-            classifications = self._parse_classification_response(content, multi_class)
+            # Step 4: Parse classification response with DCWF integration
+            classifications = self._parse_classification_response(content, multi_class, dcwf_analysis)
             
-            logger.info(f"Classified artifact into {len(classifications)} categories: "
+            logger.info(f"✅ Classified artifact into {len(classifications)} categories: "
                        f"{[c.category for c in classifications]}")
             
             return classifications
             
         except Exception as e:
-            logger.error(f"Error classifying artifact: {e}")
+            logger.error(f"❌ Error classifying artifact: {e}")
             # Return default classification on error
             return [Classification(
                 category="human_only",
@@ -129,20 +171,23 @@ class ArtifactClassifier:
                 rationale=f"Classification failed due to error: {str(e)}",
                 supporting_evidence=[],
                 model_used=self.model_name,
-                classified_at=datetime.now()
+                classified_at=datetime.now(),
+                dcwf_analysis=dcwf_analysis
             )]
     
-    def _build_classification_prompt(self, artifact_data: Dict[str, Any], 
-                                   multi_class: bool) -> str:
+    def _build_enhanced_classification_prompt(self, artifact_data: Dict[str, Any], 
+                                            multi_class: bool, 
+                                            dcwf_analysis: Optional[Dict[str, Any]]) -> str:
         """
-        Build classification prompt for LLM.
+        Build enhanced classification prompt with DCWF framework context.
         
         Args:
             artifact_data: Artifact information
             multi_class: Whether to allow multiple classifications
+            dcwf_analysis: DCWF framework analysis results
             
         Returns:
-            Formatted prompt string
+            Enhanced prompt string with DCWF context
         """
         url = artifact_data.get('url', '')
         title = artifact_data.get('title', '')
@@ -164,13 +209,38 @@ Choose the SINGLE MOST PROMINENT category that best fits the primary focus of th
             for cat_id, cat_info in AI_IMPACT_CATEGORIES.items()
         ])
         
-        prompt = f"""You are an AI research analyst tasked with classifying content about AI's impact on cybersecurity workforce roles and tasks.
+        # Build DCWF context section
+        dcwf_context = ""
+        if dcwf_analysis:
+            dcwf_context = f"""
+DCWF FRAMEWORK ANALYSIS:
+The DoD Cyber Workforce Framework analysis has identified the following relevant context:
+
+Relevant Work Roles: {', '.join(dcwf_analysis.get('relevant_work_roles', [])[:5])}
+
+Tasks at Risk of Replacement:
+{self._format_dcwf_tasks(dcwf_analysis.get('tasks_at_risk', [])[:3])}
+
+Tasks Likely to be Augmented:
+{self._format_dcwf_tasks(dcwf_analysis.get('tasks_to_augment', [])[:3])}
+
+Human-Critical Tasks:
+{self._format_dcwf_tasks(dcwf_analysis.get('human_critical_tasks', [])[:3])}
+
+Specialty Areas Affected: {', '.join(dcwf_analysis.get('specialty_areas_affected', []))}
+
+Use this DCWF analysis to inform your classification and provide specific references to DoD cybersecurity work roles and tasks in your rationale.
+"""
+        
+        prompt = f"""You are an AI research analyst tasked with classifying content about AI's impact on cybersecurity workforce roles and tasks, with specific focus on the DoD Cyber Workforce Framework (DCWF).
 
 ARTIFACT TO CLASSIFY:
 URL: {url}
 Title: {title}
 Source Type: {source_type}
 Content: {content_excerpt}
+
+{dcwf_context}
 
 CLASSIFICATION CATEGORIES:
 {categories_desc}
@@ -179,10 +249,11 @@ CLASSIFICATION INSTRUCTIONS:
 {multi_class_instruction}
 
 For each category you assign, analyze:
-1. What specific cybersecurity tasks or roles are mentioned?
+1. What specific cybersecurity tasks or roles are mentioned (reference DCWF roles when applicable)?
 2. How is AI expected to impact these tasks/roles?
 3. What evidence supports this classification?
 4. What is your confidence level (0.0-1.0)?
+5. Which specific DCWF work roles and tasks are most relevant?
 
 ANALYSIS CRITERIA:
 - Replace: Look for evidence that AI will fully automate tasks, eliminate roles, or replace human decision-making
@@ -195,105 +266,106 @@ Provide your classification(s) in this EXACT format:
 CLASSIFICATION_1:
 CATEGORY: [replace/augment/new_tasks/human_only]
 CONFIDENCE: [0.0-1.0]
+DCWF_ROLES: [List specific DCWF work roles mentioned or relevant]
+DCWF_TASKS: [List specific DCWF tasks that are impacted]
 SUPPORTING_EVIDENCE: [Specific quotes or examples from the content that support this classification]
-RATIONALE: [Detailed explanation of why this category fits, including specific cybersecurity tasks/roles mentioned and how AI impacts them]
+RATIONALE: [Detailed explanation of why this category fits, including specific cybersecurity tasks/roles mentioned and how AI impacts them, with DCWF context]
 
-[If multiple classifications, repeat with CLASSIFICATION_2, CLASSIFICATION_3, etc.]
-
-IMPORTANT: Only classify if there is clear evidence in the content. If the artifact doesn't clearly discuss AI's impact on cybersecurity work, respond with:
-NO_CLASSIFICATION: Content does not clearly address AI impact on cybersecurity workforce
 """
         
         return prompt
     
+    def _format_dcwf_tasks(self, tasks: List[Dict[str, Any]]) -> str:
+        """Format DCWF tasks for prompt inclusion."""
+        if not tasks:
+            return "None identified"
+        
+        formatted = []
+        for task in tasks:
+            work_role = task.get('work_role', 'Unknown Role')
+            description = task.get('description', 'No description')[:100]
+            formatted.append(f"  • {work_role}: {description}...")
+        
+        return "\n".join(formatted)
+    
     def _parse_classification_response(self, response: str, 
-                                     multi_class: bool) -> List[Classification]:
+                                     multi_class: bool,
+                                     dcwf_analysis: Optional[Dict[str, Any]]) -> List[Classification]:
         """
-        Parse LLM classification response.
+        Parse LLM classification response with DCWF integration.
         
         Args:
             response: LLM response text
-            multi_class: Whether multiple classifications were requested
+            multi_class: Whether multiple classifications are expected
+            dcwf_analysis: DCWF framework analysis results
             
         Returns:
-            List of Classification objects
+            List of Classification objects with DCWF data
         """
         classifications = []
         
-        # Check for no classification case
-        if "NO_CLASSIFICATION:" in response:
-            return [Classification(
-                category="human_only",
-                confidence=0.0,
-                rationale="Content does not clearly address AI impact on cybersecurity workforce",
-                supporting_evidence=[],
-                model_used=self.model_name,
-                classified_at=datetime.now()
-            )]
+        # Split response into individual classifications
+        classification_blocks = re.split(r'CLASSIFICATION_\d+:', response)
         
-        # Find all classification blocks
-        classification_pattern = r'CLASSIFICATION_\d+:\s*\n(.*?)(?=CLASSIFICATION_\d+:|$)'
-        classification_blocks = re.findall(classification_pattern, response, re.DOTALL)
-        
-        # If no numbered classifications found, try to parse as single classification
-        if not classification_blocks:
-            classification_blocks = [response]
-        
-        for block in classification_blocks:
+        for block in classification_blocks[1:]:  # Skip first empty split
             try:
-                # Extract components from each block
+                # Extract classification components
                 category_match = re.search(r'CATEGORY:\s*(\w+)', block)
                 confidence_match = re.search(r'CONFIDENCE:\s*([\d.]+)', block)
-                evidence_match = re.search(r'SUPPORTING_EVIDENCE:\s*(.+?)(?=RATIONALE:)', 
-                                         block, re.DOTALL)
+                dcwf_roles_match = re.search(r'DCWF_ROLES:\s*([^\n]+)', block)
+                dcwf_tasks_match = re.search(r'DCWF_TASKS:\s*([^\n]+)', block)
+                evidence_match = re.search(r'SUPPORTING_EVIDENCE:\s*([^\n]+(?:\n(?!RATIONALE:)[^\n]+)*)', block, re.MULTILINE)
                 rationale_match = re.search(r'RATIONALE:\s*(.+)', block, re.DOTALL)
                 
-                if category_match:
+                if category_match and confidence_match:
                     category = category_match.group(1).lower()
+                    confidence = float(confidence_match.group(1))
                     
-                    # Validate category
-                    if category not in AI_IMPACT_CATEGORIES:
-                        logger.warning(f"Invalid category '{category}', defaulting to 'human_only'")
-                        category = "human_only"
+                    # Extract DCWF-specific information
+                    dcwf_roles = dcwf_roles_match.group(1).strip() if dcwf_roles_match else ""
+                    dcwf_tasks = dcwf_tasks_match.group(1).strip() if dcwf_tasks_match else ""
                     
-                    confidence = float(confidence_match.group(1)) if confidence_match else 0.5
-                    confidence = min(1.0, max(0.0, confidence))  # Clamp to valid range
+                    evidence = evidence_match.group(1).strip() if evidence_match else ""
+                    rationale = rationale_match.group(1).strip() if rationale_match else ""
                     
-                    evidence_text = evidence_match.group(1).strip() if evidence_match else ""
-                    evidence_list = [e.strip() for e in evidence_text.split('\n') 
-                                   if e.strip() and not e.strip().startswith('-')]
-                    
-                    rationale = rationale_match.group(1).strip() if rationale_match else "No rationale provided"
+                    # Enhance DCWF analysis with LLM insights
+                    enhanced_dcwf_analysis = dcwf_analysis.copy() if dcwf_analysis else {}
+                    if dcwf_roles or dcwf_tasks:
+                        enhanced_dcwf_analysis.update({
+                            'llm_identified_roles': dcwf_roles,
+                            'llm_identified_tasks': dcwf_tasks,
+                            'classification_category': category,
+                            'classification_confidence': confidence
+                        })
                     
                     classification = Classification(
                         category=category,
                         confidence=confidence,
                         rationale=rationale,
-                        supporting_evidence=evidence_list,
+                        supporting_evidence=[evidence] if evidence else [],
                         model_used=self.model_name,
-                        classified_at=datetime.now()
+                        classified_at=datetime.now(),
+                        dcwf_analysis=enhanced_dcwf_analysis
                     )
                     
                     classifications.append(classification)
                     
             except Exception as e:
-                logger.warning(f"Error parsing classification block: {e}")
+                logger.warning(f"⚠️  Error parsing classification block: {e}")
                 continue
         
-        # If no valid classifications found, return default
+        # Fallback if no classifications parsed
         if not classifications:
+            logger.warning("⚠️  No valid classifications parsed, using fallback")
             classifications = [Classification(
                 category="human_only",
-                confidence=0.1,
-                rationale="Failed to parse classification from response",
+                confidence=0.5,
+                rationale="Unable to parse classification response",
                 supporting_evidence=[],
                 model_used=self.model_name,
-                classified_at=datetime.now()
+                classified_at=datetime.now(),
+                dcwf_analysis=dcwf_analysis
             )]
-        
-        # If single classification requested, return only the highest confidence one
-        if not multi_class and len(classifications) > 1:
-            classifications = [max(classifications, key=lambda c: c.confidence)]
         
         return classifications
     

@@ -38,10 +38,17 @@ class ManualEntryProcessor:
         try:
             import openai
             import os
+            from dotenv import load_dotenv
+            
+            # Load environment variables from config.env with override
+            load_dotenv('config.env', override=True)
+            
             api_key = os.getenv('OPENAI_API_KEY')
-            if api_key:
+            if api_key and not api_key.startswith('your_'):
                 self.openai_client = openai.OpenAI(api_key=api_key)
                 logger.info("OpenAI client initialized")
+            else:
+                logger.warning("OpenAI API key not found or is placeholder value")
         except ImportError:
             logger.warning("OpenAI not available - falling back to keyword classification")
         except Exception as e:
@@ -98,117 +105,162 @@ class ManualEntryProcessor:
             logger.error(f"Error extracting YouTube ID: {e}")
         return None
     
-    async def ai_categorize_content(self, title: str, content: str) -> Tuple[str, float, Dict]:
-        """Use AI to categorize content and provide confidence scoring."""
+    def ai_categorize_content(self, title: str, content: str) -> Tuple[Dict, float, Dict]:
+        """Use AI to categorize content into multiple categories with confidence scoring."""
         if not self.openai_client:
-            return self._keyword_categorize(title, content)
+            return self._keyword_categorize_multi(title, content)
         
         try:
             # Prepare content for analysis (truncate if too long)
             analysis_content = content[:4000] if len(content) > 4000 else content
             
             prompt = f"""
-Analyze this cybersecurity content and categorize its impact on the workforce.
+Analyze this cybersecurity content for AI workforce impact across ALL relevant categories.
 
 Title: {title}
 
 Content: {analysis_content}
 
-Categorize into ONE of these categories:
-- REPLACE: Tasks that AI can perform completely autonomously, replacing human workers
-- AUGMENT: Tasks where AI enhances human capabilities but requires human oversight
-- NEW_TASKS: New roles and responsibilities created by AI adoption in cybersecurity
-- HUMAN_ONLY: Tasks that remain fundamentally human due to complexity or ethics
+Evaluate EACH category and provide confidence scores (0.0-1.0) with supporting evidence:
 
-Provide your analysis as JSON:
+1. REPLACE: Tasks that AI can perform completely autonomously, replacing human workers
+2. AUGMENT: Tasks where AI enhances human capabilities but requires human oversight  
+3. NEW_TASKS: New roles and responsibilities created by AI adoption in cybersecurity
+4. HUMAN_ONLY: Tasks that remain fundamentally human due to complexity or ethics
+
+Provide comprehensive analysis as JSON:
 {{
-    "category": "REPLACE|AUGMENT|NEW_TASKS|HUMAN_ONLY",
-    "confidence": 0.0-1.0,
-    "reasoning": "Brief explanation for the categorization",
-    "key_insights": ["insight1", "insight2", "insight3"],
-    "relevance_score": 0.0-1.0,
-    "actionability": 0.0-1.0
+    "categories": {{
+        "replace": {{
+            "confidence": 0.0-1.0,
+            "evidence": ["specific quote or finding 1", "specific quote or finding 2"],
+            "key_tasks": ["specific task 1", "specific task 2"]
+        }},
+        "augment": {{
+            "confidence": 0.0-1.0,
+            "evidence": ["specific quote or finding 1", "specific quote or finding 2"],
+            "key_tasks": ["specific task 1", "specific task 2"]
+        }},
+        "new_tasks": {{
+            "confidence": 0.0-1.0,
+            "evidence": ["specific quote or finding 1", "specific quote or finding 2"],
+            "key_roles": ["specific role 1", "specific role 2"]
+        }},
+        "human_only": {{
+            "confidence": 0.0-1.0,
+            "evidence": ["specific quote or finding 1", "specific quote or finding 2"],
+            "key_tasks": ["specific task 1", "specific task 2"]
+        }}
+    }},
+    "primary_focus": "replace|augment|new_tasks|human_only",
+    "overall_relevance": 0.0-1.0,
+    "actionability_for_students": 0.0-1.0,
+    "summary": "One sentence summary of key workforce insight"
 }}
 
-Focus on practical workforce implications for cybersecurity professionals graduating in 2025.
+Only include categories with confidence >= 0.3. Focus on specific, actionable insights for cybersecurity students.
 """
             
-            logger.info("Sending content to OpenAI for categorization")
+            logger.info("Sending content to OpenAI for multi-category analysis")
             start_time = time.time()
             
-            response = await asyncio.get_event_loop().run_in_executor(
-                None,
-                lambda: self.openai_client.chat.completions.create(
-                    model="gpt-4o-mini",
-                    messages=[
-                        {"role": "system", "content": "You are an expert cybersecurity workforce analyst. Provide accurate, actionable insights for career planning."},
-                        {"role": "user", "content": prompt}
-                    ],
-                    temperature=0.1,
-                    max_tokens=500
-                )
+            response = self.openai_client.chat.completions.create(
+                model="gpt-4o-mini",
+                messages=[
+                    {"role": "system", "content": "You are an expert cybersecurity workforce analyst specializing in AI impact assessment. Provide detailed, evidence-based analysis for career planning."},
+                    {"role": "user", "content": prompt}
+                ],
+                temperature=0.1,
+                max_tokens=800
             )
             
             # Track cost
             duration = time.time() - start_time
-            estimated_cost = 0.01  # Rough estimate for GPT-4o-mini
-            cost_tracker.track_api_call("openai", "gpt-4o-mini", tokens=800, custom_cost=estimated_cost)
+            estimated_cost = 0.015  # Slightly higher for more detailed analysis
+            cost_tracker.track_api_call("openai", "gpt-4o-mini", tokens=1200, custom_cost=estimated_cost)
             
             # Parse response
             try:
                 result = json.loads(response.choices[0].message.content)
-                category = result.get('category', 'AUGMENT').lower()
-                confidence = float(result.get('confidence', 0.5))
+                categories = result.get('categories', {})
                 
-                analysis_details = {
-                    'reasoning': result.get('reasoning', ''),
-                    'key_insights': result.get('key_insights', []),
-                    'relevance_score': result.get('relevance_score', 0.5),
-                    'actionability': result.get('actionability', 0.5),
-                    'processing_method': 'openai_gpt4',
-                    'processing_time': duration
+                # Filter categories by confidence threshold
+                filtered_categories = {
+                    cat: data for cat, data in categories.items() 
+                    if data.get('confidence', 0) >= 0.3
                 }
                 
-                logger.info(f"AI categorization complete: {category} (confidence: {confidence})")
-                return category, confidence, analysis_details
+                # Calculate overall confidence (average of significant categories)
+                if filtered_categories:
+                    overall_confidence = sum(data['confidence'] for data in filtered_categories.values()) / len(filtered_categories)
+                else:
+                    overall_confidence = 0.3
+                
+                analysis_details = {
+                    'primary_focus': result.get('primary_focus', 'augment'),
+                    'overall_relevance': result.get('overall_relevance', 0.5),
+                    'actionability_for_students': result.get('actionability_for_students', 0.5),
+                    'summary': result.get('summary', 'Cybersecurity workforce analysis'),
+                    'processing_method': 'openai_gpt4_multi',
+                    'processing_time': duration,
+                    'categories_analyzed': len(categories),
+                    'significant_categories': len(filtered_categories)
+                }
+                
+                logger.info(f"Multi-category analysis complete: {len(filtered_categories)} significant categories found")
+                return filtered_categories, overall_confidence, analysis_details
                 
             except json.JSONDecodeError:
                 logger.error("Failed to parse AI response as JSON")
-                return self._keyword_categorize(title, content)
+                return self._keyword_categorize_multi(title, content)
                 
         except Exception as e:
             logger.error(f"AI categorization failed: {e}")
-            return self._keyword_categorize(title, content)
+            return self._keyword_categorize_multi(title, content)
     
-    def _keyword_categorize(self, title: str, content: str) -> Tuple[str, float, Dict]:
-        """Fallback keyword-based categorization."""
+    def _keyword_categorize_multi(self, title: str, content: str) -> Tuple[Dict, float, Dict]:
+        """Fallback keyword-based multi-category categorization."""
         combined_text = f"{title.lower()} {content.lower()}"
         
         category_keywords = {
-            'replace': ['replace', 'automat', 'eliminat', 'job loss', 'redundant', 'obsolete'],
-            'augment': ['assist', 'enhance', 'tool', 'help', 'support', 'improve', 'augment'],
-            'new_tasks': ['new job', 'opportunit', 'creat', 'emergi', 'novel', 'demand'],
-            'human_only': ['human only', 'expert', 'judgment', 'creativ', 'oversight', 'strategy']
+            'replace': ['replace', 'automat', 'eliminat', 'job loss', 'redundant', 'obsolete', 'displaced'],
+            'augment': ['assist', 'enhance', 'tool', 'help', 'support', 'improve', 'augment', 'collaboration'],
+            'new_tasks': ['new job', 'opportunit', 'creat', 'emergi', 'novel', 'demand', 'ai engineer', 'mlsecops'],
+            'human_only': ['human only', 'expert', 'judgment', 'creativ', 'oversight', 'strategy', 'ethics', 'leadership']
         }
         
-        scores = {}
+        categories = {}
         for category, keywords in category_keywords.items():
-            score = sum(1 for keyword in keywords if keyword in combined_text)
-            scores[category] = score
+            matches = [keyword for keyword in keywords if keyword in combined_text]
+            if matches:
+                confidence = min(len(matches) / 5, 1.0)  # Normalize confidence
+                categories[category] = {
+                    'confidence': confidence,
+                    'evidence': [f'Contains keyword: {match}' for match in matches[:3]],
+                    'key_tasks': [f'Tasks related to {match}' for match in matches[:2]]
+                }
         
-        best_category = max(scores, key=scores.get) if max(scores.values()) > 0 else 'augment'
-        confidence = min(max(scores.values()) / 10, 1.0)  # Normalize confidence
+        # Ensure at least one category
+        if not categories:
+            categories['augment'] = {
+                'confidence': 0.4,
+                'evidence': ['General cybersecurity content'],
+                'key_tasks': ['General cybersecurity tasks']
+            }
+        
+        overall_confidence = max(cat['confidence'] for cat in categories.values())
         
         analysis_details = {
-            'reasoning': f'Keyword-based classification. Found {max(scores.values())} relevant keywords.',
-            'key_insights': [f'Contains keywords related to {best_category}'],
-            'relevance_score': 0.6,  # Default for keyword classification
-            'actionability': 0.5,
-            'processing_method': 'keyword_fallback',
-            'keyword_scores': scores
+            'primary_focus': max(categories.keys(), key=lambda k: categories[k]['confidence']),
+            'overall_relevance': 0.6,
+            'actionability_for_students': 0.5,
+            'summary': f'Keyword-based analysis found {len(categories)} relevant categories',
+            'processing_method': 'keyword_fallback_multi',
+            'categories_analyzed': len(category_keywords),
+            'significant_categories': len(categories)
         }
         
-        return best_category, confidence, analysis_details
+        return categories, overall_confidence, analysis_details
     
     def analyze_content_quality(self, content: str, source_type: str) -> Dict:
         """Analyze content quality and generate quality metrics."""
@@ -264,7 +316,7 @@ Focus on practical workforce implications for cybersecurity professionals gradua
             }
         }
     
-    async def process_entry(self, artifact_id: str, status_tracker=None) -> Dict:
+    def process_entry(self, artifact_id: str, status_tracker=None) -> Dict:
         """Process a single manual entry with full AI analysis."""
         try:
             if status_tracker:
@@ -309,16 +361,20 @@ Focus on practical workforce implications for cybersecurity professionals gradua
             if status_tracker:
                 status_tracker.add_log("INFO", f"Running AI categorization for {artifact_id}", "PROCESSING")
             
-            category, confidence, analysis_details = await self.ai_categorize_content(title, enhanced_content)
+            categories, overall_confidence, analysis_details = self.ai_categorize_content(title, enhanced_content)
             
             # Content quality analysis
             quality_metrics = self.analyze_content_quality(enhanced_content, source_type)
             
-            # Update metadata
+            # Update metadata with multi-category AI analysis
+            # For backward compatibility, set primary category as ai_impact_category
+            primary_category = analysis_details.get('primary_focus', 'augment')
+            
             updated_metadata = {
                 **metadata,  # Preserve existing metadata
-                'ai_impact_category': category,
-                'confidence_score': confidence,
+                'ai_impact_category': primary_category,  # Backward compatibility
+                'ai_impact_categories': categories,      # NEW: Multi-category data
+                'confidence_score': overall_confidence,
                 'processed_at': datetime.now().isoformat(),
                 'processing_method': analysis_details.get('processing_method', 'unknown'),
                 'analysis_details': analysis_details,
@@ -337,17 +393,17 @@ Focus on practical workforce implications for cybersecurity professionals gradua
             self.db.save_artifact(updated_artifact)
             
             if status_tracker:
-                status_tracker.add_log("INFO", f"Successfully processed {artifact_id} -> {category} (confidence: {confidence:.2f})", "PROCESSING")
+                status_tracker.add_log("INFO", f"Successfully processed {artifact_id} -> {categories.get('replace', 'AUGMENT')} (confidence: {overall_confidence:.2f})", "PROCESSING")
             
             return {
                 'status': 'processed',
                 'artifact_id': artifact_id,
-                'category': category,
-                'confidence': confidence,
+                'category': categories.get('replace', 'AUGMENT'),
+                'confidence': overall_confidence,
                 'quality_score': quality_metrics['quality_score'],
                 'word_count': quality_metrics['word_count'],
                 'processing_method': analysis_details.get('processing_method'),
-                'key_insights': analysis_details.get('key_insights', [])
+                'key_insights': analysis_details.get('key_tasks', [])
             }
             
         except Exception as e:
@@ -356,7 +412,7 @@ Focus on practical workforce implications for cybersecurity professionals gradua
                 status_tracker.add_log("ERROR", f"Failed to process {artifact_id}: {e}", "PROCESSING")
             raise
     
-    async def process_multiple_entries(self, artifact_ids: List[str], status_tracker=None) -> Dict:
+    def process_multiple_entries(self, artifact_ids: List[str], status_tracker=None) -> Dict:
         """Process multiple entries with progress tracking."""
         total_count = len(artifact_ids)
         processed_results = []
@@ -370,11 +426,12 @@ Focus on practical workforce implications for cybersecurity professionals gradua
                 if status_tracker:
                     status_tracker.update_progress(i, total_count, f"Processing {artifact_id}")
                 
-                result = await self.process_entry(artifact_id, status_tracker)
+                result = self.process_entry(artifact_id, status_tracker)
                 processed_results.append(result)
                 
                 # Small delay to prevent overwhelming APIs
-                await asyncio.sleep(0.5)
+                import time
+                time.sleep(0.5)
                 
             except Exception as e:
                 logger.error(f"Failed to process {artifact_id}: {e}")
@@ -397,17 +454,17 @@ Focus on practical workforce implications for cybersecurity professionals gradua
         }
 
 # Main functions for API integration
-async def process_single_entry(artifact_id: str, status_tracker=None) -> Dict:
+def process_single_entry(artifact_id: str, status_tracker=None) -> Dict:
     """Process a single manual entry."""
     processor = ManualEntryProcessor()
-    return await processor.process_entry(artifact_id, status_tracker)
+    return processor.process_entry(artifact_id, status_tracker)
 
-async def process_multiple_entries(artifact_ids: List[str], status_tracker=None) -> Dict:
+def process_multiple_entries(artifact_ids: List[str], status_tracker=None) -> Dict:
     """Process multiple manual entries."""
     processor = ManualEntryProcessor()
-    return await processor.process_multiple_entries(artifact_ids, status_tracker)
+    return processor.process_multiple_entries(artifact_ids, status_tracker)
 
-async def process_all_unprocessed_entries(status_tracker=None) -> Dict:
+def process_all_unprocessed_entries(status_tracker=None) -> Dict:
     """Process all unprocessed manual entries."""
     try:
         db = DatabaseManager()
@@ -429,30 +486,38 @@ async def process_all_unprocessed_entries(status_tracker=None) -> Dict:
                 'message': 'No unprocessed entries found'
             }
         
-        return await process_multiple_entries(unprocessed_ids, status_tracker)
+        return process_multiple_entries(unprocessed_ids, status_tracker)
         
     except Exception as e:
         logger.error(f"Error in process_all_unprocessed_entries: {e}")
         raise
 
+# Synchronous versions for Flask background threads (now just aliases since main functions are synchronous)
+def process_single_entry_sync(artifact_id: str, status_tracker=None) -> Dict:
+    """Process a single manual entry (synchronous version)."""
+    return process_single_entry(artifact_id, status_tracker)
+
+def process_multiple_entries_sync(artifact_ids: List[str], status_tracker=None) -> Dict:
+    """Process multiple manual entries (synchronous version)."""
+    return process_multiple_entries(artifact_ids, status_tracker)
+
+def process_all_unprocessed_entries_sync(status_tracker=None) -> Dict:
+    """Process all unprocessed manual entries (synchronous version)."""
+    return process_all_unprocessed_entries(status_tracker)
+
 if __name__ == "__main__":
-    import asyncio
-    
     # Test processing
-    async def test_processing():
-        processor = ManualEntryProcessor()
-        
-        # Test YouTube transcript extraction
-        test_url = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"  # Rick Roll for testing
-        transcript = processor.extract_youtube_transcript(test_url)
-        print(f"Transcript extracted: {len(transcript) if transcript else 0} characters")
-        
-        # Test AI categorization
-        test_title = "AI-Powered Cybersecurity Tools"
-        test_content = "This video discusses how artificial intelligence is transforming cybersecurity by automating threat detection and enhancing analyst capabilities."
-        
-        category, confidence, details = await processor.ai_categorize_content(test_title, test_content)
-        print(f"Categorization: {category} (confidence: {confidence})")
-        print(f"Details: {details}")
+    processor = ManualEntryProcessor()
     
-    asyncio.run(test_processing()) 
+    # Test YouTube transcript extraction
+    test_url = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"  # Rick Roll for testing
+    transcript = processor.extract_youtube_transcript(test_url)
+    print(f"Transcript extracted: {len(transcript) if transcript else 0} characters")
+    
+    # Test AI categorization
+    test_title = "AI-Powered Cybersecurity Tools"
+    test_content = "This video discusses how artificial intelligence is transforming cybersecurity by automating threat detection and enhancing analyst capabilities."
+    
+    categories, overall_confidence, details = processor.ai_categorize_content(test_title, test_content)
+    print(f"Categorization: {categories.get('replace', 'AUGMENT')} (confidence: {overall_confidence})")
+    print(f"Details: {details}") 

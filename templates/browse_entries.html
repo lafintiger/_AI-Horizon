@@ -1,58 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Browse Entries - AI-Horizon</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+{% extends "base.html" %}
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            color: #333;
-        }
+{% block title %}Browse Entries - AI-Horizon{% endblock %}
 
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 20px;
-        }
+{% block extra_styles %}
+<style>
 
-        .nav-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 15px 30px;
-            margin-bottom: 30px;
-            backdrop-filter: blur(10px);
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 20px;
-        }
-
-        .nav-link {
-            color: white;
-            text-decoration: none;
-            padding: 8px 16px;
-            border-radius: 8px;
-            transition: background 0.3s;
-        }
-
-        .nav-link:hover, .nav-link.active {
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            text-decoration: none;
-        }
 
         .main-content {
             background: rgba(255, 255, 255, 0.95);
@@ -60,6 +12,55 @@
             padding: 40px;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
             backdrop-filter: blur(10px);
+        }
+
+        /* Category Legend Styles */
+        .category-legend {
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .legend-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .legend-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .legend-description {
+            font-size: 12px;
+            color: #666;
+            margin-top: 2px;
         }
 
         .stats-grid {
@@ -92,6 +93,8 @@
             display: flex;
             margin-bottom: 20px;
             border-bottom: 2px solid #e1e5e9;
+            flex-wrap: nowrap;
+            align-items: center;
         }
 
         .tab {
@@ -104,6 +107,8 @@
             color: #666;
             border-bottom: 2px solid transparent;
             transition: all 0.3s;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
 
         .tab.active {
@@ -136,6 +141,30 @@
             background: rgba(102, 126, 234, 0.1);
             font-weight: 600;
             color: #667eea;
+            cursor: pointer;
+            user-select: none;
+            position: relative;
+            transition: background-color 0.2s;
+        }
+
+        .entries-table th:hover {
+            background: rgba(102, 126, 234, 0.2);
+        }
+
+        .entries-table th.sortable::after {
+            content: ' ↕️';
+            font-size: 12px;
+            opacity: 0.5;
+        }
+
+        .entries-table th.sort-asc::after {
+            content: ' ↑';
+            opacity: 1;
+        }
+
+        .entries-table th.sort-desc::after {
+            content: ' ↓';
+            opacity: 1;
         }
 
         .entries-table tr:hover {
@@ -192,6 +221,64 @@
         .category-new_tasks { background: #28a745; }
         .category-human_only { background: #ffc107; color: #333; }
 
+        /* Multi-category indicator styles */
+        .multi-category-indicators {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+            margin-bottom: 8px;
+        }
+
+        .category-indicator {
+            width: 16px;
+            height: 16px;
+            border-radius: 3px;
+            border: 1px solid rgba(255,255,255,0.3);
+            position: relative;
+            cursor: help;
+        }
+
+        .category-indicator.replace { background: #dc3545; }
+        .category-indicator.augment { background: #17a2b8; }
+        .category-indicator.new_tasks { background: #28a745; }
+        .category-indicator.human_only { background: #ffc107; }
+
+        .category-indicator:hover::after {
+            content: attr(title);
+            position: absolute;
+            bottom: 120%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            white-space: nowrap;
+            z-index: 1000;
+        }
+
+        .confidence-bar {
+            height: 3px;
+            background: rgba(255,255,255,0.4);
+            border-radius: 2px;
+            margin-top: 2px;
+            overflow: hidden;
+        }
+
+        .confidence-fill {
+            height: 100%;
+            background: rgba(255,255,255,0.8);
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+
+        .category-summary {
+            font-size: 11px;
+            color: #666;
+            margin-top: 4px;
+        }
+
         .quality-badge {
             padding: 4px 8px;
             border-radius: 12px;
@@ -241,21 +328,42 @@
             margin-bottom: 15px;
             color: #ccc;
         }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="nav-header">
-            <h1 style="color: white; margin: 0;">🔍 Browse Entries</h1>
-            <div class="nav-links">
-                <a href="/" class="nav-link">📊 Status Dashboard</a>
-                <a href="/reports" class="nav-link">📋 Reports</a>
-                <a href="/analysis" class="nav-link">🔍 Analysis</a>
-                <a href="/methodology" class="nav-link">📖 Methodology</a>
-                <a href="/cost-analysis" class="nav-link">💰 Cost Analysis</a>
-                <a href="/manual-entry" class="nav-link">📝 Manual Entry</a>
-                <a href="/settings" class="nav-link">⚙️ Settings</a>
-            </div>
+</style>
+{% endblock %}
+
+{% block content %}
+    <div class="main-content">
+        <div class="header">
+            <h1>
+                {% if category_filter %}
+                    📂 {{ category_filter.replace('_', ' ').title() }} Articles
+                {% else %}
+                    📚 Browse Entries
+                {% endif %}
+            </h1>
+            <p>
+                {% if category_filter %}
+                    Showing articles categorized as "{{ category_filter.replace('_', ' ').title() }}"
+                {% else %}
+                    Explore your collected articles, documents, and automated content
+                {% endif %}
+            </p>
+            
+            {% if category_filter %}
+                <div style="margin: 15px 0; padding: 10px; background: rgba(102, 126, 234, 0.1); border-radius: 8px; border-left: 4px solid #667eea;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <strong>🔍 Category Filter Active:</strong> 
+                            <span class="category-badge category-{{ category_filter }}" style="margin-left: 8px;">
+                                {{ category_filter.replace('_', ' ').title() }}
+                            </span>
+                        </div>
+                        <a href="/browse_entries" class="btn btn-outline" style="font-size: 12px;">
+                            ✕ Clear Filter
+                        </a>
+                    </div>
+                </div>
+            {% endif %}
         </div>
 
         <div class="main-content">
@@ -270,6 +378,50 @@
                     {% endfor %}
                 {% endif %}
             {% endwith %}
+
+            <!-- Category Legend -->
+            <div class="category-legend">
+                <div class="legend-title">
+                    🏷️ Category Legend
+                </div>
+                <div class="legend-grid">
+                    <div class="legend-item">
+                        <div class="legend-color category-replace"></div>
+                        <div>
+                            <div class="legend-label">Replace</div>
+                            <div class="legend-description">Jobs being replaced by AI</div>
+                        </div>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color category-augment"></div>
+                        <div>
+                            <div class="legend-label">Augment</div>
+                            <div class="legend-description">Human work enhanced by AI</div>
+                        </div>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color category-new_tasks"></div>
+                        <div>
+                            <div class="legend-label">New Tasks</div>
+                            <div class="legend-description">New jobs created by AI</div>
+                        </div>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color category-human_only"></div>
+                        <div>
+                            <div class="legend-label">Human Only</div>
+                            <div class="legend-description">Tasks requiring human expertise</div>
+                        </div>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color category-general"></div>
+                        <div>
+                            <div class="legend-label">General</div>
+                            <div class="legend-description">General cybersecurity content</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <!-- Statistics -->
             <div class="stats-grid">
@@ -291,17 +443,19 @@
                 </div>
             </div>
 
-            <!-- Section Tabs -->
+            <!-- Tab Navigation -->
             <div class="section-tabs">
-                <button class="tab active" onclick="showTab('manual')">
+                <div class="tab active" onclick="showTab('manual')">
                     📝 Manual Entries ({{ total_manual }})
-                </button>
-                <button class="tab" onclick="showTab('automated')">
+                </div>
+                <div class="tab" onclick="showTab('automated')">
                     🤖 Automated Collections ({{ total_automated }})
-                </button>
-                <button class="tab" onclick="showTab('categories')">
-                    🏷️ By Category
-                </button>
+                </div>
+                {% if not category_filter %}
+                    <div class="tab" onclick="showTab('categories')">
+                        🏷️ Categories
+                    </div>
+                {% endif %}
             </div>
 
             <!-- Manual Entries Tab -->
@@ -316,14 +470,15 @@
                         </span>
                     </div>
                     
-                    <table class="entries-table">
+                    <table class="entries-table" id="manual-entries-table">
                         <thead>
                             <tr>
-                                <th>Title</th>
-                                <th>Type</th>
-                                <th>Category</th>
-                                <th>Quality Score</th>
-                                <th>Added</th>
+                                <th class="sortable" onclick="sortTable('manual-entries-table', 0)">ID</th>
+                                <th class="sortable" onclick="sortTable('manual-entries-table', 1)">Title</th>
+                                <th class="sortable" onclick="sortTable('manual-entries-table', 2)">Type</th>
+                                <th class="sortable" onclick="sortTable('manual-entries-table', 3)">Category</th>
+                                <th class="sortable" onclick="sortTable('manual-entries-table', 4)">Quality Score</th>
+                                <th class="sortable" onclick="sortTable('manual-entries-table', 5)">Added</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -331,6 +486,10 @@
                             {% for entry in manual_entries %}
                                 {% set metadata = entry.raw_metadata|from_json if entry.raw_metadata else {} %}
                                 <tr>
+                                    <td>
+                                        <strong>{{ "%04d"|format(loop.index) }}</strong>
+                                        <br><small style="color: #999; font-size: 0.7em;">{{ entry.id }}</small>
+                                    </td>
                                     <td>
                                         <strong>{{ entry.title[:60] }}{% if entry.title|length > 60 %}...{% endif %}</strong>
                                         {% if entry.url and not entry.url.startswith('file://') %}
@@ -349,8 +508,28 @@
                                         {% endif %}
                                     </td>
                                     <td>
+                                        {% set ai_categories = metadata.ai_impact_categories %}
                                         {% set ai_category = metadata.ai_impact_category %}
-                                        {% if ai_category %}
+                                        
+                                        {% if ai_categories %}
+                                            <!-- Multi-category indicators -->
+                                            <div class="multi-category-indicators">
+                                                {% for category, data in ai_categories.items() %}
+                                                    {% set confidence = data.confidence if data.confidence is defined else data %}
+                                                    <div class="category-indicator {{ category }}" 
+                                                         title="{{ category.replace('_', ' ').title() }}: {{ '%.1f'|format(confidence * 100) }}% confidence">
+                                                        <div class="confidence-bar">
+                                                            <div class="confidence-fill" style="width: {{ confidence * 100 }}%"></div>
+                                                        </div>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                            <div class="category-summary">
+                                                {{ ai_categories|length }} categories found
+                                            </div>
+                                            <small style="color: #28a745; font-weight: 600;">✅ Multi-category Analysis</small>
+                                        {% elif ai_category %}
+                                            <!-- Legacy single category display -->
                                             <span class="category-badge category-{{ ai_category }}">
                                                 {{ ai_category.replace('_', ' ').title() }}
                                             </span>
@@ -420,21 +599,27 @@
                         </span>
                     </div>
                     
-                    <table class="entries-table">
+                    <table class="entries-table" id="automated-entries-table">
                         <thead>
                             <tr>
-                                <th>Title</th>
-                                <th>Source</th>
-                                <th>Category</th>
-                                <th>Quality Score</th>
-                                <th>Collected</th>
+                                <th class="sortable" onclick="sortTable('automated-entries-table', 0)">ID</th>
+                                <th class="sortable" onclick="sortTable('automated-entries-table', 1)">Title</th>
+                                <th class="sortable" onclick="sortTable('automated-entries-table', 2)">Type</th>
+                                <th class="sortable" onclick="sortTable('automated-entries-table', 3)">Category</th>
+                                <th class="sortable" onclick="sortTable('automated-entries-table', 4)">Quality Score</th>
+                                <th class="sortable" onclick="sortTable('automated-entries-table', 5)">Collected</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {% for entry in automated_entries[:50] %}
+                            {% for entry in automated_entries %}
+                                {% set loop_index = loop.index0 %}
                                 {% set metadata = entry.raw_metadata|from_json if entry.raw_metadata else {} %}
-                                <tr>
+                                <tr{% if loop_index >= 50 %} style="display: none;"{% endif %}>
+                                    <td>
+                                        <strong>{{ "%04d"|format(loop.index) }}</strong>
+                                        <br><small style="color: #999; font-size: 0.7em;">{{ entry.id }}</small>
+                                    </td>
                                     <td>
                                         <strong>{{ entry.title[:60] }}{% if entry.title|length > 60 %}...{% endif %}</strong>
                                         {% if entry.url %}
@@ -442,19 +627,48 @@
                                         {% endif %}
                                     </td>
                                     <td>
-                                        {% if entry.source_type == 'perplexity' %}
-                                            🤖 Perplexity
-                                        {% elif entry.source_type == 'targeted' %}
-                                            🎯 Targeted
+                                        {% if entry.url %}
+                                            {% if 'youtube.com' in entry.url or 'youtu.be' in entry.url %}
+                                                📺 Video
+                                            {% else %}
+                                                🔗 URL
+                                            {% endif %}
+                                        {% elif entry.source_type == 'file' or 'file://' in (entry.url or '') %}
+                                            📁 File
                                         {% else %}
-                                            📊 {{ entry.source_type.title() }}
+                                            📄 Article
                                         {% endif %}
                                     </td>
                                     <td>
-                                        {% set category = metadata.ai_impact_category or 'general' %}
-                                        <span class="category-badge category-{{ category }}">
-                                            {{ category.replace('_', ' ').title() }}
-                                        </span>
+                                        {% set ai_categories = metadata.ai_impact_categories %}
+                                        {% set ai_category = metadata.ai_impact_category %}
+                                        
+                                        {% if ai_categories %}
+                                            <!-- Multi-category indicators -->
+                                            <div class="multi-category-indicators">
+                                                {% for category, data in ai_categories.items() %}
+                                                    {% set confidence = data.confidence if data.confidence is defined else data %}
+                                                    <div class="category-indicator {{ category }}" 
+                                                         title="{{ category.replace('_', ' ').title() }}: {{ '%.1f'|format(confidence * 100) }}% confidence">
+                                                        <div class="confidence-bar">
+                                                            <div class="confidence-fill" style="width: {{ confidence * 100 }}%"></div>
+                                                        </div>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                            <div class="category-summary">
+                                                {{ ai_categories|length }} categories found
+                                            </div>
+                                        {% elif ai_category %}
+                                            <!-- Legacy single category display -->
+                                            <span class="category-badge category-{{ ai_category }}">
+                                                {{ ai_category.replace('_', ' ').title() }}
+                                            </span>
+                                        {% else %}
+                                            <span class="category-badge category-general">
+                                                General
+                                            </span>
+                                        {% endif %}
                                     </td>
                                     <td>
                                         {% if entry.quality_score is defined %}
@@ -487,9 +701,17 @@
                     </table>
                     
                     {% if automated_entries|length > 50 %}
-                        <p style="text-align: center; margin-top: 20px; color: #666;">
-                            Showing first 50 of {{ automated_entries|length }} automated entries
-                        </p>
+                        <div style="text-align: center; margin-top: 20px;">
+                            <p style="color: #666; margin-bottom: 15px;">
+                                Showing first 50 of {{ automated_entries|length }} automated entries
+                            </p>
+                            <button onclick="showAllAutomatedEntries()" class="btn btn-primary" id="showAllBtn">
+                                📄 Show All {{ automated_entries|length }} Entries
+                            </button>
+                            <button onclick="showFirstFiftyEntries()" class="btn btn-secondary" id="showLessBtn" style="display: none; margin-left: 10px;">
+                                📋 Show First 50 Only
+                            </button>
+                        </div>
                     {% endif %}
                 {% else %}
                     <div class="empty-state">
@@ -511,7 +733,10 @@
                     </div>
                     
                     {% for category, count in category_counts.items() %}
-                        <div style="background: rgba(102, 126, 234, 0.1); border-radius: 10px; padding: 20px; margin-bottom: 15px;">
+                        <div class="category-card" style="background: rgba(102, 126, 234, 0.1); border-radius: 10px; padding: 20px; margin-bottom: 15px; cursor: pointer; transition: all 0.3s ease;" 
+                             onclick="viewCategoryEntries('{{ category }}')"
+                             onmouseover="this.style.background='rgba(102, 126, 234, 0.2)'; this.style.transform='translateY(-2px)'"
+                             onmouseout="this.style.background='rgba(102, 126, 234, 0.1)'; this.style.transform='translateY(0)'">
                             <div style="display: flex; justify-content: space-between; align-items: center;">
                                 <div>
                                     <span class="category-badge category-{{ category }}" style="font-size: 14px;">
@@ -530,9 +755,15 @@
                                             General cybersecurity and AI content
                                         {% endif %}
                                     </span>
+                                    <div style="margin-top: 8px; font-size: 12px; color: #999;">
+                                        Click to view all {{ count }} articles in this category
+                                    </div>
                                 </div>
                                 <div style="font-size: 24px; font-weight: 700; color: #667eea;">
                                     {{ count }}
+                                    <div style="font-size: 12px; font-weight: normal; color: #999; margin-top: 4px;">
+                                        articles
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -556,6 +787,9 @@
     </div>
 
     <script>
+        // Global variables to track sort state
+        let sortStates = {};
+
         function showTab(tabName) {
             // Hide all tab contents
             document.querySelectorAll('.tab-content').forEach(content => {
@@ -573,6 +807,200 @@
             // Add active class to clicked tab
             event.target.classList.add('active');
         }
+
+        function sortTable(tableId, columnIndex) {
+            const table = document.getElementById(tableId);
+            const tbody = table.querySelector('tbody');
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+            const header = table.querySelectorAll('th')[columnIndex];
+            
+            // Initialize sort state for this table/column if not exists
+            const sortKey = `${tableId}-${columnIndex}`;
+            if (!sortStates[sortKey]) {
+                sortStates[sortKey] = 'none';
+            }
+            
+            // Cycle through sort states: none -> asc -> desc -> none
+            let newSortState;
+            if (sortStates[sortKey] === 'none') {
+                newSortState = 'asc';
+            } else if (sortStates[sortKey] === 'asc') {
+                newSortState = 'desc';
+            } else {
+                newSortState = 'asc';
+            }
+            
+            // Clear all sort indicators for this table
+            table.querySelectorAll('th').forEach(th => {
+                th.classList.remove('sort-asc', 'sort-desc');
+            });
+            
+            // Set new sort state
+            sortStates[sortKey] = newSortState;
+            header.classList.add(`sort-${newSortState}`);
+            
+            // Sort the rows
+            rows.sort((a, b) => {
+                let aValue = getCellValue(a, columnIndex);
+                let bValue = getCellValue(b, columnIndex);
+                
+                // Handle different data types
+                if (columnIndex === 0) { // ID column - numeric sort
+                    aValue = parseInt(aValue) || 0;
+                    bValue = parseInt(bValue) || 0;
+                } else if (columnIndex === 4) { // Quality Score column (was 3, now 4)
+                    aValue = parseQualityScore(aValue);
+                    bValue = parseQualityScore(bValue);
+                } else if (columnIndex === 5) { // Date column (was 4, now 5)
+                    aValue = new Date(aValue);
+                    bValue = new Date(bValue);
+                } else {
+                    // Text comparison
+                    aValue = aValue.toLowerCase();
+                    bValue = bValue.toLowerCase();
+                }
+                
+                if (newSortState === 'asc') {
+                    return aValue > bValue ? 1 : aValue < bValue ? -1 : 0;
+                } else {
+                    return aValue < bValue ? 1 : aValue > bValue ? -1 : 0;
+                }
+            });
+            
+            // Re-append sorted rows
+            rows.forEach(row => tbody.appendChild(row));
+        }
+        
+        function getCellValue(row, columnIndex) {
+            const cell = row.cells[columnIndex];
+            
+            // For ID column (index 0), get the sequential number from the <strong> tag
+            if (columnIndex === 0) {
+                const strongElement = cell.querySelector('strong');
+                return strongElement ? strongElement.textContent.trim() : '0000';
+            }
+            
+            // Get text content, but for quality scores, look for the numeric value
+            if (columnIndex === 4) { // Quality Score column (was 3, now 4)
+                const scoreElement = cell.querySelector('small');
+                return scoreElement ? scoreElement.textContent.trim() : '0';
+            }
+            // For dates, get the first text node (before any <br> tags)
+            if (columnIndex === 5) { // Date column (was 4, now 5)
+                const smallElement = cell.querySelector('small');
+                return smallElement ? smallElement.textContent.trim() : '';
+            }
+            return cell.textContent.trim();
+        }
+        
+        function parseQualityScore(scoreText) {
+            // Extract numeric value from quality score text
+            const match = scoreText.match(/[\d.]+/);
+            return match ? parseFloat(match[0]) : 0;
+        }
+        
+        function showAllAutomatedEntries() {
+            // Show all hidden rows
+            const hiddenRows = document.querySelectorAll('#automated-tab tbody tr[style*="display: none"]');
+            hiddenRows.forEach(row => {
+                row.style.display = '';
+            });
+            
+            // Update buttons
+            document.getElementById('showAllBtn').style.display = 'none';
+            document.getElementById('showLessBtn').style.display = 'inline-block';
+            
+            // Update text
+            const statusText = document.querySelector('#automated-tab .pagination-status');
+            if (statusText) {
+                statusText.textContent = 'Showing all {{ automated_entries|length }} automated entries';
+            }
+        }
+        
+        function showFirstFiftyEntries() {
+            // Hide rows after the first 50
+            const allRows = document.querySelectorAll('#automated-tab tbody tr');
+            allRows.forEach((row, index) => {
+                if (index >= 50) {
+                    row.style.display = 'none';
+                }
+            });
+            
+            // Update buttons
+            document.getElementById('showAllBtn').style.display = 'inline-block';
+            document.getElementById('showLessBtn').style.display = 'none';
+            
+            // Update text
+            const statusText = document.querySelector('#automated-tab .pagination-status');
+            if (statusText) {
+                statusText.textContent = 'Showing first 50 of {{ automated_entries|length }} automated entries';
+            }
+        }
+        
+        function viewCategoryEntries(category) {
+            // Navigate to filtered browse entries page for this category
+            window.location.href = `/browse_entries?category=${category}`;
+        }
     </script>
-</body>
-</html> 
+    </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function showTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            document.getElementById(tabName + '-tab').classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+        
+        function showAllAutomatedEntries() {
+            // Show all hidden rows
+            const hiddenRows = document.querySelectorAll('#automated-tab tbody tr[style*="display: none"]');
+            hiddenRows.forEach(row => {
+                row.style.display = '';
+            });
+            
+            // Update buttons
+            document.getElementById('showAllBtn').style.display = 'none';
+            document.getElementById('showLessBtn').style.display = 'inline-block';
+            
+            // Update text
+            const statusText = document.querySelector('#automated-tab .pagination-status');
+            if (statusText) {
+                statusText.textContent = 'Showing all {{ automated_entries|length }} automated entries';
+            }
+        }
+        
+        function showFirstFiftyEntries() {
+            // Hide rows after the first 50
+            const allRows = document.querySelectorAll('#automated-tab tbody tr');
+            allRows.forEach((row, index) => {
+                if (index >= 50) {
+                    row.style.display = 'none';
+                }
+            });
+            
+            // Update buttons
+            document.getElementById('showAllBtn').style.display = 'inline-block';
+            document.getElementById('showLessBtn').style.display = 'none';
+            
+            // Update text
+            const statusText = document.querySelector('#automated-tab .pagination-status');
+            if (statusText) {
+                statusText.textContent = 'Showing first 50 of {{ automated_entries|length }} automated entries';
+            }
+        }
+</script>
+{% endblock %}

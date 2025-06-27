@@ -1,58 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View Entry - AI-Horizon</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+{% extends "base.html" %}
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            color: #333;
-        }
+{% block title %}View Entry - AI-Horizon{% endblock %}
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
+{% block extra_styles %}
+<style>
 
-        .nav-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 15px 30px;
-            margin-bottom: 30px;
-            backdrop-filter: blur(10px);
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 20px;
-        }
-
-        .nav-link {
-            color: white;
-            text-decoration: none;
-            padding: 8px 16px;
-            border-radius: 8px;
-            transition: background 0.3s;
-        }
-
-        .nav-link:hover {
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            text-decoration: none;
-        }
 
         .main-content {
             background: rgba(255, 255, 255, 0.95);
@@ -342,11 +294,12 @@
             background: #f8f9fa;
             border-radius: 10px;
         }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="nav-header">
+</style>
+{% endblock %}
+
+{% block content %}
+    <div class="main-content">
+<div class="nav-header">
             <h1 style="color: white; margin: 0;">👁️ View Entry</h1>
             <div class="nav-links">
                 <a href="/browse_entries" class="nav-link">← Back to Browse</a>
@@ -762,5 +715,107 @@
             });
         }
     </script>
-</body>
-</html> 
+    </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Load existing wisdom if available
+        window.addEventListener('DOMContentLoaded', function() {
+            const existingWisdomDiv = document.getElementById('existingWisdomData');
+            if (existingWisdomDiv) {
+                try {
+                    const existingWisdom = JSON.parse(existingWisdomDiv.textContent);
+                    displayWisdom(existingWisdom, true);
+                } catch (e) {
+                    console.error('Error loading existing wisdom:', e);
+                }
+            }
+        });
+
+        async function extractWisdom(artifactId) {
+            const button = document.getElementById('wisdomBtn');
+            const extractButton = document.getElementById('extractButton');
+            const wisdomLoading = document.getElementById('wisdomLoading');
+            const wisdomSection = document.getElementById('wisdomSection');
+            
+            // Show loading state
+            extractButton.style.display = 'none';
+            wisdomLoading.style.display = 'block';
+            
+            try {
+                const response = await fetch('/api/extract_wisdom', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        artifact_id: artifactId
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    displayWisdom(result.wisdom, result.cached);
+                } else {
+                    throw new Error(result.error || 'Failed to extract wisdom');
+                }
+                
+            } catch (error) {
+                console.error('Error extracting wisdom:', error);
+                
+                // Show error state
+                wisdomLoading.style.display = 'none';
+                extractButton.style.display = 'block';
+                
+                alert('Error extracting wisdom: ' + error.message);
+            }
+        }
+        
+        function displayWisdom(wisdom, cached = false) {
+            const extractButton = document.getElementById('extractButton');
+            const wisdomLoading = document.getElementById('wisdomLoading');
+            const wisdomSection = document.getElementById('wisdomSection');
+            
+            // Hide loading and button, show wisdom
+            extractButton.style.display = 'none';
+            wisdomLoading.style.display = 'none';
+            wisdomSection.style.display = 'block';
+            
+            // Populate wisdom content
+            document.getElementById('wisdomSummary').textContent = wisdom.summary || 'No summary available';
+            
+            // Populate lists
+            populateList('keyWisdom', wisdom.key_wisdom || []);
+            populateList('careerImplications', wisdom.career_implications || []);
+            populateList('actionableTakeaways', wisdom.actionable_takeaways || []);
+            populateList('skillRecommendations', wisdom.skill_recommendations || []);
+            
+            // Future outlook
+            document.getElementById('futureOutlook').textContent = wisdom.future_outlook || 'No outlook provided';
+            
+            // Metadata
+            const extractedAt = new Date(wisdom.extracted_at).toLocaleString();
+            const relevanceScore = wisdom.relevance_score ? (wisdom.relevance_score * 100).toFixed(0) + '%' : 'N/A';
+            const complexity = wisdom.complexity_level || 'Unknown';
+            
+            document.getElementById('wisdomMetadata').innerHTML = `
+                ✨ Wisdom extracted ${cached ? '(cached)' : ''} on ${extractedAt} | 
+                📊 Relevance: ${relevanceScore} | 
+                🎓 Complexity: ${complexity}
+            `;
+        }
+        
+        function populateList(elementId, items) {
+            const element = document.getElementById(elementId);
+            element.innerHTML = '';
+            
+            items.forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = item;
+                element.appendChild(li);
+            });
+        }
+</script>
+{% endblock %}

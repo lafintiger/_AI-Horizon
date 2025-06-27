@@ -1,36 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI-Horizon - Analysis Dashboard</title>
-    
-    <!-- Chart.js for Interactive Visualizations -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
-    
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-        
-        .container {
-            max-width: 1400px; /* Increased for visualizations */
-            margin: 0 auto;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-        }
+{% extends "base.html" %}
+
+{% block title %}Analysis Tools - AI-Horizon{% endblock %}
+
+{% block extra_styles %}
+<style>
+
         
         .header {
             text-align: center;
@@ -306,57 +280,52 @@
         }
         
         .result-item {
-            margin-bottom: 10px;
-            padding: 8px 0;
-            border-bottom: 1px solid #ecf0f1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .result-item:last-child {
+            border-bottom: none;
         }
         
         .result-label {
-            font-weight: bold;
-            color: #34495e;
-            display: inline-block;
-            width: 150px;
+            font-weight: 500;
+            color: #4a5568;
+            flex: 1;
         }
         
         .result-value {
-            color: #667eea;
             font-weight: bold;
+            color: #2d3748;
+            text-align: right;
+            flex: 1;
         }
         
         .report-link {
             display: inline-block;
             margin-top: 15px;
             padding: 10px 20px;
-            background: #27ae60;
+            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
             color: white;
             text-decoration: none;
-            border-radius: 5px;
-            transition: background 0.3s ease;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.3s ease;
         }
         
         .report-link:hover {
-            background: #219a52;
+            background: linear-gradient(135deg, #3182ce 0%, #2c5282 100%);
+            transform: translateY(-1px);
+            color: white;
+            text-decoration: none;
         }
         
         .navigation {
             text-align: center;
             margin-top: 30px;
-        }
-        
-        .nav-button {
-            display: inline-block;
-            margin: 0 10px;
-            padding: 12px 25px;
-            background: #34495e;
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-        }
-        
-        .nav-button:hover {
-            background: #2c3e50;
-            transform: translateY(-2px);
         }
         
         .error {
@@ -377,6 +346,99 @@
             margin-top: 15px;
         }
         
+        /* Comprehensive Category Narratives Styling */
+        .narrative-content {
+            max-height: 600px;
+            overflow-y: auto;
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .narrative-summary {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #007bff;
+        }
+        
+        .narrative-stats {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .stat-item {
+            background: #f8f9fa;
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+            min-width: 150px;
+        }
+        
+        .jobs-tasks-section, .top-articles-section {
+            margin-bottom: 25px;
+        }
+        
+        .jobs-tasks-section h4, .top-articles-section h4 {
+            color: #495057;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .job-item, .article-item {
+            background: #ffffff;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .job-title, .article-title {
+            font-weight: bold;
+            color: #007bff;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+        
+        .job-confidence, .job-evidence, .article-metrics, .article-evidence {
+            color: #6c757d;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+        
+        .job-citations ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        
+        .job-citations li {
+            margin-bottom: 10px;
+            padding: 8px;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+        
+        .article-insight {
+            background: #e7f3ff;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            font-style: italic;
+            border-left: 3px solid #007bff;
+        }
+        
+        .error {
+            color: #dc3545;
+            background: #f8d7da;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #f5c6cb;
+        }
+
         /* Enhanced Category Distribution Insights Styling */
         .card-features {
             display: flex;
@@ -549,11 +611,7 @@
             opacity: 0.7;
         }
         
-        .modal-body {
-            padding: 0;
-            overflow-y: auto;
-            max-height: calc(90vh - 80px);
-        }
+        .modal-
         
         .visualization-tabs {
             display: flex;
@@ -663,10 +721,14 @@
                 border-right-color: #4299e1;
             }
         }
-    </style>
-</head>
-<body>
-    <div class="container">
+</style>
+{% endblock %}
+
+{% block content %}
+    <div class="main-content">
+<!-- Navigation Header -->
+        
+        
         <div class="header">
             <h1>📊 Analysis Dashboard</h1>
             <p>Advanced analytics and monitoring for AI-Horizon collection system</p>
@@ -993,6 +1055,96 @@
                     </div>
                 </div>
             </div>
+            
+            <!-- Comprehensive Category Narratives Card -->
+            <div class="analysis-card" id="comprehensive-narratives-card">
+                <div class="card-header">
+                    <div class="card-icon">📖</div>
+                    <div class="card-title">Comprehensive Category Narratives</div>
+                </div>
+                <div class="card-description">
+                    Detailed narrative summaries for all AI impact categories with executive summaries, specific job/task analysis, and evidence-based explanations with citations.
+                </div>
+                <div class="card-features">
+                    <span class="feature-tag">🤖 AI REPLACE</span>
+                    <span class="feature-tag">🤝 AI AUGMENT</span>
+                    <span class="feature-tag">✨ NEW TASKS</span>
+                    <span class="feature-tag">👤 HUMAN-ONLY</span>
+                    <span class="feature-tag">📋 Citations</span>
+                    <span class="feature-tag">📊 Evidence</span>
+                </div>
+                <div class="card-metrics">
+                    <div class="metric">
+                        <span class="metric-label">Categories:</span>
+                        <span class="metric-value" id="narrativesCategories">4</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Format:</span>
+                        <span class="metric-value">Detailed</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Citations:</span>
+                        <span class="metric-value">Included</span>
+                    </div>
+                </div>
+                <div class="card-actions">
+                    <button class="btn-primary" onclick="runComprehensiveCategoryNarratives()">🚀 Generate Narratives</button>
+                    <button class="btn-secondary" onclick="showCategoryNarratives()">📋 View Narratives</button>
+                </div>
+                <div class="card-results" id="narrativesResults" style="display: none;">
+                    <div class="results-summary">
+                        <div class="result-metric">
+                            <span class="metric-label">Categories Analyzed:</span>
+                            <span class="metric-value" id="narrativesCategoriesAnalyzed">-</span>
+                        </div>
+                        <div class="result-metric">
+                            <span class="metric-label">Total Articles:</span>
+                            <span class="metric-value" id="narrativesTotalArticles">-</span>
+                        </div>
+                        <div class="result-metric">
+                            <span class="metric-label">Avg per Category:</span>
+                            <span class="metric-value" id="narrativesAvgPerCategory">-</span>
+                        </div>
+                    </div>
+                    <div class="view-report">
+                        <a href="#" id="narrativesReportLink" target="_blank">📄 View Comprehensive Report</a>
+                    </div>
+                </div>
+                
+                <!-- Category Narratives Modal -->
+                <div id="narrativesModal" class="visualization-modal" style="display: none;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3>📖 Comprehensive Category Narratives</h3>
+                            <span class="close-modal" onclick="closeNarrativesModal()">&times;</span>
+                        </div>
+                        <div class="modal-body">
+                            <div class="visualization-tabs">
+                                <button class="tab-button active" onclick="showNarrativeTab('replace')">🤖 AI REPLACE</button>
+                                <button class="tab-button" onclick="showNarrativeTab('augment')">🤝 AI AUGMENT</button>
+                                <button class="tab-button" onclick="showNarrativeTab('new_tasks')">✨ NEW TASKS</button>
+                                <button class="tab-button" onclick="showNarrativeTab('human_only')">👤 HUMAN-ONLY</button>
+                            </div>
+                            
+                            <div id="replaceTab" class="visualization-tab active">
+                                <div id="replaceNarrative">Loading AI REPLACE narrative...</div>
+                            </div>
+                            
+                            <div id="augmentTab" class="visualization-tab">
+                                <div id="augmentNarrative">Loading AI AUGMENT narrative...</div>
+                            </div>
+                            
+                            <div id="newTasksTab" class="visualization-tab">
+                                <div id="newTasksNarrative">Loading NEW TASKS narrative...</div>
+                            </div>
+                            
+                            <div id="humanOnlyTab" class="visualization-tab">
+                                <div id="humanOnlyNarrative">Loading HUMAN-ONLY narrative...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         
         <!-- Main Visualization Modal -->
@@ -1246,25 +1398,80 @@
                 const data = await response.json();
                 
                 if (data.success) {
-                    // Display results
-                    document.getElementById('overallSentiment').textContent = data.summary.overall_sentiment;
-                    document.getElementById('opportunityRatio').textContent = data.summary.opportunity_threat_ratio;
-                    document.getElementById('dominantNarrative').textContent = data.summary.dominant_narrative;
-                    document.getElementById('topSkill').textContent = data.summary.top_skill;
-                    document.getElementById('employerSentiment').textContent = data.summary.employer_sentiment;
-                    document.getElementById('employeeSentiment').textContent = data.summary.employee_sentiment;
+                    // Display results using the correct API response structure
+                    const metrics = data.metrics || {};
                     
-                    // Set report link
-                    const reportPath = data.report_file.replace(/\\/g, '/');
-                    document.getElementById('sentimentReportLink').href = `/api/view_report?path=${encodeURIComponent(reportPath)}`;
+                    // Update elements if they exist
+                    const overallSentimentEl = document.getElementById('overallSentiment');
+                    if (overallSentimentEl) {
+                        overallSentimentEl.textContent = metrics.overall_sentiment || 'N/A';
+                    }
+                    
+                    const opportunityRatioEl = document.getElementById('opportunityRatio');
+                    if (opportunityRatioEl) {
+                        opportunityRatioEl.textContent = metrics.opportunity_threat_ratio || 'N/A';
+                    }
+                    
+                    const dominantNarrativeEl = document.getElementById('dominantNarrative');
+                    if (dominantNarrativeEl) {
+                        dominantNarrativeEl.textContent = metrics.dominant_narrative || 'N/A';
+                    }
+                    
+                    const topSkillEl = document.getElementById('topSkill');
+                    if (topSkillEl) {
+                        topSkillEl.textContent = metrics.top_skill || 'N/A';
+                    }
+                    
+                    const employerSentimentEl = document.getElementById('employerSentiment');
+                    if (employerSentimentEl) {
+                        employerSentimentEl.textContent = metrics.employer_sentiment || 'N/A';
+                    }
+                    
+                    const employeeSentimentEl = document.getElementById('employeeSentiment');
+                    if (employeeSentimentEl) {
+                        employeeSentimentEl.textContent = metrics.employee_sentiment || 'N/A';
+                    }
+                    
+                    // Set report link if element exists
+                    const reportLinkEl = document.getElementById('sentimentReportLink');
+                    if (reportLinkEl && data.report_file) {
+                        const reportPath = data.report_file.replace(/\\/g, '/');
+                        reportLinkEl.href = `/api/view_report?path=${encodeURIComponent(reportPath)}`;
+                    }
+                    
+                    // If no specific result elements exist, create a generic results display
+                    if (!overallSentimentEl) {
+                        results.innerHTML = `
+                            <h3>🎯 Job Market Sentiment Analysis Results</h3>
+                            <div class="result-item">
+                                <span class="result-label">Overall Sentiment:</span>
+                                <span class="result-value">${metrics.overall_sentiment || 'N/A'}</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">Top Skill:</span>
+                                <span class="result-value">${metrics.top_skill || 'N/A'}</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">Confidence Level:</span>
+                                <span class="result-value">${metrics.confidence_level || 'N/A'}</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">Analysis Time:</span>
+                                <span class="result-value">${new Date().toLocaleString()}</span>
+                            </div>
+                            ${data.report_file ? `<a href="/api/view_report?path=${encodeURIComponent(data.report_file)}" class="report-link" target="_blank">📄 View Detailed Report</a>` : ''}
+                        `;
+                    }
                     
                     results.style.display = 'block';
                 } else {
-                    alert('Sentiment analysis failed: ' + data.error);
+                    results.innerHTML = `<div class="error">Sentiment analysis failed: ${data.error || 'Unknown error'}</div>`;
+                    results.style.display = 'block';
                 }
             } catch (error) {
                 console.error('Error:', error);
-                alert('Error running sentiment analysis: ' + error.message);
+                results.innerHTML = `<div class="error">Error running sentiment analysis: ${error.message}</div>`;
+                results.style.display = 'block';
             } finally {
                 loading.style.display = 'none';
                 button.disabled = false;
@@ -1292,16 +1499,34 @@
                 const data = await response.json();
                 
                 if (data.success) {
-                    // Display results using the metrics from the API response
-                    document.getElementById('adoptionAnalyzed').textContent = data.metrics?.total_analyzed || 'N/A';
-                    document.getElementById('adoptionPhase').textContent = data.metrics?.adoption_phase || 'N/A';
-                    document.getElementById('transformationSpeed').textContent = data.metrics?.transformation_speed || 'N/A';
-                    document.getElementById('topSkills').textContent = data.metrics?.top_skills || 'N/A';
+                    // Display results using the correct API response structure
+                    const metrics = data.metrics || {};
                     
-                    // Populate completed features
+                    // Update elements if they exist
+                    const adoptionAnalyzedEl = document.getElementById('adoptionAnalyzed');
+                    if (adoptionAnalyzedEl) {
+                        adoptionAnalyzedEl.textContent = metrics.total_analyzed || 'N/A';
+                    }
+                    
+                    const adoptionPhaseEl = document.getElementById('adoptionPhase');
+                    if (adoptionPhaseEl) {
+                        adoptionPhaseEl.textContent = metrics.adoption_phase || 'N/A';
+                    }
+                    
+                    const transformationSpeedEl = document.getElementById('transformationSpeed');
+                    if (transformationSpeedEl) {
+                        transformationSpeedEl.textContent = metrics.transformation_speed || 'N/A';
+                    }
+                    
+                    const topSkillsEl = document.getElementById('topSkills');
+                    if (topSkillsEl) {
+                        topSkillsEl.textContent = metrics.top_skills || 'N/A';
+                    }
+                    
+                    // Populate completed features if element exists
                     const featuresContainer = document.getElementById('completedFeatures');
-                    featuresContainer.innerHTML = '';
-                    if (data.features) {
+                    if (featuresContainer && data.features) {
+                        featuresContainer.innerHTML = '';
                         data.features.forEach(feature => {
                             const li = document.createElement('li');
                             li.textContent = feature;
@@ -1309,20 +1534,314 @@
                         });
                     }
                     
-                    // Set report link
-                    const reportPath = data.report_file.replace(/\\/g, '/');
-                    document.getElementById('adoptionReportLink').href = `/api/view_report?path=${encodeURIComponent(reportPath)}`;
+                    // Set report link if element exists
+                    const reportLinkEl = document.getElementById('adoptionReportLink');
+                    if (reportLinkEl && data.report_file) {
+                        const reportPath = data.report_file.replace(/\\/g, '/');
+                        reportLinkEl.href = `/api/view_report?path=${encodeURIComponent(reportPath)}`;
+                    }
+                    
+                    // If no specific result elements exist, create a generic results display
+                    if (!adoptionAnalyzedEl) {
+                        results.innerHTML = `
+                            <h3>🚀 AI Adoption Predictions Results</h3>
+                            <div class="result-item">
+                                <span class="result-label">Analysis Status:</span>
+                                <span class="result-value">Completed Successfully</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">Features Analyzed:</span>
+                                <span class="result-value">${data.features ? data.features.length : 0} features</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">Analysis Time:</span>
+                                <span class="result-value">${new Date().toLocaleString()}</span>
+                            </div>
+                            ${data.report_file ? `<a href="/api/view_report?path=${encodeURIComponent(data.report_file)}" class="report-link" target="_blank">📄 View Detailed Report</a>` : ''}
+                        `;
+                        
+                        if (data.features && data.features.length > 0) {
+                            results.innerHTML += `
+                                <div class="result-item">
+                                    <span class="result-label">Completed Features:</span>
+                                    <ul style="margin-top: 10px;">
+                                        ${data.features.map(feature => `<li>${feature}</li>`).join('')}
+                                    </ul>
+                                </div>
+                            `;
+                        }
+                    }
                     
                     results.style.display = 'block';
                 } else {
-                    alert('Predictions analysis failed: ' + (data.error || 'Unknown error'));
+                    results.innerHTML = `<div class="error">Predictions analysis failed: ${data.error || 'Unknown error'}</div>`;
+                    results.style.display = 'block';
                 }
             } catch (error) {
                 console.error('Error:', error);
-                alert('Error running predictions analysis: ' + error.message);
+                results.innerHTML = `<div class="error">Error running predictions analysis: ${error.message}</div>`;
+                results.style.display = 'block';
             } finally {
                 loading.style.display = 'none';
                 button.disabled = false;
+            }
+        }
+        
+        // Comprehensive Category Narratives JavaScript Functions
+        async function runComprehensiveCategoryNarratives() {
+            const button = document.querySelector('#comprehensive-narratives-card .btn-primary');
+            const results = document.getElementById('narrativesResults');
+            
+            button.disabled = true;
+            button.innerHTML = '⏳ Generating...';
+            
+            // Show results div if it exists
+            if (results) {
+                results.style.display = 'none';
+            }
+            
+            try {
+                const response = await fetch('/api/run_comprehensive_category_narratives', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({})
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Update metrics if elements exist
+                    const metrics = data.metrics || {};
+                    
+                    const narrativesCategoriesAnalyzedEl = document.getElementById('narrativesCategoriesAnalyzed');
+                    if (narrativesCategoriesAnalyzedEl) {
+                        narrativesCategoriesAnalyzedEl.textContent = metrics.categories_analyzed || 'N/A';
+                    }
+                    
+                    const narrativesTotalArticlesEl = document.getElementById('narrativesTotalArticles');
+                    if (narrativesTotalArticlesEl) {
+                        narrativesTotalArticlesEl.textContent = metrics.total_articles || 'N/A';
+                    }
+                    
+                    const narrativesAvgPerCategoryEl = document.getElementById('narrativesAvgPerCategory');
+                    if (narrativesAvgPerCategoryEl) {
+                        narrativesAvgPerCategoryEl.textContent = metrics.avg_articles_per_category || 'N/A';
+                    }
+                    
+                    // Update report link if element exists
+                    const reportLinkEl = document.getElementById('narrativesReportLink');
+                    if (reportLinkEl && data.report_file) {
+                        reportLinkEl.href = `/api/download_report?file=${encodeURIComponent(data.report_file)}`;
+                        reportLinkEl.style.display = 'inline';
+                    }
+                    
+                    // If no specific result elements exist, create a generic results display
+                    if (!narrativesCategoriesAnalyzedEl && results) {
+                        results.innerHTML = `
+                            <h3>📚 Comprehensive Category Narratives Results</h3>
+                            <div class="result-item">
+                                <span class="result-label">Analysis Status:</span>
+                                <span class="result-value">Completed Successfully</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">Categories Analyzed:</span>
+                                <span class="result-value">${metrics.categories_analyzed || 'N/A'}</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">Total Articles:</span>
+                                <span class="result-value">${metrics.total_articles || 'N/A'}</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">Avg Articles per Category:</span>
+                                <span class="result-value">${metrics.avg_articles_per_category || 'N/A'}</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">Features Analyzed:</span>
+                                <span class="result-value">${data.features ? data.features.length : 0} features</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">Analysis Time:</span>
+                                <span class="result-value">${new Date().toLocaleString()}</span>
+                            </div>
+                            ${data.report_file ? `<a href="/api/download_report?file=${encodeURIComponent(data.report_file)}" class="report-link" target="_blank">📄 Download Report</a>` : ''}
+                        `;
+                        
+                        if (data.features && data.features.length > 0) {
+                            results.innerHTML += `
+                                <div class="result-item">
+                                    <span class="result-label">Completed Features:</span>
+                                    <ul style="margin-top: 10px;">
+                                        ${data.features.map(feature => `<li>${feature}</li>`).join('')}
+                                    </ul>
+                                </div>
+                            `;
+                        }
+                    }
+                    
+                    // Show results
+                    if (results) {
+                        results.style.display = 'block';
+                    }
+                    
+                    // Show success message
+                    if (!narrativesCategoriesAnalyzedEl) {
+                        alert('Comprehensive category narratives analysis completed successfully!');
+                    }
+                } else {
+                    const errorMsg = `Analysis failed: ${data.error || 'Unknown error'}`;
+                    if (results) {
+                        results.innerHTML = `<div class="error">${errorMsg}</div>`;
+                        results.style.display = 'block';
+                    } else {
+                        alert(errorMsg);
+                    }
+                }
+            } catch (error) {
+                const errorMsg = `Error: ${error.message}`;
+                if (results) {
+                    results.innerHTML = `<div class="error">${errorMsg}</div>`;
+                    results.style.display = 'block';
+                } else {
+                    alert(errorMsg);
+                }
+            } finally {
+                button.disabled = false;
+                button.innerHTML = '🚀 Generate Narratives';
+            }
+        }
+        
+        async function showCategoryNarratives() {
+            const modal = document.getElementById('narrativesModal');
+            modal.style.display = 'block';
+            
+            // Load the replace narrative by default
+            await loadCategoryNarrative('replace');
+        }
+        
+        function closeNarrativesModal() {
+            document.getElementById('narrativesModal').style.display = 'none';
+        }
+        
+        async function showNarrativeTab(category) {
+            // Update tab buttons
+            document.querySelectorAll('#narrativesModal .tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Update tab content
+            document.querySelectorAll('#narrativesModal .visualization-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.getElementById(`${category}Tab`).classList.add('active');
+            
+            // Load narrative content
+            await loadCategoryNarrative(category);
+        }
+        
+        async function loadCategoryNarrative(category) {
+            const narrativeDiv = document.getElementById(`${category}Narrative`);
+            narrativeDiv.innerHTML = '⏳ Loading narrative...';
+            
+            try {
+                const response = await fetch(`/api/category_narrative/${category}`);
+                const data = await response.json();
+                
+                if (data.success && data.report) {
+                    const report = data.report;
+                    
+                    // Format the narrative content
+                    let html = `
+                        <div class="narrative-content">
+                            <div class="narrative-summary">
+                                ${report.narrative_summary.replace(/\n/g, '<br>')}
+                            </div>
+                            
+                            <div class="narrative-stats">
+                                <div class="stat-item">
+                                    <strong>Total Articles:</strong> ${report.total_articles_analyzed}
+                                </div>
+                                <div class="stat-item">
+                                    <strong>High Confidence:</strong> ${report.high_confidence_articles}
+                                </div>
+                                <div class="stat-item">
+                                    <strong>Average Confidence:</strong> ${report.avg_confidence.toFixed(3)}
+                                </div>
+                            </div>
+                            
+                            <div class="jobs-tasks-section">
+                                <h4>🎯 Key Jobs and Tasks</h4>
+                    `;
+                    
+                    // Add top jobs/tasks
+                    const sortedJobs = Object.entries(report.jobs_and_tasks)
+                        .sort(([,a], [,b]) => b.avg_confidence - a.avg_confidence)
+                        .slice(0, 5);
+                    
+                    for (const [job, data] of sortedJobs) {
+                        if (data.evidence_count >= 2) {
+                            html += `
+                                <div class="job-item">
+                                    <div class="job-title">${job.toUpperCase().replace(/_/g, ' ')}</div>
+                                    <div class="job-confidence">Confidence: ${data.avg_confidence.toFixed(3)}</div>
+                                    <div class="job-evidence">Evidence: ${data.evidence_count} articles</div>
+                                    <div class="job-citations">
+                                        Top Citations:
+                                        <ul>
+                            `;
+                            
+                            for (const citation of data.citations.slice(0, 2)) {
+                                html += `
+                                    <li>
+                                        <strong>${citation.title}</strong><br>
+                                        <small>Confidence: ${citation.confidence.toFixed(3)} | Quality: ${citation.quality.toFixed(3)}</small><br>
+                                        <small>Evidence: ${citation.evidence.slice(0, 3).join(', ')}</small>
+                                    </li>
+                                `;
+                            }
+                            
+                            html += `
+                                        </ul>
+                                    </div>
+                                </div>
+                            `;
+                        }
+                    }
+                    
+                    html += `
+                            </div>
+                            
+                            <div class="top-articles-section">
+                                <h4>📚 Top Supporting Articles</h4>
+                    `;
+                    
+                    // Add top articles
+                    for (const [index, article] of report.top_articles.slice(0, 3).entries()) {
+                        html += `
+                            <div class="article-item">
+                                <div class="article-title">${index + 1}. ${article.title}</div>
+                                <div class="article-metrics">
+                                    Confidence: ${article.confidence.toFixed(3)} | Quality: ${article.quality_score.toFixed(3)}
+                                </div>
+                                <div class="article-evidence">Evidence: ${article.evidence.slice(0, 3).join(', ')}</div>
+                                ${article.key_insights.length > 0 ? `<div class="article-insight">Key Insight: ${article.key_insights[0].substring(0, 150)}...</div>` : ''}
+                            </div>
+                        `;
+                    }
+                    
+                    html += `
+                            </div>
+                        </div>
+                    `;
+                    
+                    narrativeDiv.innerHTML = html;
+                } else {
+                    narrativeDiv.innerHTML = `<div class="error">Failed to load narrative: ${data.message}</div>`;
+                }
+            } catch (error) {
+                narrativeDiv.innerHTML = `<div class="error">Error loading narrative: ${error.message}</div>`;
             }
         }
         
@@ -1334,7 +1853,11 @@
             // Show loading state
             button.innerHTML = '⏳ Analyzing...';
             button.disabled = true;
-            resultsDiv.style.display = 'block';
+            
+            // Show results div if it exists
+            if (resultsDiv) {
+                resultsDiv.style.display = 'block';
+            }
             
             fetch('/api/run_category_distribution_insights', {
                 method: 'POST',
@@ -1346,31 +1869,96 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    // Update metrics
-                    document.getElementById('categoryArticlesAnalyzed').textContent = data.metrics?.total_analyzed || 'N/A';
-                    document.getElementById('categoryBalanceScore').textContent = data.metrics?.distribution_balance || 'N/A';
-                    document.getElementById('categoryPredictionConfidence').textContent = 'High'; // From enhanced analysis
+                    // Update metrics if elements exist
+                    const metrics = data.metrics || {};
                     
-                    // Update global metrics
-                    document.getElementById('categoryDistributionCategories').textContent = data.metrics?.categories_covered || '5';
-                    document.getElementById('categoryDistributionBalance').textContent = data.metrics?.distribution_balance || '0.70';
-                    
-                    // Set report link
-                    const reportLink = document.getElementById('categoryDistributionReportLink');
-                    if (data.report_file) {
-                        reportLink.href = '/api/view_report?path=' + encodeURIComponent(data.report_file);
+                    const categoryArticlesAnalyzedEl = document.getElementById('categoryArticlesAnalyzed');
+                    if (categoryArticlesAnalyzedEl) {
+                        categoryArticlesAnalyzedEl.textContent = metrics.total_analyzed || 'N/A';
                     }
                     
-                    // Load visualization data for interactive charts
-                    loadCategoryVisualizationData();
+                    const categoryBalanceScoreEl = document.getElementById('categoryBalanceScore');
+                    if (categoryBalanceScoreEl) {
+                        categoryBalanceScoreEl.textContent = metrics.distribution_balance || 'N/A';
+                    }
+                    
+                    const categoryPredictionConfidenceEl = document.getElementById('categoryPredictionConfidence');
+                    if (categoryPredictionConfidenceEl) {
+                        categoryPredictionConfidenceEl.textContent = 'High'; // From enhanced analysis
+                    }
+                    
+                    // Update global metrics if elements exist
+                    const categoryDistributionCategoriesEl = document.getElementById('categoryDistributionCategories');
+                    if (categoryDistributionCategoriesEl) {
+                        categoryDistributionCategoriesEl.textContent = metrics.categories_covered || '5';
+                    }
+                    
+                    const categoryDistributionBalanceEl = document.getElementById('categoryDistributionBalance');
+                    if (categoryDistributionBalanceEl) {
+                        categoryDistributionBalanceEl.textContent = metrics.distribution_balance || '0.70';
+                    }
+                    
+                    // Set report link if element exists
+                    const reportLinkEl = document.getElementById('categoryDistributionReportLink');
+                    if (reportLinkEl && data.report_file) {
+                        reportLinkEl.href = '/api/view_report?path=' + encodeURIComponent(data.report_file);
+                    }
+                    
+                    // If no specific result elements exist, create a generic results display
+                    if (!categoryArticlesAnalyzedEl && resultsDiv) {
+                        resultsDiv.innerHTML = `
+                            <h3>📊 Category Distribution Analysis Results</h3>
+                            <div class="result-item">
+                                <span class="result-label">Analysis Status:</span>
+                                <span class="result-value">Completed Successfully</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">Features Analyzed:</span>
+                                <span class="result-value">${data.features ? data.features.length : 0} features</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">Analysis Time:</span>
+                                <span class="result-value">${new Date().toLocaleString()}</span>
+                            </div>
+                            ${data.report_file ? `<a href="/api/view_report?path=${encodeURIComponent(data.report_file)}" class="report-link" target="_blank">📄 View Detailed Report</a>` : ''}
+                        `;
+                        
+                        if (data.features && data.features.length > 0) {
+                            resultsDiv.innerHTML += `
+                                <div class="result-item">
+                                    <span class="result-label">Completed Features:</span>
+                                    <ul style="margin-top: 10px;">
+                                        ${data.features.map(feature => `<li>${feature}</li>`).join('')}
+                                    </ul>
+                                </div>
+                            `;
+                        }
+                    }
+                    
+                    // Load visualization data for interactive charts if function exists
+                    if (typeof loadCategoryVisualizationData === 'function') {
+                        loadCategoryVisualizationData();
+                    }
                     
                 } else {
-                    alert('Analysis failed: ' + (data.error || 'Unknown error'));
+                    const errorMsg = 'Analysis failed: ' + (data.error || 'Unknown error');
+                    if (resultsDiv) {
+                        resultsDiv.innerHTML = `<div class="error">${errorMsg}</div>`;
+                        resultsDiv.style.display = 'block';
+                    } else {
+                        alert(errorMsg);
+                    }
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('Analysis failed: ' + error.message);
+                const errorMsg = 'Analysis failed: ' + error.message;
+                if (resultsDiv) {
+                    resultsDiv.innerHTML = `<div class="error">${errorMsg}</div>`;
+                    resultsDiv.style.display = 'block';
+                } else {
+                    alert(errorMsg);
+                }
             })
             .finally(() => {
                 button.innerHTML = '🚀 Run Advanced Analysis';
@@ -1438,6 +2026,8 @@
                     confidence: [0.85, 0.78, 0.82, 0.75]
                 }
             };
+            
+            console.log('Category visualization data loaded:', window.categoryVisualizationData);
         }
         
         function initializeCategoryCharts() {
@@ -1679,34 +2269,33 @@
                 // Store data globally for chart initialization
                 window.vizData = data;
                 
+                // Wait for Chart.js to be fully loaded before initializing
+                if (typeof Chart === 'undefined') {
+                    console.log('Waiting for Chart.js to load...');
+                    setTimeout(() => loadVisualizationData(type), 500);
+                    return;
+                }
+                
                 // Initialize the first chart (overview)
-                setTimeout(() => initializeChart('overview'), 100);
+                setTimeout(() => initializeChart('overview'), 200);
                 
             } catch (error) {
                 console.error('Error fetching visualization data:', error);
                 
                 // Use mock data for demonstration
                 window.vizData = generateMockData(type);
-                setTimeout(() => initializeChart('overview'), 100);
+                
+                // Wait for Chart.js before using mock data too
+                if (typeof Chart === 'undefined') {
+                    setTimeout(() => loadVisualizationData(type), 500);
+                    return;
+                }
+                
+                setTimeout(() => initializeChart('overview'), 200);
             }
         }
         
-        function initializeChart(chartType) {
-            const canvasId = chartType + 'Chart';
-            const canvas = document.getElementById(canvasId);
-            
-            if (!canvas) return;
-            
-            const ctx = canvas.getContext('2d');
-            
-            // Destroy existing chart if it exists
-            if (vizCharts[chartType]) {
-                vizCharts[chartType].destroy();
-            }
-            
-            // Create new chart based on type and current analysis
-            vizCharts[chartType] = createChart(ctx, chartType, currentVizType);
-        }
+        // initializeChart function moved to enhanced version below
         
         function createChart(ctx, chartType, analysisType) {
             const data = window.vizData || {};
@@ -1946,7 +2535,119 @@
                     }, 100);
                 }, index * 200);
             });
+            
+            // Check if Chart.js is loaded
+            if (typeof Chart === 'undefined') {
+                console.error('Chart.js library not loaded! Charts will not work.');
+            } else {
+                console.log('Chart.js loaded successfully');
+                // Test chart creation
+                testChartCreation();
+            }
         });
+        
+        // Test function to verify Chart.js is working
+        function testChartCreation() {
+            console.log('Testing chart creation...');
+            // This will help us verify if Chart.js is working
+            try {
+                const testCanvas = document.createElement('canvas');
+                testCanvas.width = 100;
+                testCanvas.height = 100;
+                const testCtx = testCanvas.getContext('2d');
+                
+                const testChart = new Chart(testCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Test'],
+                        datasets: [{
+                            data: [100],
+                            backgroundColor: ['#27ae60']
+                        }]
+                    },
+                    options: {
+                        responsive: false,
+                        plugins: {
+                            legend: { display: false }
+                        }
+                    }
+                });
+                
+                testChart.destroy();
+                console.log('✅ Chart.js test successful - charts should work!');
+            } catch (error) {
+                console.error('❌ Chart.js test failed:', error);
+            }
+        }
+        
+        // Enhanced chart initialization with error handling
+        function initializeChart(chartType) {
+            const canvasId = chartType + 'Chart';
+            const canvas = document.getElementById(canvasId);
+            
+            if (!canvas) {
+                console.error(`Canvas element not found: ${canvasId}`);
+                return;
+            }
+            
+            if (typeof Chart === 'undefined') {
+                console.error('Chart.js not loaded, cannot create chart');
+                return;
+            }
+            
+            const ctx = canvas.getContext('2d');
+            
+            // Destroy existing chart if it exists
+            if (vizCharts[chartType]) {
+                vizCharts[chartType].destroy();
+            }
+            
+            try {
+                // Create new chart based on type and current analysis
+                vizCharts[chartType] = createChart(ctx, chartType, currentVizType);
+                console.log(`Chart created successfully: ${chartType}`);
+            } catch (error) {
+                console.error(`Error creating chart ${chartType}:`, error);
+            }
+        }
+        
+        // Enhanced category chart initialization
+        function initializeSpecificChart(chartType) {
+            const data = window.categoryVisualizationData;
+            if (!data) {
+                loadCategoryVisualizationData();
+                return;
+            }
+            
+            if (typeof Chart === 'undefined') {
+                console.error('Chart.js not loaded, cannot create category chart');
+                return;
+            }
+            
+            try {
+                switch(chartType) {
+                    case 'distribution':
+                        initializeDistributionChart();
+                        break;
+                    case 'evolution':
+                        initializeEvolutionChart();
+                        break;
+                    case 'network':
+                        initializeNetworkChart();
+                        break;
+                    case 'predictions':
+                        initializePredictionsChart();
+                        break;
+                }
+                console.log(`Category chart created successfully: ${chartType}`);
+            } catch (error) {
+                console.error(`Error creating category chart ${chartType}:`, error);
+            }
+        }
     </script>
-</body>
-</html> 
+    
+    <!-- Chart.js Library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+    
+    </div>
+{% endblock %}

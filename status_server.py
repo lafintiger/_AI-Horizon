@@ -32,33 +32,47 @@ Usage:
     python status_server.py --host 0.0.0.0 --port 5000 [--debug]
 """
 
+# Standard library imports
 import sys
 import json
 import time
+import time as time_module
 import threading
 import atexit
 import argparse
 from datetime import datetime
 from pathlib import Path
-from collections import deque
+from collections import deque, defaultdict
 from typing import Dict, Any, Optional
+
+# Third-party imports
 from werkzeug.utils import secure_filename
 from urllib.parse import urlparse, parse_qs
-
 from flask import Flask, render_template, jsonify, Response, request, send_file, stream_template, send_from_directory, redirect, url_for, flash
 from flask_cors import CORS
 
 # Add project root to path
 sys.path.append(str(Path(__file__).parent))
 
+# AI-Horizon specific imports
 from aih.utils.database import DatabaseManager
 from aih.utils.logging import get_logger
 from aih.utils.cost_tracker import cost_tracker
 from scripts.analysis.implement_quality_ranking import DocumentQualityRanker
 
+# Initialize logger
+logger = get_logger('status_server')
+
 app = Flask(__name__)
 app.secret_key = 'ai-horizon-status-server-secret-key'  # Change in production
 CORS(app)
+
+# Flask configuration for file uploads
+app.config['UPLOAD_FOLDER'] = 'data/uploads'
+app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024  # 50MB max file size
+
+# Ensure upload directory exists
+Path(app.config['UPLOAD_FOLDER']).mkdir(parents=True, exist_ok=True)
 
 # Register custom Jinja2 filters
 def from_json_filter(value):
@@ -77,8 +91,35 @@ class StatusTracker:
     """
     Tracks the status of operations, progress, and system state for the AI-Horizon system.
     
-    Manages real-time status updates, progress tracking, cost monitoring, and client notifications
+    This class provides comprehensive status tracking for all AI-Horizon operations including
+    real-time progress monitoring, cost tracking, collection statistics, and client notifications
     through Server-Sent Events (SSE) for the web interface.
+    
+    Key Responsibilities:
+    - Operation Progress: Track current operations with start times and progress percentages
+    - Cost Monitoring: API usage tracking for budget management
+    - Collection Statistics: Real-time collection progress by category
+    - Client Notifications: SSE broadcasting to web interface clients
+    - System Health: Database synchronization and status reporting
+    
+    Critical Features:
+    - Thread-safe operations for concurrent web requests
+    - Automatic database synchronization
+    - Real-time progress broadcasting
+    - Comprehensive error logging
+    - Cost per article calculations
+    
+    Usage:
+        status = StatusTracker()
+        status.set_operation("Processing entries")
+        status.update_progress(50, 100, "Processing...")
+        status.complete_operation(success=True)
+    
+    Integration:
+    - Flask Routes: All major operations report to this tracker
+    - Web Interface: Real-time updates via SSE at /api/stream
+    - Database: Automatic sync with actual collection counts
+    - Cost Tracking: Integration with cost_tracker utility
     """
     
     def __init__(self):
@@ -340,14 +381,32 @@ status = StatusTracker()
 # Initialize quality ranker globally
 quality_ranker = DocumentQualityRanker()
 
-# File upload configuration for manual entry
-UPLOAD_FOLDER = Path("data/uploads")
-UPLOAD_FOLDER.mkdir(parents=True, exist_ok=True)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024  # 50MB max file size
+# Rate limiting tracking
+api_call_timestamps = defaultdict(list)
 
 # Allowed file extensions
-ALLOWED_EXTENSIONS = {'pdf', 'txt', 'docx', 'doc'}
+ALLOWED_EXTENSIONS = {'txt', 'pdf', 'docx', 'doc'}
+
+# Simple rate limiting function
+def check_rate_limit(endpoint: str, limit_per_minute: int = 10) -> bool:
+    """Check if API call is within rate limits."""
+    client_ip = request.remote_addr
+    current_time = time_module.time()
+    key = f"{client_ip}:{endpoint}"
+    
+    # Clean old timestamps (older than 1 minute)
+    api_call_timestamps[key] = [
+        timestamp for timestamp in api_call_timestamps[key] 
+        if current_time - timestamp < 60
+    ]
+    
+    # Check if under limit
+    if len(api_call_timestamps[key]) >= limit_per_minute:
+        return False
+    
+    # Add current timestamp
+    api_call_timestamps[key].append(current_time)
+    return True
 
 def allowed_file(filename):
     """Check if file extension is allowed."""
@@ -392,20 +451,7 @@ def database_stats():
     """Get database statistics."""
     try:
         db = DatabaseManager()
-        artifacts = db.get_artifacts()
-        
-        # Count by category if metadata exists
-        category_counts = {}
-        for artifact in artifacts:
-            metadata = json.loads(artifact.get('raw_metadata', '{}'))
-            category = metadata.get('ai_impact_category', 'unknown')
-            category_counts[category] = category_counts.get(category, 0) + 1
-        
-        stats = {
-            "total_artifacts": len(artifacts),
-            "categories": category_counts,
-            "last_updated": datetime.now().isoformat()
-        }
+        stats = db.get_database_stats()
         
         status.update_stats(stats)
         return jsonify(stats)
@@ -424,7 +470,8 @@ def stream():
         
         try:
             # Send initial status
-            yield f"data: {json.dumps(status.get_status())}\n\n"
+            initial_data = json.dumps(status.get_status())
+            yield f"data: {initial_data}\n\n"
             
             while True:
                 try:
@@ -438,11 +485,19 @@ def stream():
         except GeneratorExit:
             status.clients.discard(client_queue)
     
-    return Response(event_stream(), mimetype='text/event-stream')
+    response = Response(event_stream(), mimetype='text/event-stream')
+    response.headers['Cache-Control'] = 'no-cache'
+    response.headers['Connection'] = 'keep-alive'
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    return response
 
 @app.route('/api/start_collection')
 def start_collection():
     """Start comprehensive collection in background."""
+    # Rate limiting for intensive operations
+    if not check_rate_limit('start_collection', limit_per_minute=2):
+        return jsonify({"error": "Rate limit exceeded. Please wait before starting another collection."}), 429
+    
     if status.is_running:
         return jsonify({"error": "Operation already running"}), 400
     
@@ -565,15 +620,163 @@ def start_comprehensive_collection():
     """Alias for start_collection - comprehensive collection of all categories."""
     return start_collection()
 
-@app.route('/manual-entry')
+@app.route('/collection_config')
+def collection_config():
+    """Collection configuration page."""
+    return render_template('collection_config.html')
+
+@app.route('/api/start_configured_collection', methods=['POST'])
+def start_configured_collection():
+    """Start collection with custom configuration."""
+    try:
+        config = request.get_json()
+        if not config:
+            return jsonify({'success': False, 'error': 'No configuration provided'})
+        
+        total_articles = config.get('total_articles', 80)
+        custom_prompts = config.get('prompts', {})
+        timeframe_config = config.get('timeframe', {})
+        
+        # Validate configuration
+        if total_articles < 4 or total_articles > 400:
+            return jsonify({'success': False, 'error': 'Total articles must be between 4 and 400'})
+        
+        if total_articles % 4 != 0:
+            return jsonify({'success': False, 'error': 'Total articles must be divisible by 4'})
+        
+        # Calculate articles per category
+        articles_per_category = total_articles // 4
+        
+        # Check if collection is already running
+        if status.is_running:
+            return jsonify({'success': False, 'error': 'Collection already in progress'})
+        
+        # Start collection with custom configuration
+        def run_configured_collection():
+            try:
+                status.set_operation("Comprehensive Collection")
+                
+                # Build log message with configuration details
+                log_parts = [f"Starting configured collection: {total_articles} total articles ({articles_per_category} per category)"]
+                if custom_prompts:
+                    log_parts.append("with custom prompts")
+                if timeframe_config:
+                    timeframe_type = timeframe_config.get('type', 'all_time')
+                    if timeframe_type == 'since_last':
+                        log_parts.append("since last collection")
+                    elif timeframe_type == 'custom_range':
+                        start_date = timeframe_config.get('start_date')
+                        end_date = timeframe_config.get('end_date')
+                        log_parts.append(f"from {start_date} to {end_date}")
+                    else:
+                        log_parts.append(f"timeframe: {timeframe_type}")
+                
+                status.add_log("INFO", ", ".join(log_parts), "COLLECTION")
+                
+                # Import and run the collection directly
+                import asyncio
+                from scripts.collection.collect_comprehensive import collect_comprehensive, set_status_tracker
+                
+                # Set the status tracker in the collection module
+                set_status_tracker(status)
+                
+                # Run the collection with custom parameters
+                if custom_prompts or timeframe_config:
+                    result, category_stats = asyncio.run(collect_comprehensive(articles_per_category, custom_prompts, timeframe_config))
+                else:
+                    result, category_stats = asyncio.run(collect_comprehensive(articles_per_category))
+                
+                # Update final stats
+                status.add_log("INFO", f"Collection completed: {result} total articles", "COLLECTION")
+                for category, count in category_stats.items():
+                    status.add_log("INFO", f"{category.upper()}: {count} articles", "COLLECTION")
+                
+                status.complete_operation(True, f"Successfully collected {result} articles")
+                
+            except Exception as e:
+                error_msg = f"Collection failed: {str(e)}"
+                status.complete_operation(False, f"Operation failed: {error_msg}")
+                status.add_log("ERROR", error_msg, "COLLECTION")
+        
+        # Start collection in background thread
+        import threading
+        collection_thread = threading.Thread(target=run_configured_collection)
+        collection_thread.daemon = True
+        collection_thread.start()
+        
+        return jsonify({'success': True, 'message': f'Collection started with {total_articles} articles'})
+        
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)})
+
+@app.route('/manual_entry')
 def manual_entry():
     """Manual entry page for uploading content."""
     return render_template('manual_entry.html')
 
+@app.route('/analysis')
+def analysis():
+    """Analysis tools interface."""
+    return render_template('analysis.html')
+
+@app.route('/workflow')
+def workflow():
+    """Workflow interface."""
+    return render_template('workflow.html')
+
+@app.route('/settings')
+def settings():
+    """Settings interface."""
+    return render_template('settings.html')
+
+@app.route('/methodology')
+def methodology():
+    """Methodology interface."""
+    return render_template('methodology.html')
+
+@app.route('/reports')
+def reports():
+    """Reports interface."""
+    return render_template('reports.html')
+
+@app.route('/summaries')
+def summaries():
+    """Summaries interface."""
+    return render_template('summaries.html')
+
+@app.route('/chat')
+def chat():
+    """Chat interface."""
+    try:
+        db = DatabaseManager()
+        database_stats = db.get_database_stats()
+        
+        # Define available models for the dropdown
+        available_models = [
+            'claude-3-5-sonnet-20241022',
+            'claude-3-haiku-20240307',
+            'gpt-4o',
+            'gpt-4o-mini',
+            'gpt-3.5-turbo'
+        ]
+        
+        return render_template('chat.html', 
+                             database_stats=database_stats,
+                             available_models=available_models)
+    except Exception as e:
+        # Fallback with empty stats if database fails
+        available_models = ['claude-3-5-sonnet-20241022']
+        return render_template('chat.html', 
+                             database_stats={'total_articles': 0},
+                             available_models=available_models)
+
 @app.route('/browse_entries')
 def browse_entries():
-    """Browse all manual entries and artifacts."""
+    """Browse all manual entries and artifacts, with optional category filtering."""
     try:
+        # Get category filter from URL parameter
+        category_filter = request.args.get('category')
+        
         db = DatabaseManager()
         all_artifacts = db.get_artifacts(limit=100)
         
@@ -597,6 +800,25 @@ def browse_entries():
                 artifact_with_score['quality_grade'] = 'Unknown'
                 artifacts_with_scores.append(artifact_with_score)
         
+        # Filter by category if specified
+        if category_filter:
+            filtered_artifacts = []
+            for artifact in artifacts_with_scores:
+                metadata = json.loads(artifact.get('raw_metadata', '{}'))
+                
+                # Check if artifact belongs to the filtered category
+                ai_categories = metadata.get('ai_impact_categories', {})
+                ai_category = metadata.get('ai_impact_category')
+                
+                if ai_categories and category_filter in ai_categories:
+                    filtered_artifacts.append(artifact)
+                elif ai_category == category_filter:
+                    filtered_artifacts.append(artifact)
+                elif category_filter == 'general' and not ai_categories and not ai_category:
+                    filtered_artifacts.append(artifact)
+            
+            artifacts_with_scores = filtered_artifacts
+        
         # Sort by quality score (highest first)
         artifacts_with_scores.sort(key=lambda x: x['quality_score'], reverse=True)
         
@@ -604,291 +826,47 @@ def browse_entries():
         manual_entries = [a for a in artifacts_with_scores if a.get('source_type', '').startswith('manual_')]
         automated_entries = [a for a in artifacts_with_scores if not a.get('source_type', '').startswith('manual_')]
         
-        # Count by category
+        # Sort automated entries to show demo entries first (for multi-category demonstration)
+        def sort_key(entry):
+            # Demo entries first, then by collected_at descending
+            if entry.get('source_type') == 'demo':
+                return (0, entry.get('collected_at', ''))
+            else:
+                return (1, entry.get('collected_at', ''))
+        
+        automated_entries.sort(key=sort_key, reverse=True)
+        
+        # Count by category (always show full counts, not filtered)
         category_counts = {}
-        for artifact in artifacts_with_scores:
+        all_artifacts_for_counting = db.get_artifacts(limit=100)  # Get fresh data for counting
+        for artifact in all_artifacts_for_counting:
             metadata = json.loads(artifact.get('raw_metadata', '{}'))
-            category = metadata.get('category', 'general')
-            category_counts[category] = category_counts.get(category, 0) + 1
+            
+            # Check for multi-category analysis first
+            ai_categories = metadata.get('ai_impact_categories', {})
+            if ai_categories:
+                # For multi-category entries, count each category
+                for category in ai_categories.keys():
+                    category_counts[category] = category_counts.get(category, 0) + 1
+            else:
+                # Check for single category (legacy)
+                ai_category = metadata.get('ai_impact_category')
+                if ai_category:
+                    category_counts[ai_category] = category_counts.get(ai_category, 0) + 1
+                else:
+                    # Unprocessed entries go to general
+                    category_counts['general'] = category_counts.get('general', 0) + 1
         
         return render_template('browse_entries.html',
                              manual_entries=manual_entries,
                              automated_entries=automated_entries,
                              category_counts=category_counts,
                              total_manual=len(manual_entries),
-                             total_automated=len(automated_entries))
-                             
-    except Exception as e:
-        flash(f'Error browsing entries: {str(e)}', 'error')
-        return redirect(url_for('manual_entry'))
-
-@app.route('/view_entry/<artifact_id>')
-def view_entry(artifact_id):
-    """View detailed information about a specific entry."""
-    try:
-        db = DatabaseManager()
-        artifact = db.get_artifact_by_id(artifact_id)
-        
-        if not artifact:
-            flash('Entry not found!', 'error')
-            return redirect(url_for('browse_entries'))
-        
-        # Parse metadata if it exists
-        metadata = {}
-        if artifact.get('raw_metadata'):
-            try:
-                metadata = json.loads(artifact['raw_metadata'])
-            except:
-                pass
-        
-        return render_template('view_entry.html', 
-                             artifact=artifact, 
-                             metadata=metadata)
-                             
-    except Exception as e:
-        flash(f'Error viewing entry: {str(e)}', 'error')
-        return redirect(url_for('browse_entries'))
-
-@app.route('/process_entries')
-def process_entries():
-    """Process manual entries through AI categorization."""
-    try:
-        db = DatabaseManager()
-        artifacts = db.get_artifacts(limit=500)
-        
-        # Get manual entries that need processing (no ai_impact_category)
-        manual_entries = []
-        for artifact in artifacts:
-            if artifact.get('source_type', '').startswith('manual_'):
-                # Parse metadata to check processing status
-                metadata = json.loads(artifact.get('raw_metadata', '{}'))
-                
-                # Only include if not already processed
-                if not metadata.get('ai_impact_category'):
-                    manual_entries.append(artifact)
-        
-        if not manual_entries:
-            flash('No manual entries need processing. All entries have been processed!', 'success')
-            return redirect(url_for('browse_entries'))
-        
-        return render_template('process_entries.html', 
-                             entries=manual_entries,
-                             total_count=len(manual_entries))
-                             
-    except Exception as e:
-        flash(f'Error accessing processing: {str(e)}', 'error')
-        return redirect(url_for('manual_entry'))
-
-@app.route('/methodology')
-def methodology():
-    """Research methodology page."""
-    return render_template('methodology.html')
-
-@app.route('/reports')
-def reports():
-    """Reports page."""
-    return render_template('reports.html')
-
-@app.route('/analysis')
-def analysis():
-    """Analysis page (placeholder)."""
-    return render_template('analysis.html')
-
-@app.route('/settings')
-def settings():
-    """Settings page (placeholder)."""
-    return render_template('settings.html')
-
-@app.route('/api/reports')
-def api_reports():
-    """Get list of available reports."""
-    try:
-        reports_dir = Path('data/reports')
-        reports = []
-        
-        if reports_dir.exists():
-            # Get both markdown and HTML files
-            for report_file in reports_dir.glob('*.md'):
-                stat = report_file.stat()
-                # Clean path to remove any potential line ending characters
-                clean_path = str(report_file).replace('\\', '/').strip()
-                reports.append({
-                    'name': report_file.name,
-                    'path': clean_path,
-                    'size': f"{stat.st_size / 1024:.1f} KB",
-                    'created': stat.st_mtime,
-                    'type': 'student'  # Mark as student report
-                })
-                
-            for report_file in reports_dir.glob('*.html'):
-                stat = report_file.stat()
-                # Clean path to remove any potential line ending characters
-                clean_path = str(report_file).replace('\\', '/').strip()
-                reports.append({
-                    'name': report_file.name,
-                    'path': clean_path,
-                    'size': f"{stat.st_size / 1024:.1f} KB", 
-                    'created': stat.st_mtime,
-                    'type': 'web'  # Mark as web report
-                })
-        
-        # Sort by creation time (newest first)
-        reports.sort(key=lambda x: x['created'], reverse=True)
-        
-        return jsonify({"reports": reports})
-        
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-@app.route('/api/generate_student_report', methods=['POST'])
-def api_generate_student_report():
-    """Generate student career intelligence report."""
-    try:
-        import subprocess
-        import sys
-        
-        # Use subprocess to run the script directly
-        script_path = "scripts/generate_student_report.py"
-        
-        # Run the script and capture output
-        result = subprocess.run(
-            [sys.executable, script_path],
-            capture_output=True,
-            text=True,
-            cwd=str(Path(__file__).parent)
-        )
-        
-        if result.returncode == 0:
-            # Parse the output to get the filepath
-            output_lines = result.stdout.strip().split('\n')
-            filepath = None
-            
-            # First, look for clean filepath output
-            for line in output_lines:
-                if line.startswith('[FILEPATH]'):
-                    filepath = line.replace('[FILEPATH]', '').strip()
-                    break
-            
-            # Fallback to parsing common report output patterns
-            if not filepath:
-                for line in output_lines:
-                    if 'saved to:' in line.lower() or 'report saved' in line.lower():
-                        # Extract filepath from output line
-                        parts = line.split()
-                        for part in parts:
-                            if 'data' in part and ('.html' in part or '.md' in part):
-                                filepath = part
-                                break
-                        if filepath:
-                            break
-            
-            # Final fallback to scanning for data/reports paths
-            if not filepath:
-                # Look for the last line that might contain the filepath
-                for line in reversed(output_lines):
-                    if 'data' in line and 'reports' in line and ('.html' in line or '.md' in line):
-                        # Try to extract just the file path part
-                        parts = line.split()
-                        for part in parts:
-                            if 'data' in part and ('.html' in part or '.md' in part):
-                                filepath = part
-                                break
-                        if filepath:
-                            break
-            
-            return jsonify({
-                "message": "Student report generated successfully",
-                "filepath": filepath or "Report generated but filepath not found",
-                "output": result.stdout
-            })
-        else:
-            return jsonify({
-                "error": f"Script execution failed: {result.stderr}",
-                "stdout": result.stdout,
-                "returncode": result.returncode
-            }), 500
-            
+                             total_automated=len(automated_entries),
+                             category_filter=category_filter)
     except Exception as e:
         import traceback
-        return jsonify({
-            "error": str(e),
-            "traceback": traceback.format_exc()
-        }), 500
-
-@app.route('/api/generate_web_report', methods=['POST'])
-def api_generate_web_report():
-    """Generate web intelligence report."""
-    try:
-        import subprocess
-        import sys
-        
-        # Use subprocess to run the script directly
-        script_path = "scripts/generate_web_report.py"
-        
-        # Run the script and capture output
-        result = subprocess.run(
-            [sys.executable, script_path],
-            capture_output=True,
-            text=True,
-            cwd=str(Path(__file__).parent)
-        )
-        
-        if result.returncode == 0:
-            # Parse the output to get the filepath
-            output_lines = result.stdout.strip().split('\n')
-            filepath = None
-            
-            # First, look for clean filepath output
-            for line in output_lines:
-                if line.startswith('[FILEPATH]'):
-                    filepath = line.replace('[FILEPATH]', '').strip()
-                    break
-            
-            # Fallback to parsing common report output patterns
-            if not filepath:
-                for line in output_lines:
-                    if 'saved to:' in line.lower() or 'report saved' in line.lower():
-                        # Extract filepath from output line
-                        parts = line.split()
-                        for part in parts:
-                            if 'data' in part and ('.html' in part or '.md' in part):
-                                filepath = part
-                                break
-                        if filepath:
-                            break
-            
-            # Final fallback to scanning for data/reports paths
-            if not filepath:
-                # Look for the last line that might contain the filepath
-                for line in reversed(output_lines):
-                    if 'data' in line and 'reports' in line and ('.html' in line or '.md' in line):
-                        # Try to extract just the file path part
-                        parts = line.split()
-                        for part in parts:
-                            if 'data' in part and ('.html' in part or '.md' in part):
-                                filepath = part
-                                break
-                        if filepath:
-                            break
-            
-            return jsonify({
-                "message": "Web report generated successfully", 
-                "filepath": filepath or "Report generated but filepath not found",
-                "output": result.stdout
-            })
-        else:
-            return jsonify({
-                "error": f"Script execution failed: {result.stderr}",
-                "stdout": result.stdout,
-                "returncode": result.returncode
-            }), 500
-            
-    except Exception as e:
-        import traceback
-        return jsonify({
-            "error": str(e),
-            "traceback": traceback.format_exc()
-        }), 500
+        return f"Error loading browse entries: {str(e)}", 500
 
 @app.route('/api/view_report')
 def api_view_report():
@@ -975,6 +953,11 @@ def add_cost():
         return jsonify({"message": f"Added ${cost:.4f} cost for {api_name}"})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+@app.route('/cost_analysis')
+def cost_analysis_redirect():
+    """Redirect cost_analysis (underscore) to cost-analysis (hyphen)."""
+    return redirect('/cost-analysis')
 
 @app.route('/cost-analysis')
 def cost_analysis():
@@ -1393,16 +1376,14 @@ def add_youtube():
             
             # Automatically trigger processing for transcript extraction and AI categorization
             def process_youtube_entry():
-                import asyncio
                 try:
-                    from scripts.manual_entry.manual_entry_processor import ManualEntryProcessor
-                    processor = ManualEntryProcessor()
+                    from scripts.manual_entry.manual_entry_processor import ManualEntryProcessorSync
+                    processor = ManualEntryProcessorSync()
                     
-                    async def run_processing():
-                        result = await processor.process_entry(artifact_id)
-                        status.add_log("INFO", f"YouTube processing complete: {artifact_id} -> {result.get('category', 'unknown')} (confidence: {result.get('confidence', 0):.2f})", "PROCESSING")
-                    
-                    asyncio.run(run_processing())
+                    # Use synchronous processing (no async needed)
+                    result = processor.process_entry_sync(artifact_id)
+                    status.add_log("INFO", f"YouTube processing complete: {artifact_id} -> {result.get('category', 'unknown')} (confidence: {result.get('confidence', 0):.2f})", "PROCESSING")
+                
                 except Exception as e:
                     status.add_log("ERROR", f"YouTube auto-processing failed for {artifact_id}: {e}", "PROCESSING")
             
@@ -1436,11 +1417,7 @@ def too_large(e):
     flash("File is too large! Maximum size is 50MB.", 'error')
     return redirect(request.url), 413
 
-@app.route('/chat')
-def chat_interface():
-    """Chat interface placeholder."""
-    flash('Chat interface will be implemented soon!', 'info')
-    return redirect(url_for('manual_entry'))
+# Chat interface route moved to line 756 - duplicate removed
 
 # ===== END MANUAL ENTRY ROUTES =====
 
@@ -1453,15 +1430,14 @@ def api_process_all_entries():
         return jsonify({"error": "Another operation is already running"}), 400
     
     def run_processing():
-        import asyncio
-        from scripts.manual_entry.manual_entry_processor import process_all_unprocessed_entries
+        from scripts.manual_entry.manual_entry_processor import process_all_unprocessed_entries_sync
         
         try:
             status.set_operation("Processing Manual Entries")
             status.add_log("INFO", "Starting AI processing of all unprocessed manual entries", "PROCESSING")
             
-            # Run the processing
-            result = asyncio.run(process_all_unprocessed_entries(status))
+            # Run the processing (synchronous)
+            result = process_all_unprocessed_entries_sync(status)
             
             # Update final stats
             if result.get('successful', 0) > 0:
@@ -1495,15 +1471,14 @@ def api_process_selected_entries():
         return jsonify({"error": "No entry IDs provided"}), 400
     
     def run_processing():
-        import asyncio
-        from scripts.manual_entry.manual_entry_processor import process_multiple_entries
+        from scripts.manual_entry.manual_entry_processor import process_multiple_entries_sync
         
         try:
             status.set_operation("Processing Selected Entries")
             status.add_log("INFO", f"Starting AI processing of {len(entry_ids)} selected entries", "PROCESSING")
             
-            # Run the processing
-            result = asyncio.run(process_multiple_entries(entry_ids, status))
+            # Run the processing (synchronous)
+            result = process_multiple_entries_sync(entry_ids, status)
             
             # Update final stats
             status.add_log("INFO", f"Selected processing completed: {result['successful']} successful, {result['failed']} failed", "PROCESSING")
@@ -1530,14 +1505,13 @@ def api_process_single_entry():
         return jsonify({"error": "No entry ID provided"}), 400
     
     def run_processing():
-        import asyncio
-        from scripts.manual_entry.manual_entry_processor import process_single_entry
+        from scripts.manual_entry.manual_entry_processor import process_single_entry_sync
         
         try:
             status.add_log("INFO", f"Starting AI processing of entry: {entry_id}", "PROCESSING")
             
-            # Run the processing
-            result = asyncio.run(process_single_entry(entry_id, status))
+            # Run the processing (synchronous)
+            result = process_single_entry_sync(entry_id, status)
             
             if result['status'] == 'processed':
                 status.add_log("INFO", f"Single entry processed: {entry_id} -> {result['category']} (confidence: {result['confidence']:.2f})", "PROCESSING")
@@ -2520,6 +2494,138 @@ def api_run_category_distribution_insights():
         status.add_log("ERROR", error_msg, "ANALYSIS")
         return jsonify({"error": error_msg}), 500
 
+@app.route('/api/run_comprehensive_category_narratives', methods=['POST'])
+def api_run_comprehensive_category_narratives():
+    """Run comprehensive category narratives analysis for all AI impact categories."""
+    try:
+        import subprocess
+        import sys
+        
+        # Use subprocess to run the analysis script
+        script_path = "scripts/analysis/comprehensive_category_narratives.py"
+        
+        status.add_log("INFO", "Starting comprehensive category narratives analysis...", "ANALYSIS")
+        
+        # Run the script and capture output
+        result = subprocess.run(
+            [sys.executable, script_path],
+            capture_output=True,
+            text=True,
+            timeout=300  # 5 minute timeout
+        )
+        
+        if result.returncode != 0:
+            # Script failed
+            error_msg = f"Comprehensive category narratives analysis failed: {result.stderr}"
+            status.add_log("ERROR", error_msg, "ANALYSIS")
+            return jsonify({
+                "error": error_msg,
+                "stderr": result.stderr,
+                "stdout": result.stdout
+            }), 500
+        
+        # Parse the results from stdout
+        try:
+            import os
+            import glob
+            
+            # Find the most recent comprehensive category narratives report
+            report_pattern = "data/comprehensive_category_narratives_*.json"
+            report_files = glob.glob(report_pattern)
+            
+            if report_files:
+                latest_report = max(report_files, key=os.path.getctime)
+                file_size = os.path.getsize(latest_report)
+                
+                # Load the JSON report to get summary statistics
+                import json
+                with open(latest_report, 'r', encoding='utf-8') as f:
+                    report_data = json.load(f)
+                
+                # Extract key metrics
+                metrics = {}
+                total_articles = 0
+                categories_analyzed = len(report_data)
+                
+                for category, data in report_data.items():
+                    total_articles += data.get('total_articles_analyzed', 0)
+                
+                metrics['categories_analyzed'] = categories_analyzed
+                metrics['total_articles'] = total_articles
+                metrics['avg_articles_per_category'] = total_articles // categories_analyzed if categories_analyzed > 0 else 0
+                
+                status.add_log("INFO", f"Comprehensive category narratives analysis completed successfully - {latest_report}", "ANALYSIS")
+                
+                return jsonify({
+                    "success": True,
+                    "report_file": latest_report,
+                    "file_size": file_size,
+                    "metrics": metrics,
+                    "message": "Comprehensive category narratives analysis completed successfully",
+                    "features": [
+                        "AI REPLACE: Jobs/tasks automated by AI",
+                        "AI AUGMENT: Human-AI collaboration scenarios",
+                        "AI NEW TASKS: Jobs created by AI technology", 
+                        "AI HUMAN-ONLY: Uniquely human expertise",
+                        "Detailed job/task analysis with citations",
+                        "Executive summaries for each category",
+                        "Evidence-based explanations and mechanisms"
+                    ]
+                })
+            else:
+                return jsonify({
+                    "error": "Analysis completed but no report file found",
+                    "stdout": result.stdout
+                }), 404
+                
+        except Exception as e:
+            # Return basic success if we can't parse detailed results
+            status.add_log("INFO", f"Comprehensive category narratives analysis completed with parsing issues: {e}", "ANALYSIS")
+            return jsonify({
+                "success": True,
+                "message": "Comprehensive category narratives analysis completed",
+                "stdout": result.stdout,
+                "parsing_error": str(e)
+            })
+        
+    except subprocess.TimeoutExpired:
+        error_msg = "Comprehensive category narratives analysis timed out after 5 minutes"
+        status.add_log("ERROR", error_msg, "ANALYSIS")
+        return jsonify({"error": error_msg}), 408
+        
+    except Exception as e:
+        error_msg = f"Failed to run comprehensive category narratives analysis: {str(e)}"
+        status.add_log("ERROR", error_msg, "ANALYSIS")
+        return jsonify({"error": error_msg}), 500
+
+@app.route('/api/category_narrative/<category>')
+def api_get_category_narrative(category):
+    """Get detailed narrative for a specific category."""
+    try:
+        from scripts.analysis.comprehensive_category_narratives import ComprehensiveCategoryNarrativeAnalyzer
+        
+        analyzer = ComprehensiveCategoryNarrativeAnalyzer()
+        report = analyzer.generate_category_report(category)
+        
+        if report:
+            return jsonify({
+                'success': True,
+                'category': category,
+                'report': report
+            })
+        else:
+            return jsonify({
+                'success': False,
+                'message': f'No data found for category: {category}'
+            }), 404
+            
+    except Exception as e:
+        logger.error(f"Error getting category narrative for {category}: {e}")
+        return jsonify({
+            'success': False,
+            'message': f'Error retrieving narrative: {str(e)}'
+        }), 500
+
 @app.route('/api/visualization_data/<analysis_type>')
 def api_visualization_data(analysis_type):
     """Get visualization data for interactive charts."""
@@ -2835,9 +2941,641 @@ def generate_adoption_viz_data(artifacts):
         "prediction_labels": ['Next Quarter', '6 Months', '1 Year', '2 Years']
     })
 
+@app.route('/api/generate_category_summary', methods=['POST'])
+def api_generate_category_summary():
+    """Generate LLM-powered summary for a specific category."""
+    try:
+        data = request.get_json()
+        category = data.get('category')
+        
+        if not category:
+            return jsonify({"error": "Category is required"}), 400
+        
+        # Get relevant articles for this category
+        db = DatabaseManager()
+        artifacts = db.get_artifacts(limit=500)
+        
+        # Filter articles that contain this category
+        relevant_articles = []
+        for artifact in artifacts:
+            metadata = json.loads(artifact.get('raw_metadata', '{}'))
+            
+            # Check both new multi-category and legacy single category
+            ai_categories = metadata.get('ai_impact_categories', {})
+            legacy_category = metadata.get('ai_impact_category', '')
+            
+            is_relevant = False
+            confidence = 0
+            evidence = []
+            
+            if ai_categories and category in ai_categories:
+                category_data = ai_categories[category]
+                confidence = category_data.get('confidence', 0)
+                evidence = category_data.get('evidence', [])
+                is_relevant = confidence >= 0.3
+            elif legacy_category == category:
+                confidence = metadata.get('confidence_score', 0.5)
+                is_relevant = True
+                evidence = ['Legacy single-category classification']
+            
+            # Debug: Print what we're finding
+            if is_relevant:
+                print(f"Found relevant article for {category}: {artifact['title'][:50]}... (confidence: {confidence})")
+            
+            if is_relevant:
+                relevant_articles.append({
+                    'id': artifact['id'],
+                    'title': artifact['title'],
+                    'url': artifact.get('url', ''),
+                    'content': artifact['content'][:1000],  # Truncate for analysis
+                    'confidence': confidence,
+                    'evidence': evidence,
+                    'collected_at': artifact.get('collected_at', '')
+                })
+        
+        if not relevant_articles:
+            return jsonify({
+                "category": category,
+                "summary": f"No articles found for category '{category}'. This may indicate that more data collection is needed in this area, or the category classification system needs refinement.",
+                "article_count": 0,
+                "citations": [],
+                "confidence": 0,
+                "generated_at": datetime.now().isoformat()
+            })
+        
+        # Generate summary using OpenAI
+        try:
+            from openai import OpenAI
+            import os
+            from dotenv import load_dotenv
+            
+            # Load environment variables from config.env (override existing)
+            load_dotenv('config.env', override=True)
+            
+            # Get OpenAI API key
+            openai_api_key = os.getenv('OPENAI_API_KEY')
+            if not openai_api_key:
+                return jsonify({"error": "OpenAI API key not found in config.env"}), 500
+            
+            client = OpenAI(api_key=openai_api_key)
+            
+            # Prepare content for analysis - limit to most confident articles
+            top_articles = sorted(relevant_articles, key=lambda x: x['confidence'], reverse=True)[:8]
+            
+            articles_text = "\n\n".join([
+                f"Article {i+1}: {article['title']}\nEvidence: {'; '.join(article['evidence'][:2])}\nContent: {article['content'][:400]}..."
+                for i, article in enumerate(top_articles)
+            ])
+            
+            category_descriptions = {
+                'replace': 'tasks that AI can perform completely autonomously, replacing human workers',
+                'augment': 'tasks where AI enhances human capabilities but requires human oversight',
+                'new_tasks': 'new roles and responsibilities created by AI adoption in cybersecurity',
+                'human_only': 'tasks that remain fundamentally human due to complexity, ethics, or judgment requirements'
+            }
+            
+            category_desc = category_descriptions.get(category, f'{category} tasks')
+            
+            prompt = f"""
+Based on {len(relevant_articles)} cybersecurity articles, generate a comprehensive summary about {category_desc}.
+
+Top Evidence from {len(top_articles)} most relevant articles:
+{articles_text}
+
+Provide a structured summary:
+
+**Key Findings**: What are the main insights about {category_desc}?
+**Specific Examples**: What specific tasks, tools, or roles are mentioned?
+**Current Trends**: What patterns are emerging in this area?
+**Student Implications**: Critical insights for cybersecurity students graduating in 2025.
+**Evidence Quality**: Assessment of finding reliability.
+
+Focus on specific, actionable insights for career planning. 300-400 words.
+"""
+            
+            response = client.chat.completions.create(
+                model="gpt-4o-mini",
+                messages=[
+                    {"role": "system", "content": "You are an expert cybersecurity workforce analyst. Provide evidence-based analysis with specific examples and actionable career guidance."},
+                    {"role": "user", "content": prompt}
+                ],
+                temperature=0.2,
+                max_tokens=600
+            )
+            
+            summary_text = response.choices[0].message.content
+            
+            # Create citations
+            citations = []
+            for i, article in enumerate(top_articles):
+                citations.append({
+                    'number': i + 1,
+                    'title': article['title'],
+                    'url': article['url'] if article['url'] and not article['url'].startswith('file://') else '',
+                    'confidence': round(article['confidence'], 3),
+                    'key_evidence': article['evidence'][:2]  # Top 2 evidence items
+                })
+            
+            # Calculate overall confidence
+            avg_confidence = sum(article['confidence'] for article in relevant_articles) / len(relevant_articles)
+            
+            return jsonify({
+                "category": category,
+                "summary": summary_text,
+                "article_count": len(relevant_articles),
+                "citations": citations,
+                "confidence": round(avg_confidence, 3),
+                "generated_at": datetime.now().isoformat(),
+                "category_description": category_descriptions.get(category, f'{category} tasks')
+            })
+            
+        except Exception as e:
+            print(f"OpenAI API error: {e}")  # Use print instead of logger
+            return jsonify({"error": f"Failed to generate summary: {str(e)}"}), 500
+            
+    except Exception as e:
+        print(f"Category summary error: {e}")  # Use print instead of logger
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/chat', methods=['POST'])
+def api_chat():
+    """Enhanced RAG chat API with DCWF integration and advanced filtering."""
+    try:
+        from aih.chat.rag_chat import RAGChatSystem
+        
+        data = request.get_json()
+        query = data.get('query', '').strip()
+        model = data.get('model', 'claude-3-5-sonnet-20241022')
+        filters = data.get('filters', {})
+        
+        if not query:
+            return jsonify({"error": "Query is required"}), 400
+        
+        # Initialize RAG system with selected model
+        rag_system = RAGChatSystem(model=model)
+        
+        # Apply filters if provided
+        context_filters = {}
+        if filters.get('categories'):
+            context_filters['categories'] = filters['categories']
+        if filters.get('date_range'):
+            context_filters['date_range'] = filters['date_range']
+        if filters.get('confidence_threshold'):
+            context_filters['confidence_threshold'] = filters['confidence_threshold']
+        if filters.get('source_types'):
+            context_filters['source_types'] = filters['source_types']
+        
+        # Get enhanced context with DCWF integration
+        context = rag_system.get_enhanced_context(query, filters=context_filters)
+        
+        # Generate response
+        response = rag_system.generate_response(query, context)
+        
+        # Get source information for citations
+        sources = rag_system.get_source_citations(query, context)
+        
+        return jsonify({
+            "response": response,
+            "sources": sources,
+            "context_stats": {
+                "articles_used": len(sources),
+                "model_used": model,
+                "filters_applied": context_filters
+            }
+        })
+        
+    except Exception as e:
+        logger.error(f"Chat API error: {e}")
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/chat/suggestions')
+def api_chat_suggestions():
+    """Get suggested questions based on current database content."""
+    try:
+        from aih.chat.rag_chat import RAGChatSystem
+        
+        rag_system = RAGChatSystem()
+        suggestions = rag_system.get_suggested_questions()
+        
+        return jsonify({"suggestions": suggestions})
+        
+    except Exception as e:
+        logger.error(f"Chat suggestions error: {e}")
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/chat/dcwf_search')
+def api_chat_dcwf_search():
+    """Search DCWF framework for specific roles or tasks."""
+    try:
+        query = request.args.get('query', '').strip()
+        if not query:
+            return jsonify({"error": "Query parameter required"}), 400
+        
+        # Import DCWF framework indexer
+        try:
+            from scripts.analysis.dcwf_framework_indexer import DCWFFrameworkIndexer
+            dcwf_indexer = DCWFFrameworkIndexer()
+            
+            # Search for matching roles and tasks
+            results = dcwf_indexer.search_framework(query)
+            
+            return jsonify({
+                "query": query,
+                "results": results,
+                "total_matches": len(results)
+            })
+            
+        except ImportError:
+            return jsonify({"error": "DCWF framework not available"}), 503
+        
+    except Exception as e:
+        logger.error(f"DCWF search error: {e}")
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/chat/export', methods=['POST'])
+def api_chat_export():
+    """Export chat conversation to various formats."""
+    try:
+        data = request.get_json()
+        conversation = data.get('conversation', [])
+        format_type = data.get('format', 'markdown')  # markdown, json, pdf
+        
+        if not conversation:
+            return jsonify({"error": "No conversation to export"}), 400
+        
+        # Generate export content
+        if format_type == 'markdown':
+            content = generate_markdown_export(conversation)
+            filename = f"chat_export_{datetime.now().strftime('%Y%m%d_%H%M%S')}.md"
+        elif format_type == 'json':
+            content = json.dumps(conversation, indent=2)
+            filename = f"chat_export_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+        else:
+            return jsonify({"error": "Unsupported format"}), 400
+        
+        # Save to exports directory
+        export_dir = Path('data/exports')
+        export_dir.mkdir(exist_ok=True)
+        export_path = export_dir / filename
+        
+        with open(export_path, 'w', encoding='utf-8') as f:
+            f.write(content)
+        
+        return jsonify({
+            "success": True,
+            "filename": filename,
+            "path": str(export_path),
+            "size": len(content)
+        })
+        
+    except Exception as e:
+        logger.error(f"Chat export error: {e}")
+        return jsonify({"error": str(e)}), 500
+
+def generate_markdown_export(conversation):
+    """Generate markdown format for chat export."""
+    content = f"# AI-Horizon Chat Export\n\n"
+    content += f"**Export Date:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
+    content += f"**Total Messages:** {len(conversation)}\n\n"
+    content += "---\n\n"
+    
+    for i, message in enumerate(conversation, 1):
+        role = message.get('role', 'unknown')
+        text = message.get('content', '')
+        timestamp = message.get('timestamp', '')
+        
+        if role == 'user':
+            content += f"## Question {i}\n\n"
+            content += f"**Asked:** {timestamp}\n\n"
+            content += f"{text}\n\n"
+        elif role == 'assistant':
+            content += f"## Response {i}\n\n"
+            content += f"{text}\n\n"
+            
+            # Add sources if available
+            sources = message.get('sources', [])
+            if sources:
+                content += "### Sources\n\n"
+                for source in sources:
+                    content += f"- [{source.get('title', 'Untitled')}]({source.get('url', '#')})\n"
+                content += "\n"
+        
+        content += "---\n\n"
+    
+    return content
+
+@app.route('/reprocess')
+def reprocess_interface():
+    """Web interface for comprehensive entry reprocessing."""
+    return render_template('reprocess.html')
+
+@app.route('/api/reprocess_entries', methods=['POST'])
+def api_reprocess_entries():
+    """API endpoint for comprehensive entry reprocessing."""
+    try:
+        data = request.get_json()
+        
+        # Get processing options
+        quality_scoring = data.get('quality_scoring', False)
+        categorization = data.get('categorization', False)
+        multicategory = data.get('multicategory', False)
+        wisdom = data.get('wisdom', False)
+        content_enhancement = data.get('content_enhancement', False)
+        metadata_standardization = data.get('metadata_standardization', False)
+        force = data.get('force', False)
+        limit = data.get('limit')
+        
+        # Validate at least one option is selected
+        if not any([quality_scoring, categorization, multicategory, wisdom, 
+                   content_enhancement, metadata_standardization]):
+            return jsonify({
+                'success': False,
+                'error': 'Please select at least one processing option'
+            }), 400
+        
+        status.set_operation("Comprehensive Entry Reprocessing")
+        
+        def run_reprocessing():
+            try:
+                # Import and run reprocessor
+                from scripts.reprocess_all_entries import ComprehensiveReprocessor
+                
+                # Run reprocessing directly (no async needed now)
+                reprocessor = ComprehensiveReprocessor()
+                report = reprocessor.reprocess_all_entries(
+                    quality_scoring=quality_scoring,
+                    categorization=categorization,
+                    multicategory=multicategory,
+                    wisdom=wisdom,
+                    content_enhancement=content_enhancement,
+                    metadata_standardization=metadata_standardization,
+                    force=force,
+                    limit=limit
+                )
+                
+                # Update status
+                status.complete_operation(True, f"Reprocessed {report['statistics']['total_processed']} entries")
+                status.add_log("INFO", f"Reprocessing completed: {report['statistics']}", "REPROCESS")
+                
+            except Exception as e:
+                status.complete_operation(False, f"Reprocessing failed: {e}")
+                status.add_log("ERROR", f"Reprocessing error: {e}", "REPROCESS")
+        
+        # Start reprocessing in background
+        thread = threading.Thread(target=run_reprocessing)
+        thread.daemon = True
+        thread.start()
+        
+        return jsonify({
+            'success': True,
+            'message': 'Reprocessing started successfully',
+            'options': {
+                'quality_scoring': quality_scoring,
+                'categorization': categorization,
+                'multicategory': multicategory,
+                'wisdom': wisdom,
+                'content_enhancement': content_enhancement,
+                'metadata_standardization': metadata_standardization,
+                'force': force,
+                'limit': limit
+            }
+        })
+        
+    except Exception as e:
+        logger.error(f"Reprocessing API error: {e}")
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/api/start_reprocessing', methods=['POST'])
+def api_start_reprocessing():
+    """API endpoint to start reprocessing with the expected format from the frontend."""
+    try:
+        data = request.get_json()
+        
+        # Map frontend algorithm names to backend options
+        algorithms = data.get('algorithms', [])
+        max_entries = data.get('max_entries', 10)
+        force_reprocess = data.get('force_reprocess', False)
+        dry_run = data.get('dry_run', False)
+        
+        # Convert algorithm names to boolean flags
+        options = {
+            'quality_scoring': 'quality_scoring' in algorithms,
+            'categorization': 'ai_categorization' in algorithms,
+            'multicategory': 'multi_category' in algorithms,
+            'wisdom': 'wisdom_extraction' in algorithms,
+            'content_enhancement': 'content_enhancement' in algorithms,
+            'metadata_standardization': 'metadata_standardization' in algorithms,
+            'force': force_reprocess,
+            'limit': max_entries if not dry_run else 1
+        }
+        
+        # Validate at least one option is selected
+        if not any([options['quality_scoring'], options['categorization'], 
+                   options['multicategory'], options['wisdom'], 
+                   options['content_enhancement'], options['metadata_standardization']]):
+            return jsonify({
+                'success': False,
+                'error': 'Please select at least one processing option'
+            }), 400
+        
+        status.set_operation("Comprehensive Entry Reprocessing")
+        
+        # Get unprocessed count for logging
+        try:
+            from scripts.reprocess_all_entries import ComprehensiveReprocessor
+            temp_reprocessor = ComprehensiveReprocessor()
+            unprocessed_count = temp_reprocessor.get_unprocessed_count(options)
+            total_articles = len(temp_reprocessor.db.get_artifacts())
+            
+            if force_reprocess:
+                status.add_log("INFO", f"🔥 Force mode: Starting reprocessing with options: {algorithms}", "REPROCESS")
+                status.add_log("INFO", f"📊 Processing all {total_articles} articles (force mode)", "REPROCESS")
+            else:
+                status.add_log("INFO", f"🎯 Smart mode: Starting reprocessing with options: {algorithms}", "REPROCESS")
+                status.add_log("INFO", f"📊 Found {unprocessed_count} unprocessed articles out of {total_articles} total", "REPROCESS")
+        except Exception as e:
+            status.add_log("INFO", f"Starting reprocessing with options: {algorithms}", "REPROCESS")
+            logger.error(f"Error getting unprocessed count for logging: {e}")
+        
+        def run_reprocessing():
+            try:
+                if dry_run:
+                    # Simulate processing for dry run
+                    status.add_log("INFO", "Dry run mode - simulating processing", "REPROCESS")
+                    time.sleep(2)
+                    status.complete_operation(True, "Dry run completed successfully")
+                    return
+                
+                # Import and use the actual reprocessor
+                from scripts.reprocess_all_entries import ComprehensiveReprocessor
+                
+                status.add_log("INFO", "Initializing comprehensive reprocessor...", "REPROCESS")
+                reprocessor = ComprehensiveReprocessor()
+                
+                # Run actual reprocessing
+                status.add_log("INFO", f"Processing up to {max_entries} entries...", "REPROCESS")
+                report = reprocessor.reprocess_all_entries(
+                    quality_scoring=options['quality_scoring'],
+                    categorization=options['categorization'],
+                    multicategory=options['multicategory'],
+                    wisdom=options['wisdom'],
+                    content_enhancement=options['content_enhancement'],
+                    metadata_standardization=options['metadata_standardization'],
+                    force=options['force'],
+                    limit=options['limit']
+                )
+                
+                # Log results
+                stats = report.get('statistics', {})
+                total_processed = stats.get('total_processed', 0)
+                wisdom_updated = stats.get('wisdom_updated', 0)
+                errors = stats.get('errors', 0)
+                
+                status.add_log("INFO", f"Reprocessing completed: {total_processed} entries processed", "REPROCESS")
+                status.add_log("INFO", f"Wisdom extracted for {wisdom_updated} entries", "REPROCESS")
+                
+                if errors > 0:
+                    status.add_log("WARNING", f"Encountered {errors} errors during processing", "REPROCESS")
+                
+                status.complete_operation(True, f"Reprocessed {total_processed} entries successfully")
+                
+            except Exception as e:
+                status.complete_operation(False, f"Reprocessing failed: {e}")
+                status.add_log("ERROR", f"Reprocessing error: {e}", "REPROCESS")
+                logger.error(f"Reprocessing failed: {e}")
+        
+        # Start reprocessing in background
+        thread = threading.Thread(target=run_reprocessing)
+        thread.daemon = True
+        thread.start()
+        
+        return jsonify({
+            'success': True,
+            'message': 'Reprocessing started successfully'
+        })
+        
+    except Exception as e:
+        logger.error(f"Start reprocessing API error: {e}")
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/api/reprocess_status')
+def api_reprocess_status():
+    """Get current reprocessing status."""
+    try:
+        current_status = status.get_status()
+        
+        return jsonify({
+            'is_processing': current_status.get('current_operation') != 'Idle',
+            'progress': {
+                'completed': current_status.get('progress', {}).get('current', 0),
+                'total': current_status.get('progress', {}).get('total', 0),
+                'current_operation': current_status.get('current_operation', 'Idle'),
+                'successful': current_status.get('progress', {}).get('current', 0),  # Assume all successful for now
+                'eta': None  # Could calculate this based on progress
+            },
+            'logs': current_status.get('recent_logs', [])[-10:]  # Last 10 logs
+        })
+        
+    except Exception as e:
+        logger.error(f"Reprocess status API error: {e}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/reprocess_stream')
+def api_reprocess_stream():
+    """Server-sent events stream for reprocessing progress."""
+    def event_stream():
+        while True:
+            try:
+                current_status = status.get_status()
+                
+                # Format data for frontend
+                data = {
+                    'progress': {
+                        'completed': current_status.get('progress', {}).get('current', 0),
+                        'total': current_status.get('progress', {}).get('total', 0),
+                        'current_operation': current_status.get('current_operation', 'Idle'),
+                        'successful': current_status.get('progress', {}).get('current', 0),
+                        'eta': None
+                    },
+                    'logs': current_status.get('recent_logs', [])[-5:],  # Last 5 logs
+                    'completed': current_status.get('current_operation') == 'Idle'
+                }
+                
+                yield f"data: {json.dumps(data)}\n\n"
+                time.sleep(2)  # Update every 2 seconds
+                
+                # Stop streaming if operation is complete
+                if current_status.get('current_operation') == 'Idle':
+                    break
+                    
+            except Exception as e:
+                logger.error(f"Stream error: {e}")
+                break
+    
+    return Response(event_stream(), mimetype='text/plain')
+
+@app.route('/process_entries')
+def process_entries():
+    """Redirect to reprocess interface for processing entries."""
+    return redirect('/reprocess')
+
+@app.route('/view_entry/<artifact_id>')
+def view_entry(artifact_id):
+    """View detailed information about an artifact."""
+    try:
+        db = DatabaseManager()
+        artifact = db.get_artifact_by_id(artifact_id)
+        
+        if not artifact:
+            return f"Artifact not found: {artifact_id}", 404
+        
+        # Add quality score if not present
+        if 'quality_score' not in artifact:
+            artifact['quality_score'] = 0.0
+            artifact['quality_grade'] = 'Unknown'
+        
+        # Ensure collected_at is a string for template compatibility
+        if 'collected_at' in artifact and artifact['collected_at']:
+            # If it's already a string, keep it as is
+            if not isinstance(artifact['collected_at'], str):
+                artifact['collected_at'] = str(artifact['collected_at'])
+        
+        # Extract metadata for template
+        metadata = {}
+        if artifact.get('raw_metadata'):
+            try:
+                import json
+                if isinstance(artifact['raw_metadata'], str):
+                    metadata = json.loads(artifact['raw_metadata'])
+                else:
+                    metadata = artifact['raw_metadata']
+            except (json.JSONDecodeError, TypeError):
+                metadata = {}
+        
+        return render_template('view_entry.html', artifact=artifact, metadata=metadata)
+        
+    except Exception as e:
+        logger.error(f"View entry error: {e}")
+        return f"Error viewing artifact: {str(e)}", 500
+
+@app.route('/delete_artifact/<artifact_id>', methods=['POST'])
+def delete_artifact(artifact_id):
+    """Delete an artifact."""
+    try:
+        db = DatabaseManager()
+        success = db.delete_artifact(artifact_id)
+        
+        if success:
+            status.add_log("INFO", f"Deleted artifact: {artifact_id}", "MANUAL")
+            return redirect(url_for('browse_entries'))
+        else:
+            return f"Failed to delete artifact: {artifact_id}", 404
+            
+    except Exception as e:
+        return f"Error deleting artifact: {str(e)}", 500
+
 def run_server(host='127.0.0.1', port=5000, debug=False):
     """Run the status server."""
-    logger = get_logger('status_server')
     logger.info(f"Starting AI-Horizon Status Server on http://{host}:{port}")
     
     # Connect cost tracker to status tracker
@@ -2863,6 +3601,177 @@ def run_server(host='127.0.0.1', port=5000, debug=False):
         status.add_log("ERROR", f"Database initialization error: {e}", "SERVER")
     
     app.run(host=host, port=port, debug=debug, threaded=True)
+
+@app.route('/api/last_collection_date')
+def api_last_collection_date():
+    """Get the date of the last successful collection."""
+    try:
+        db = DatabaseManager()
+        
+        # Query for the most recent collection date
+        # Look for artifacts with source_type starting with 'perplexity' (automated collections)
+        with db.get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("""
+                SELECT MAX(collected_at) as last_collection_date
+                FROM artifacts 
+                WHERE source_type LIKE 'perplexity%'
+            """)
+            result = cursor.fetchone()
+        
+        if result and result[0]:
+            return jsonify({
+                'success': True,
+                'last_collection_date': result[0]
+            })
+        else:
+            return jsonify({
+                'success': True,
+                'last_collection_date': None
+            })
+            
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        })
+
+@app.route('/api/unprocessed_count', methods=['POST'])
+def api_unprocessed_count():
+    """Get count of unprocessed articles for selected algorithms."""
+    try:
+        data = request.get_json()
+        algorithms = data.get('algorithms', [])
+        
+        # Map frontend algorithm names to backend options
+        selected_algorithms = {
+            'quality_scoring': 'quality_scoring' in algorithms,
+            'categorization': 'ai_categorization' in algorithms,
+            'multicategory': 'multi_category' in algorithms,
+            'wisdom': 'wisdom_extraction' in algorithms,
+            'content_enhancement': 'content_enhancement' in algorithms,
+            'metadata_standardization': 'metadata_standardization' in algorithms
+        }
+        
+        # Import and use the reprocessor to get counts
+        from scripts.reprocess_all_entries import ComprehensiveReprocessor
+        reprocessor = ComprehensiveReprocessor()
+        
+        # Get total articles count
+        all_artifacts = reprocessor.db.get_artifacts()
+        total_articles = len(all_artifacts)
+        
+        # Get unprocessed count
+        unprocessed_count = reprocessor.get_unprocessed_count(selected_algorithms)
+        
+        return jsonify({
+            'success': True,
+            'unprocessed_count': unprocessed_count,
+            'total_articles': total_articles,
+            'selected_algorithms': list(algorithms)
+        })
+        
+    except Exception as e:
+        logger.error(f"Unprocessed count API error: {e}")
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/predictive_analytics')
+def predictive_analytics():
+    """Predictive Analytics Engine page."""
+    return render_template('predictive_analytics.html')
+
+@app.route('/api/predictive_analytics', methods=['POST'])
+def api_predictive_analytics():
+    """Handle predictive analytics requests using real ML models."""
+    try:
+        data = request.get_json()
+        prediction_type = data.get('prediction_type')
+        timeframe = data.get('timeframe')
+        
+        logger.info(f"Predictive analytics request: {prediction_type} for {timeframe}")
+        
+        # Import and initialize ML analytics
+        sys.path.append(str(Path(__file__).parent / 'scripts' / 'analysis'))
+        from ml_predictive_analytics import MLPredictiveAnalytics
+        
+        analytics = MLPredictiveAnalytics()
+        
+        # Load data if not already loaded
+        if not analytics.load_and_prepare_data():
+            return jsonify({
+                'status': 'error',
+                'message': 'Failed to load article data for analysis'
+            }), 500
+        
+        # Generate real predictions based on article data
+        if prediction_type == 'job_roles':
+            result = analytics.predict_job_automation(timeframe)
+            return jsonify({
+                'status': 'success',
+                'prediction_type': prediction_type,
+                'timeframe': timeframe,
+                'confidence': result['model_confidence'],
+                'data_points_analyzed': len(analytics.articles_data),
+                'predictions': result['predictions'],
+                'methodology': result['methodology'],
+                'data_source': result['data_source'],
+                'last_updated': datetime.now().isoformat()
+            })
+            
+        elif prediction_type == 'skills':
+            result = analytics.predict_skills_demand(timeframe)
+            return jsonify({
+                'status': 'success',
+                'prediction_type': prediction_type,
+                'timeframe': timeframe,
+                'confidence': result['model_confidence'],
+                'data_points_analyzed': len(analytics.articles_data),
+                'predictions': result['skill_trends'],
+                'methodology': result['methodology'],
+                'data_source': result['data_source'],
+                'last_updated': datetime.now().isoformat()
+            })
+            
+        elif prediction_type == 'industry':
+            result = analytics.predict_industry_adoption(timeframe)
+            return jsonify({
+                'status': 'success',
+                'prediction_type': prediction_type,
+                'timeframe': timeframe,
+                'confidence': result['model_confidence'],
+                'data_points_analyzed': len(analytics.articles_data),
+                'predictions': result['adoption_by_sector'],
+                'methodology': result['methodology'],
+                'data_source': result['data_source'],
+                'overall_trend': result['overall_trend'],
+                'last_updated': datetime.now().isoformat()
+            })
+            
+        elif prediction_type == 'technology':
+            result = analytics.predict_technology_impact(timeframe)
+            return jsonify({
+                'status': 'success',
+                'prediction_type': prediction_type,
+                'timeframe': timeframe,
+                'confidence': result['model_confidence'],
+                'data_points_analyzed': len(analytics.articles_data),
+                'predictions': result['technology_trends'],
+                'methodology': result['methodology'],
+                'data_source': result['data_source'],
+                'last_updated': datetime.now().isoformat()
+            })
+        
+        return jsonify({
+            'status': 'error',
+            'message': f'Invalid prediction type: {prediction_type}'
+        }), 400
+        
+    except Exception as e:
+        logger.error(f"Predictive analytics API error: {e}")
+        return jsonify({
+            'status': 'error',
+            'message': str(e)
+        }), 500
 
 if __name__ == "__main__":
     import argparse

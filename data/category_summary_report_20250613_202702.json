@@ -1,0 +1,306 @@
+{
+  "generated_at": "2025-06-13T20:27:02.729088",
+  "total_articles": 230,
+  "categories": {
+    "replace": {
+      "category": "replace",
+      "description": "AI REPLACE - Tasks completely automated by AI",
+      "article_count": 0,
+      "articles": [],
+      "themes": {},
+      "quality_stats": {}
+    },
+    "augment": {
+      "category": "augment",
+      "description": "AI AUGMENT - Human-AI collaboration enhancing capabilities",
+      "article_count": 0,
+      "articles": [],
+      "themes": {},
+      "quality_stats": {}
+    },
+    "new_tasks": {
+      "category": "new_tasks",
+      "description": "AI NEW TASKS - Jobs created due to AI technology",
+      "article_count": 0,
+      "articles": [],
+      "themes": {},
+      "quality_stats": {}
+    },
+    "human_only": {
+      "category": "human_only",
+      "description": "AI HUMAN-ONLY - Tasks requiring uniquely human expertise",
+      "article_count": 230,
+      "quality_stats": {
+        "average_quality": 0.8207681012358592,
+        "high_quality_count": 148,
+        "medium_quality_count": 82,
+        "low_quality_count": 0
+      },
+      "source_distribution": {
+        "student_intel_new_tasks": 14,
+        "student_intel_augment": 20,
+        "student_intel_replace": 18,
+        "manual_youtube": 6,
+        "manual_url": 4,
+        "perplexity_new_tasks": 24,
+        "targeted_replace": 21,
+        "validation_test": 5,
+        "targeted_human_only": 15,
+        "targeted_new_tasks": 14,
+        "targeted_augment": 3,
+        "manual_file": 2,
+        "perplexity_human_only": 37,
+        "perplexity_augment": 4,
+        "perplexity_replace": 9,
+        "perplexity": 34
+      },
+      "themes": {
+        "top_skills": [
+          [
+            "threat detection",
+            172
+          ],
+          [
+            "incident response",
+            138
+          ],
+          [
+            "compliance",
+            114
+          ],
+          [
+            "vulnerability",
+            81
+          ],
+          [
+            "security analyst",
+            64
+          ],
+          [
+            "risk assessment",
+            61
+          ],
+          [
+            "malware",
+            37
+          ],
+          [
+            "phishing",
+            36
+          ],
+          [
+            "cloud security",
+            18
+          ],
+          [
+            "ransomware",
+            13
+          ]
+        ],
+        "top_technologies": [
+          [
+            "automation",
+            148
+          ],
+          [
+            "machine learning",
+            121
+          ],
+          [
+            "artificial intelligence",
+            107
+          ],
+          [
+            "anomaly detection",
+            41
+          ],
+          [
+            "predictive analytics",
+            21
+          ],
+          [
+            "natural language processing",
+            19
+          ],
+          [
+            "deep learning",
+            14
+          ],
+          [
+            "neural networks",
+            5
+          ],
+          [
+            "behavioral analysis",
+            5
+          ],
+          [
+            "computer vision",
+            2
+          ]
+        ],
+        "article_count": 230
+      },
+      "top_articles": [
+        {
+          "title": "Will Cybersecurity be Replaced by AI? - UWF",
+          "quality_score": 0.9447826086956521,
+          "source_type": "perplexity",
+          "url": "https://onlinedegrees.uwf.edu/articles/cybersecurity-and-ai/",
+          "summary": "The impact of AI on cybersecurity operations and workforce has been significant in 2024, transforming how organizations approach security challenges while reshaping the professional landscape.\n\n## AI ..."
+        },
+        {
+          "title": "AI and Privacy: Shifting from 2024 to 2025 | CSA",
+          "quality_score": 0.9437068965517241,
+          "source_type": "perplexity_human_only",
+          "url": "https://cloudsecurityalliance.org/blog/2025/04/22/ai-and-privacy-2024-to-2025-embracing-the-future-of-global-legal-developments",
+          "key_insights": [],
+          "implications": [],
+          "recommendations": [],
+          "summary": "As we navigate through 2025, the relationship between AI and cybersecurity continues to evolve rapidly, creating both opportunities and challenges for organizations. While AI is transforming many aspe..."
+        },
+        {
+          "title": "Nvidia CEO predicts the death of coding — Jensen Huang says AI will do the work, so kids don't need to learn",
+          "quality_score": 0.9421739130434783,
+          "source_type": "manual_url",
+          "url": "https://www.techradar.com/pro/nvidia-ceo-predicts-the-death-of-coding-jensen-huang-says-ai-will-do-the-work-so-kids-dont-need-to-learn",
+          "key_insights": [],
+          "implications": [],
+          "recommendations": [],
+          "summary": "Pro Nvidia CEO predicts the death of coding — Jensen Huang says AI will do the work, so kids don't need to learn News By Benedict Collins published 26 February 2024 Jensen Huang believes coding langua..."
+        },
+        {
+          "title": "AI Jobs in 2025: Essential Insights for Software Engineers - IEEE Spectrum",
+          "quality_score": 0.932391304347826,
+          "source_type": "perplexity",
+          "url": "https://spectrum.ieee.org/ai-jobs-in-2025",
+          "summary": "## AI Security Engineer, MLSecOps, and AI Governance: Cybersecurity Job Market Analysis (2024)\n\n**Current Trends and Developments**\n\nThe cybersecurity workforce in 2024 is experiencing significant shi..."
+        },
+        {
+          "title": "Cybersecurity Strategy Scorecard | The Belfer Center for Science and International Affairs",
+          "quality_score": 0.9306818181818182,
+          "source_type": "perplexity_human_only",
+          "url": "https://www.belfercenter.org/research-analysis/cybersecurity-strategy-scorecard",
+          "key_insights": [],
+          "implications": [],
+          "recommendations": [],
+          "summary": "## Strategic Planning, Compliance, and Human Judgment in Cybersecurity: The Irreplaceable Role of Human Expertise (2024–2025)\n\n**Current Trends and Developments**\n\nArtificial intelligence (AI) is tran..."
+        },
+        {
+          "title": "LEAKED internal memo from CEO of Shopify Tobi Lutke",
+          "quality_score": 0.9273913043478261,
+          "source_type": "manual_url",
+          "url": "https://www.linkedin.com/posts/gisenberg_leaked-internal-memo-from-ceo-of-shopify-activity-7315008387585355776-pe4x",
+          "key_insights": [],
+          "implications": [],
+          "recommendations": [],
+          "summary": "Greg Isenberg Greg Isenberg is an Influencer CEO of Late Checkout, a portfolio of internet companies 1mo Edited Report this post LEAKED internal memo from CEO of Shopify Tobi Lutke around AI (see imag..."
+        },
+        {
+          "title": "Free Online Cybersecurity Workforce Certification Training - Center for Cybersecurity - Purdue University Northwest",
+          "quality_score": 0.9268382352941177,
+          "source_type": "perplexity_human_only",
+          "url": "https://www.pnw.edu/cybersecurity/cwct/",
+          "key_insights": [],
+          "implications": [],
+          "recommendations": [],
+          "summary": "## Strategic Planning, Compliance, and Human Judgment in Cybersecurity: What AI Cannot Replace (2024–2025)\n\n**Current Trends and Developments**\n\nAI is transforming cybersecurity by automating repetiti..."
+        },
+        {
+          "title": "SANS 2024 Detection & Response Survey: Transforming Cybersecurity Operations: AI, Automation, and Integration in Detection and Response | SANS Webcast",
+          "quality_score": 0.9265217391304348,
+          "source_type": "perplexity",
+          "url": "https://www.sans.org/webcasts/sans-2024-detection-response-survey-transforming-cybersecurity-operations-ai-automation-and-integration-in-detection-and-response/",
+          "summary": "## AI Automation in Vulnerability Assessment, Threat Detection, and Incident Response (2024)\n\n**Current Trends and Developments**\n\nArtificial intelligence (AI) is rapidly transforming the cybersecurit..."
+        },
+        {
+          "title": "Cybersecurity Jobs in Most Demand in 2025 - Cybersecurity Insiders",
+          "quality_score": 0.9213679245283019,
+          "source_type": "perplexity_new_tasks",
+          "url": "https://www.cybersecurity-insiders.com/cybersecurity-jobs-in-most-demand-in-2025/",
+          "key_insights": [],
+          "implications": [],
+          "recommendations": [],
+          "summary": "## AI’s Impact on Cybersecurity Workforce (2024–2025)\n\nAI is fundamentally reshaping the cybersecurity workforce, driving demand for new roles and specialized expertise as organizations accelerate dig..."
+        },
+        {
+          "title": "U.S. Artificial Intelligence Safety Institute | NIST",
+          "quality_score": 0.9120503597122303,
+          "source_type": "targeted_new_tasks",
+          "url": "https://www.nist.gov/aisi",
+          "key_insights": [],
+          "implications": [],
+          "recommendations": [],
+          "summary": "## AI-Driven Cybersecurity Workforce Trends (2024-2025)\n\n**Current Trends and Developments**\n\nThe rapid integration of artificial intelligence (AI) into cybersecurity is reshaping job roles, skill req..."
+        }
+      ],
+      "recent_articles": [
+        {
+          "title": "When Will the Tech Job Market Recover in 2025? - UnitedCode",
+          "quality_score": 0.8873913043478261,
+          "source_type": "student_intel_new_tasks",
+          "url": "https://unitedcode.net/when-will-the-tech-job-market-recover-2025-hiring-outlook-layoffs-and-policy-shifts/",
+          "key_insights": [],
+          "implications": [],
+          "recommendations": [],
+          "summary": "## Current Trends and Developments\n\nThe integration of AI into cybersecurity is transforming the industry by creating new roles, enhancing existing ones, and changing the required skill sets for profe..."
+        },
+        {
+          "title": "AI Engineering Specialization - Coursera",
+          "quality_score": 0.8919565217391304,
+          "source_type": "student_intel_new_tasks",
+          "url": "https://www.coursera.org/specializations/ai-engineering",
+          "key_insights": [],
+          "implications": [],
+          "recommendations": [],
+          "summary": "The AI and cybersecurity job market for 2024-2025 is rapidly evolving, with new roles emerging that blend AI expertise with cybersecurity skills, such as AI Security Engineer, MLSecOps (Machine Learni..."
+        },
+        {
+          "title": "IBM AI Engineering Professional Certificate - Coursera",
+          "quality_score": 0.8919565217391304,
+          "source_type": "student_intel_new_tasks",
+          "url": "https://www.coursera.org/professional-certificates/ai-engineer",
+          "key_insights": [],
+          "implications": [],
+          "recommendations": [],
+          "summary": "The AI and cybersecurity job market for 2024-2025 is rapidly evolving, with new roles emerging that blend AI expertise with cybersecurity skills, such as AI Security Engineer, MLSecOps (Machine Learni..."
+        },
+        {
+          "title": "Join Team Coursera",
+          "quality_score": 0.8669565217391304,
+          "source_type": "student_intel_new_tasks",
+          "url": "https://careers.coursera.com/jobs/search",
+          "key_insights": [],
+          "implications": [],
+          "recommendations": [],
+          "summary": "The AI and cybersecurity job market for 2024-2025 is rapidly evolving, with new roles emerging that blend AI expertise with cybersecurity skills, such as AI Security Engineer, MLSecOps (Machine Learni..."
+        },
+        {
+          "title": "AI Security | Coursera",
+          "quality_score": 0.8269565217391305,
+          "source_type": "student_intel_new_tasks",
+          "url": "https://www.coursera.org/learn/ai-security",
+          "key_insights": [],
+          "implications": [],
+          "recommendations": [],
+          "summary": "The AI and cybersecurity job market for 2024-2025 is rapidly evolving, with new roles emerging that blend AI expertise with cybersecurity skills, such as AI Security Engineer, MLSecOps (Machine Learni..."
+        }
+      ]
+    },
+    "unknown": {
+      "category": "unknown",
+      "description": "UNCATEGORIZED - Not yet classified",
+      "article_count": 0,
+      "articles": [],
+      "themes": {},
+      "quality_stats": {}
+    }
+  },
+  "overall_stats": {
+    "category_distribution": {
+      "human_only": 230
+    },
+    "total_quality_articles": 148,
+    "average_quality": 0.8207681012358592
+  }
+}

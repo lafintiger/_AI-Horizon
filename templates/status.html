@@ -1,43 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI-Horizon Status Dashboard</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+{% extends "base.html" %}
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            color: #333;
-        }
+{% block title %}AI-Horizon Status Dashboard{% endblock %}
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
+{% block extra_styles %}
+<style>
 
         .header {
             text-align: center;
-            color: white;
+            color: #000000;
             margin-bottom: 30px;
         }
 
         .header h1 {
             font-size: 2.5rem;
             margin-bottom: 10px;
+            color: #000000;
+            font-weight: 900;
+            text-shadow: 0 2px 4px rgba(255, 255, 255, 0.8), 0 1px 2px rgba(255, 255, 255, 0.6);
+            letter-spacing: 0.5px;
         }
 
         .header p {
             font-size: 1.1rem;
-            opacity: 0.9;
+            color: #000000;
+            font-weight: 600;
+            text-shadow: 0 2px 4px rgba(255, 255, 255, 0.8), 0 1px 2px rgba(255, 255, 255, 0.6);
+            letter-spacing: 0.3px;
         }
 
         .dashboard {
@@ -247,54 +235,7 @@
             font-size: 0.875rem;
         }
 
-        .nav-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 20px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            margin-bottom: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .nav-brand {
-            display: flex;
-            flex-direction: column;
-            color: white;
-        }
-
-        .nav-brand h2 {
-            margin: 0;
-            font-size: 1.5rem;
-        }
-
-        .nav-subtitle {
-            font-size: 0.875rem;
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 20px;
-        }
-
-        .nav-link {
-            color: white;
-            text-decoration: none;
-            font-weight: 600;
-            padding: 8px 12px;
-            border-radius: 6px;
-            transition: background 0.2s;
-        }
-
-        .nav-link:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .nav-link.active {
-            background: rgba(255, 255, 255, 0.2);
-        }
+        /* Navigation styles are now in base template */
 
         .cost-overview {
             display: flex;
@@ -339,37 +280,20 @@
             transition: all 0.2s;
         }
     </style>
-</head>
-<body>
+{% endblock %}
+
+{% block content %}
     <div class="connection-status" id="connectionStatus">Connecting...</div>
     
-    <div class="container">
-        <!-- Navigation Header -->
-        <nav class="nav-header">
-            <div class="nav-brand">
-                <h2>🤖 AI-Horizon</h2>
-                <span class="nav-subtitle">Cybersecurity Workforce Intelligence</span>
-            </div>
-            <div class="nav-links">
-                <a href="/" class="nav-link active">📊 Status Dashboard</a>
-                <a href="/reports" class="nav-link">📋 Reports</a>
-                <a href="/analysis" class="nav-link">🔍 Analysis</a>
-                <a href="/methodology" class="nav-link">📖 Methodology</a>
-                <a href="/cost-analysis" class="nav-link">💰 Cost Analysis</a>
-                <a href="/browse_entries" class="nav-link">📂 Browse Entries</a>
-                <a href="/manual-entry" class="nav-link">📝 Manual Entry</a>
-                <a href="/settings" class="nav-link">⚙️ Settings</a>
-            </div>
-        </nav>
-
+    <div class="main-content">
         <div class="header">
             <h1>AI-Horizon Status Dashboard</h1>
             <p>Real-time monitoring of article collection and processing operations</p>
         </div>
 
         <div class="controls">
-            <button class="btn btn-primary" id="startComprehensiveBtn" onclick="startComprehensiveCollection()">
-                🚀 Start Comprehensive Collection (80 Articles: 4 Categories)
+            <button class="btn btn-primary" id="startComprehensiveBtn" onclick="window.location.href='/collection_config'">
+                🚀 Configure & Start Collection
             </button>
             <button class="btn btn-primary" id="startTargetedBtn" onclick="startTargetedCollection()" style="background: #9f7aea;">
                 🎯 Start Targeted Collection (High-Value Sources)
@@ -385,44 +309,43 @@
 
         <div class="dashboard">
             <div class="card">
-                <h3>Current Operation</h3>
-                <div id="currentOperation">
-                    <span class="status-indicator idle" id="statusIndicator"></span>
-                    <span id="operationName">Idle</span>
-                </div>
-                <div id="operationProgress" style="display: none;">
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                <h3>📊 Database Statistics</h3>
+                <div class="stats-grid" id="statsGrid">
+                    <div class="stat-item">
+                        <div class="stat-number" id="totalArtifacts">--</div>
+                        <div class="stat-label">Total Articles</div>
                     </div>
-                    <div id="progressText">0 / 0</div>
-                </div>
-                <div id="operationStatus"></div>
-                
-                <!-- Collection Progress (only shown during active collection) -->
-                <div id="collectionProgress" style="margin-top: 20px; display: none;">
-                    <h4 style="margin-bottom: 15px; color: #4a5568;">Collection Progress</h4>
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="overallProgressFill" style="width: 0%"></div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="replaceCount">--</div>
+                        <div class="stat-label">Replace</div>
                     </div>
-                    <div id="overallProgressText" style="margin-bottom: 15px;">0 / 80 articles collected</div>
-                    
-                    <div id="categoryProgress">
-                        <div class="category-item" id="replaceProgress">
-                            <span class="category-name">Replace:</span>
-                            <span class="category-status">0/20 (Query 0/20)</span>
-                        </div>
-                        <div class="category-item" id="augmentProgress">
-                            <span class="category-name">Augment:</span>
-                            <span class="category-status">0/20 (Query 0/20)</span>
-                        </div>
-                        <div class="category-item" id="newTasksProgress">
-                            <span class="category-name">New Tasks:</span>
-                            <span class="category-status">0/20 (Query 0/20)</span>
-                        </div>
-                        <div class="category-item" id="humanOnlyProgress">
-                            <span class="category-name">Human Only:</span>
-                            <span class="category-status">0/20 (Query 0/20)</span>
-                        </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="augmentCount">--</div>
+                        <div class="stat-label">Augment</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="newTasksCount">--</div>
+                        <div class="stat-label">New Tasks</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="humanOnlyCount">--</div>
+                        <div class="stat-label">Human Only</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="avgQualityScore">--</div>
+                        <div class="stat-label">Avg Quality</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="highQualityCount">--</div>
+                        <div class="stat-label">High Quality</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="recentArtifacts">--</div>
+                        <div class="stat-label">Recent (30d)</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="wisdomExtracted">--</div>
+                        <div class="stat-label">Wisdom Extracted</div>
                     </div>
                 </div>
             </div>
@@ -467,27 +390,44 @@
             </div>
 
             <div class="card">
-                <h3>Database Statistics</h3>
-                <div class="stats-grid" id="statsGrid">
-                    <div class="stat-item">
-                        <div class="stat-number" id="totalArtifacts">--</div>
-                        <div class="stat-label">Total Articles</div>
+                <h3>⚙️ Current Operation</h3>
+                <div id="currentOperation">
+                    <span class="status-indicator idle" id="statusIndicator"></span>
+                    <span id="operationName">Idle</span>
+                </div>
+                <div id="operationProgress" style="display: none;">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill" style="width: 0%"></div>
                     </div>
-                    <div class="stat-item">
-                        <div class="stat-number" id="replaceCount">--</div>
-                        <div class="stat-label">Replace</div>
+                    <div id="progressText">0 / 0</div>
+                </div>
+                <div id="operationStatus"></div>
+                
+                <!-- Collection Progress (only shown during active collection) -->
+                <div id="collectionProgress" style="margin-top: 20px; display: none;">
+                    <h4 style="margin-bottom: 15px; color: #4a5568;">Collection Progress</h4>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="overallProgressFill" style="width: 0%"></div>
                     </div>
-                    <div class="stat-item">
-                        <div class="stat-number" id="augmentCount">--</div>
-                        <div class="stat-label">Augment</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number" id="newTasksCount">--</div>
-                        <div class="stat-label">New Tasks</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number" id="humanOnlyCount">--</div>
-                        <div class="stat-label">Human Only</div>
+                    <div id="overallProgressText" style="margin-bottom: 15px;">0 / 80 articles collected</div>
+                    
+                    <div id="categoryProgress">
+                        <div class="category-item" id="replaceProgress">
+                            <span class="category-name">Replace:</span>
+                            <span class="category-status">0/20 (Query 0/20)</span>
+                        </div>
+                        <div class="category-item" id="augmentProgress">
+                            <span class="category-name">Augment:</span>
+                            <span class="category-status">0/20 (Query 0/20)</span>
+                        </div>
+                        <div class="category-item" id="newTasksProgress">
+                            <span class="category-name">New Tasks:</span>
+                            <span class="category-status">0/20 (Query 0/20)</span>
+                        </div>
+                        <div class="category-item" id="humanOnlyProgress">
+                            <span class="category-name">Human Only:</span>
+                            <span class="category-status">0/20 (Query 0/20)</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -651,6 +591,17 @@
                 document.getElementById('augmentCount').textContent = categories.augment || '0';
                 document.getElementById('newTasksCount').textContent = categories.new_tasks || '0';
                 document.getElementById('humanOnlyCount').textContent = categories.human_only || '0';
+                
+                // Update enhanced statistics
+                const qualityStats = data.stats.quality_stats || {};
+                document.getElementById('avgQualityScore').textContent = 
+                    qualityStats.avg_quality_score ? qualityStats.avg_quality_score.toFixed(3) : '--';
+                document.getElementById('highQualityCount').textContent = 
+                    qualityStats.high_quality_count || '--';
+                document.getElementById('recentArtifacts').textContent = 
+                    data.stats.recent_artifacts_30d || '--';
+                document.getElementById('wisdomExtracted').textContent = 
+                    data.stats.wisdom_extracted_count || '--';
             }
 
             // Update logs
@@ -804,5 +755,8 @@
         // Auto-refresh stats every 30 seconds
         setInterval(refreshStats, 30000);
     </script>
-</body>
-</html> 
+    </div>
+{% endblock %}
+
+{% block scripts %}
+{% endblock %} 
