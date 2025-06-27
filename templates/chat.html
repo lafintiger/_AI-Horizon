@@ -382,11 +382,16 @@
     <div class="chat-main">
         <div class="chat-header">
             <h1 class="chat-title">🤖 AI-Horizon Chat</h1>
-            <select id="model-selector" class="model-selector">
-                {% for model in available_models %}
-                <option value="{{ model }}" {% if loop.first %}selected{% endif %}>{{ model }}</option>
-                {% endfor %}
-            </select>
+            <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 5px;">
+                <select id="model-selector" class="model-selector">
+                    {% for model in available_models %}
+                    <option value="{{ model }}" {% if loop.first %}selected{% endif %}>{{ model }}</option>
+                    {% endfor %}
+                </select>
+                <div id="model-info" style="font-size: 0.8rem; opacity: 0.8; text-align: right;">
+                    Loading model info...
+                </div>
+            </div>
         </div>
 
         <div class="chat-messages" id="chat-messages">
@@ -477,6 +482,7 @@ let isLoading = false;
 // Initialize chat interface
 document.addEventListener('DOMContentLoaded', function() {
     loadSuggestions();
+    loadModelInfo();
     setupEventListeners();
     autoResizeTextarea();
 });
@@ -486,6 +492,7 @@ function setupEventListeners() {
     const sendButton = document.getElementById('send-button');
     const confidenceSlider = document.getElementById('confidence-slider');
     const confidenceValue = document.getElementById('confidence-value');
+    const modelSelector = document.getElementById('model-selector');
 
     // Send message on button click
     sendButton.addEventListener('click', sendMessage);
@@ -497,6 +504,9 @@ function setupEventListeners() {
             sendMessage();
         }
     });
+
+    // Model selector change
+    modelSelector.addEventListener('change', updateModelInfo);
 
     // Update confidence value display
     confidenceSlider.addEventListener('input', function() {
@@ -562,7 +572,12 @@ async function sendMessage() {
     try {
         // Get selected filters
         const filters = getSelectedFilters();
-        const model = document.getElementById('model-selector').value;
+        let model = document.getElementById('model-selector').value;
+        
+        // Convert display name back to API format
+        if (model.startsWith('Local (default:')) {
+            model = 'local';
+        }
         
         // Send to API
         const response = await fetch('/api/chat', {
@@ -697,6 +712,103 @@ async function exportChat(format) {
         }
     } catch (error) {
         alert(`Export error: ${error.message}`);
+    }
+}
+
+let availableModels = [];
+
+async function loadModelInfo() {
+    try {
+        const response = await fetch('/api/chat/available_models');
+        const data = await response.json();
+        
+        if (data.available_models) {
+            availableModels = data.available_models;
+            updateModelSelector();
+            updateModelInfo();
+        }
+    } catch (error) {
+        console.error('Error loading model info:', error);
+        document.getElementById('model-info').textContent = 'Model info unavailable';
+    }
+}
+
+function updateModelSelector() {
+    const modelSelector = document.getElementById('model-selector');
+    const currentValue = modelSelector.value;
+    
+    // Clear existing options except external APIs
+    const externalModels = ['claude-3-5-sonnet-20241022', 'claude-3-haiku-20240307', 'gpt-4o', 'gpt-4o-mini', 'gpt-3.5-turbo'];
+    
+    // Rebuild selector with local models first
+    modelSelector.innerHTML = '';
+    
+    // Add "Auto (Default Local)" option
+    const autoOption = document.createElement('option');
+    autoOption.value = 'local';
+    autoOption.textContent = '🤖 Auto (Default Local)';
+    modelSelector.appendChild(autoOption);
+    
+    // Add specific local models by category
+    const categories = ['Fast & Lightweight', 'Balanced Performance', 'High-Performance', 'Specialized', 'Premium Large'];
+    
+    categories.forEach(category => {
+        const categoryModels = availableModels.filter(m => m.category === category);
+        if (categoryModels.length > 0) {
+            // Add category header
+            const optgroup = document.createElement('optgroup');
+            optgroup.label = `${category} Models`;
+            
+            categoryModels.forEach(model => {
+                const option = document.createElement('option');
+                option.value = `local:${model.model_id}`;
+                option.textContent = `${model.name} (${model.size})`;
+                optgroup.appendChild(option);
+            });
+            
+            modelSelector.appendChild(optgroup);
+        }
+    });
+    
+    // Add external APIs
+    const externalOptgroup = document.createElement('optgroup');
+    externalOptgroup.label = 'External APIs';
+    externalModels.forEach(model => {
+        const option = document.createElement('option');
+        option.value = model;
+        option.textContent = model.replace('-', ' ').toUpperCase();
+        externalOptgroup.appendChild(option);
+    });
+    modelSelector.appendChild(externalOptgroup);
+    
+    // Restore selection or default to first option
+    modelSelector.value = currentValue || 'local';
+}
+
+function updateModelInfo() {
+    const modelSelector = document.getElementById('model-selector');
+    const modelInfo = document.getElementById('model-info');
+    const selectedModel = modelSelector.value;
+    
+    if (selectedModel === 'local') {
+        // Find default model
+        const defaultModel = availableModels.find(m => m.default) || availableModels.find(m => m.model_id === 'mistral-nemo:12b-instruct-2407-q6_K');
+        if (defaultModel) {
+            modelInfo.innerHTML = `${defaultModel.name}<br>${defaultModel.description}`;
+        } else {
+            modelInfo.textContent = 'Default local model (Mistral Nemo 12B)';
+        }
+    } else if (selectedModel.startsWith('local:')) {
+        const modelId = selectedModel.substring(6);
+        const model = availableModels.find(m => m.model_id === modelId);
+        if (model) {
+            modelInfo.innerHTML = `${model.name} • ${model.params}<br>${model.description}`;
+        } else {
+            modelInfo.textContent = `Local: ${modelId}`;
+        }
+    } else {
+        // External API
+        modelInfo.textContent = `External API: ${selectedModel}`;
     }
 }
 </script>

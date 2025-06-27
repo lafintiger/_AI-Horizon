@@ -751,21 +751,41 @@ def chat():
         db = DatabaseManager()
         database_stats = db.get_database_stats()
         
-        # Define available models for the dropdown
-        available_models = [
-            'claude-3-5-sonnet-20241022',
-            'claude-3-haiku-20240307',
-            'gpt-4o',
-            'gpt-4o-mini',
-            'gpt-3.5-turbo'
-        ]
+        # Get available local models with info
+        try:
+            from aih.utils.ollama_client import OllamaClient
+            ollama_client = OllamaClient()
+            local_models = ollama_client.get_available_models()
+            
+            # Get default model name for display
+            default_model = ollama_client.models.get('chat', 'mistral-nemo:12b-instruct-2407-q6_K')
+            default_short_name = default_model.split(':')[0].replace('-', ' ').title()
+            
+            # Add local models first, then external APIs
+            available_models = [f'Local (default: {default_short_name})'] + [f"local:{model}" for model in local_models if model != 'nomic-embed-text:latest' and model != 'mxbai-embed-large:latest'] + [
+                'claude-3-5-sonnet-20241022',
+                'claude-3-haiku-20240307', 
+                'gpt-4o',
+                'gpt-4o-mini',
+                'gpt-3.5-turbo'
+            ]
+        except Exception as e:
+            logger.warning(f"Could not get local models: {e}")
+            available_models = [
+                'Local (default: Mistral Nemo)',
+                'claude-3-5-sonnet-20241022',
+                'claude-3-haiku-20240307',
+                'gpt-4o',
+                'gpt-4o-mini', 
+                'gpt-3.5-turbo'
+            ]
         
         return render_template('chat.html', 
                              database_stats=database_stats,
                              available_models=available_models)
     except Exception as e:
         # Fallback with empty stats if database fails
-        available_models = ['claude-3-5-sonnet-20241022']
+        available_models = ['Local (default: Mistral Nemo)']
         return render_template('chat.html', 
                              database_stats={'total_articles': 0},
                              available_models=available_models)
@@ -778,7 +798,7 @@ def browse_entries():
         category_filter = request.args.get('category')
         
         db = DatabaseManager()
-        all_artifacts = db.get_artifacts(limit=100)
+        all_artifacts = db.get_artifacts()  # Remove limit to show all artifacts
         
         # Calculate quality scores for all artifacts
         artifacts_with_scores = []
@@ -838,7 +858,7 @@ def browse_entries():
         
         # Count by category (always show full counts, not filtered)
         category_counts = {}
-        all_artifacts_for_counting = db.get_artifacts(limit=100)  # Get fresh data for counting
+        all_artifacts_for_counting = db.get_artifacts()  # Get fresh data for counting (no limit)
         for artifact in all_artifacts_for_counting:
             metadata = json.loads(artifact.get('raw_metadata', '{}'))
             
@@ -3105,13 +3125,16 @@ def api_chat():
         
         data = request.get_json()
         query = data.get('query', '').strip()
-        model = data.get('model', 'claude-3-5-sonnet-20241022')
+        model = data.get('model', 'local')
         filters = data.get('filters', {})
+        
+        logger.info(f"Chat API request: model='{model}', query='{query[:100]}...', filters={filters}")
         
         if not query:
             return jsonify({"error": "Query is required"}), 400
         
         # Initialize RAG system with selected model
+        logger.info(f"Initializing RAG system with model: {model}")
         rag_system = RAGChatSystem(model=model)
         
         # Apply filters if provided
@@ -3129,10 +3152,13 @@ def api_chat():
         context = rag_system.get_enhanced_context(query, filters=context_filters)
         
         # Generate response
+        logger.info(f"Generating response for query with {len(context)} characters of context")
         response = rag_system.generate_response(query, context)
+        logger.info(f"Response generated successfully (length: {len(response)} chars)")
         
         # Get source information for citations
         sources = rag_system.get_source_citations(query, context)
+        logger.info(f"Found {len(sources)} source citations")
         
         return jsonify({
             "response": response,
@@ -3154,7 +3180,7 @@ def api_chat_suggestions():
     try:
         from aih.chat.rag_chat import RAGChatSystem
         
-        rag_system = RAGChatSystem()
+        rag_system = RAGChatSystem(model="local")
         suggestions = rag_system.get_suggested_questions()
         
         return jsonify({"suggestions": suggestions})
@@ -3772,6 +3798,166 @@ def api_predictive_analytics():
             'status': 'error',
             'message': str(e)
         }), 500
+
+@app.route('/api/chat/available_models')
+def api_chat_available_models():
+    """Get available local models with descriptions."""
+    try:
+        from aih.utils.ollama_client import OllamaClient
+        
+        ollama_client = OllamaClient()
+        available_models = ollama_client.get_available_models()
+        
+        # Model categories with descriptions
+        model_info = {
+            # Fast & Lightweight (4-8GB)
+            'llama3:latest': {
+                'name': 'Llama 3 (8B)',
+                'category': 'Fast & Lightweight',
+                'size': '4.6GB',
+                'params': '8.0B',
+                'description': 'Fast, reliable model for quick responses',
+                'memory_gb': 4.6
+            },
+            'mistral:latest': {
+                'name': 'Mistral (7B)',
+                'category': 'Fast & Lightweight', 
+                'size': '4.1GB',
+                'params': '7.2B',
+                'description': 'Lightweight and efficient for basic queries',
+                'memory_gb': 4.1
+            },
+            'qwen3:latest': {
+                'name': 'Qwen 3 (8B)',
+                'category': 'Fast & Lightweight',
+                'size': '5.2GB', 
+                'params': '8.2B',
+                'description': 'Balanced performance and speed',
+                'memory_gb': 5.2
+            },
+            
+            # Balanced Performance (10-30GB)
+            'mistral-nemo:12b-instruct-2407-q6_K': {
+                'name': 'Mistral Nemo (12B) [DEFAULT]',
+                'category': 'Balanced Performance',
+                'size': '10GB',
+                'params': '12.2B', 
+                'description': 'Excellent for structured responses and analysis',
+                'memory_gb': 10.0,
+                'default': True
+            },
+            'devstral:24b-small-2505-fp16': {
+                'name': 'Devstral (24B)',
+                'category': 'Balanced Performance',
+                'size': '47GB',
+                'params': '23.6B',
+                'description': 'High-quality responses with good reasoning',
+                'memory_gb': 47.0
+            },
+            'mistral-small3.1:24b-instruct-2503-q8_0': {
+                'name': 'Mistral Small 3.1 (24B)',
+                'category': 'Balanced Performance',
+                'size': '26GB',
+                'params': '24.0B',
+                'description': 'Advanced reasoning and complex analysis',
+                'memory_gb': 26.0
+            },
+            'gemma3:27b-it-q8_0': {
+                'name': 'Gemma 3 (27B)',
+                'category': 'Balanced Performance',
+                'size': '29GB',
+                'params': '27.4B',
+                'description': 'Google model with strong instruction following',
+                'memory_gb': 29.0
+            },
+            
+            # High-Performance Large Models (32-70GB)
+            'qwen3:32b-q8_0': {
+                'name': 'Qwen 3 (32B)',
+                'category': 'High-Performance',
+                'size': '35GB',
+                'params': '32.8B',
+                'description': 'Superior reasoning and complex problem solving',
+                'memory_gb': 35.0
+            },
+            'aya-expanse:32b-fp16': {
+                'name': 'Aya Expanse (32B)',
+                'category': 'High-Performance',
+                'size': '64GB',
+                'params': '32.3B',
+                'description': 'Multilingual model with broad knowledge',
+                'memory_gb': 64.0
+            },
+            'qwen2.5-coder:32b-instruct-fp16': {
+                'name': 'Qwen 2.5 Coder (32B)',
+                'category': 'Specialized',
+                'size': '65GB',
+                'params': '32.8B',
+                'description': 'Specialized for code analysis and technical content',
+                'memory_gb': 65.0
+            },
+            
+            # Premium Large Models (45-70GB)
+            'llama3.3:70b-instruct-q5_K_M': {
+                'name': 'Llama 3.3 (70B)',
+                'category': 'Premium Large',
+                'size': '50GB',
+                'params': '70.6B',
+                'description': 'Top-tier analysis and complex reasoning',
+                'memory_gb': 50.0
+            },
+            'nemotron:70b-instruct-q5_K_M': {
+                'name': 'Nemotron (70B)',
+                'category': 'Premium Large',
+                'size': '50GB',
+                'params': '70.6B',
+                'description': 'NVIDIA model for advanced analysis',
+                'memory_gb': 50.0
+            },
+            'cogito:70b': {
+                'name': 'Cogito (70B)',
+                'category': 'Premium Large',
+                'size': '42GB',
+                'params': '70.6B',
+                'description': 'Optimized for reasoning and analysis',
+                'memory_gb': 42.0
+            },
+            'meditron:70b-q5_1': {
+                'name': 'Meditron (70B)',
+                'category': 'Specialized',
+                'size': '52GB',
+                'params': '69B',
+                'description': 'Medical/scientific domain expertise',
+                'memory_gb': 52.0
+            }
+        }
+        
+        # Filter to only include models that are actually available
+        available_model_info = []
+        for model in available_models:
+            if model in model_info:
+                info = model_info[model].copy()
+                info['model_id'] = model
+                available_model_info.append(info)
+        
+        # Sort by category and memory size
+        category_order = ['Fast & Lightweight', 'Balanced Performance', 'High-Performance', 'Specialized', 'Premium Large']
+        available_model_info.sort(key=lambda x: (category_order.index(x['category']), x['memory_gb']))
+        
+        # Get actual default model from OllamaClient
+        default_model = ollama_client.models.get('chat', 'mistral-nemo:12b-instruct-2407-q6_K')
+        default_short_name = default_model.split(':')[0].replace('-', ' ').title()
+        
+        return jsonify({
+            "available_models": available_model_info,
+            "total_count": len(available_model_info),
+            "default_model": default_model,
+            "default_short_name": default_short_name
+        })
+        
+    except Exception as e:
+        logger.error(f"Error getting available models: {e}")
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
     import argparse

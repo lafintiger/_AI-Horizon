@@ -1,0 +1,159 @@
+version: '3.8'
+
+services:
+  # ======================
+  # MAIN AI-HORIZON APP
+  # ======================
+  ai-horizon:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ai-horizon-app
+    ports:
+      - "5000:5000"
+    environment:
+      # Local model configuration
+      - USE_LOCAL_MODELS=true
+      - PERPLEXICA_URL=http://perplexica:3000
+      - OLLAMA_URL=http://ollama:11434
+      
+      # Model selections
+      - LOCAL_CLASSIFICATION_MODEL=llama3.1:8b
+      - LOCAL_WISDOM_MODEL=qwen2.5:14b
+      - LOCAL_CHAT_MODEL=deepseek-r1:7b
+      - LOCAL_ANALYSIS_MODEL=llama3.1:8b
+      
+      # Application settings
+      - DATABASE_URL=sqlite:///data/aih_database.db
+      - LOG_LEVEL=INFO
+      - DEBUG=false
+      
+      # Disable external APIs (all local)
+      - FALLBACK_TO_EXTERNAL_APIS=false
+      - PERPLEXITY_API_KEY=
+      - OPENAI_API_KEY=
+      - ANTHROPIC_API_KEY=
+      
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ai-horizon-data:/app/data/persistent
+    depends_on:
+      - perplexica
+      - ollama
+    restart: unless-stopped
+    networks:
+      - ai-horizon-network
+
+  # ======================
+  # PERPLEXICA (Local Search)
+  # ======================
+  # Note: Perplexica is complex and best run separately
+  # This is a placeholder - follow the setup at:
+  # https://github.com/ItzCrazyKns/Perplexica
+  perplexica:
+    image: itzcrazykns/perplexica:latest
+    container_name: ai-horizon-perplexica
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - OLLAMA_API_URL=http://ollama:11434
+      - GROQ_API_KEY=${GROQ_API_KEY:-}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+    volumes:
+      - perplexica-data:/app/data
+      - perplexica-config:/app/config
+    restart: unless-stopped
+    networks:
+      - ai-horizon-network
+    depends_on:
+      - ollama
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/search"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ======================
+  # OLLAMA (Local LLM)
+  # ======================
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ai-horizon-ollama
+    ports:
+      - "11434:11434"
+    environment:
+      - OLLAMA_HOST=0.0.0.0
+      - OLLAMA_ORIGINS=*
+    volumes:
+      - ollama-models:/root/.ollama
+    restart: unless-stopped
+    networks:
+      - ai-horizon-network
+    # Uncomment if you have NVIDIA GPU support
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ======================
+  # OLLAMA MODEL INIT (One-time setup)
+  # ======================
+  ollama-init:
+    image: ollama/ollama:latest
+    container_name: ai-horizon-ollama-init
+    depends_on:
+      - ollama
+    volumes:
+      - ollama-models:/root/.ollama
+    networks:
+      - ai-horizon-network
+    command: >
+      sh -c "
+        echo 'Waiting for Ollama to be ready...' &&
+        sleep 10 &&
+        ollama pull llama3.1:8b &&
+        ollama pull qwen2.5:14b &&
+        ollama pull deepseek-r1:7b &&
+        echo 'All models downloaded successfully!'
+      "
+    restart: "no"  # Only run once
+
+# ======================
+# VOLUMES
+# ======================
+volumes:
+  ai-horizon-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data
+  
+  perplexica-data:
+    driver: local
+  
+  perplexica-config:
+    driver: local
+  
+  ollama-models:
+    driver: local
+
+# ======================
+# NETWORKS
+# ======================
+networks:
+  ai-horizon-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16 

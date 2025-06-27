@@ -2,6 +2,7 @@
 Configuration management for AI-Horizon pipeline.
 
 Handles environment variables, API keys, and application settings.
+Enhanced with local model support for Ollama and Perplexical.
 """
 
 import os
@@ -17,10 +18,28 @@ load_dotenv("config.env")
 class Settings(BaseSettings):
     """Application settings loaded from environment variables."""
     
-    # API Keys
+    # === EXTERNAL API KEYS (Legacy) ===
     perplexity_api_key: Optional[str] = Field(None, env="PERPLEXITY_API_KEY")
     openai_api_key: Optional[str] = Field(None, env="OPENAI_API_KEY") 
     anthropic_api_key: Optional[str] = Field(None, env="ANTHROPIC_API_KEY")
+    
+    # === LOCAL MODEL CONFIGURATION ===
+    use_local_models: bool = Field(True, env="USE_LOCAL_MODELS")
+    
+    # Local service URLs
+    perplexica_url: str = Field("http://localhost:3000", env="PERPLEXICA_URL")
+    ollama_url: str = Field("http://localhost:11434", env="OLLAMA_URL")
+    
+    # Model selections for different tasks
+    local_classification_model: str = Field("llama3:latest", env="LOCAL_CLASSIFICATION_MODEL")
+    local_wisdom_model: str = Field("qwen3:32b-q8_0", env="LOCAL_WISDOM_MODEL")
+    local_chat_model: str = Field("mistral-nemo:12b-instruct-2407-q6_K", env="LOCAL_CHAT_MODEL")
+    local_analysis_model: str = Field("llama3.3:70b-instruct-q5_K_M", env="LOCAL_ANALYSIS_MODEL")
+    local_coding_model: str = Field("qwen2.5-coder:32b-instruct-fp16", env="LOCAL_CODING_MODEL")
+    local_heavy_analysis_model: str = Field("nemotron:70b-instruct-q5_K_M", env="LOCAL_HEAVY_ANALYSIS_MODEL")
+    
+    # Fallback behavior
+    fallback_to_external_apis: bool = Field(False, env="FALLBACK_TO_EXTERNAL_APIS")
     
     # Database
     database_url: str = Field("sqlite:///data/aih_database.db", env="DATABASE_URL")
@@ -37,9 +56,10 @@ class Settings(BaseSettings):
     default_confidence_threshold: float = Field(0.6, env="DEFAULT_CONFIDENCE_THRESHOLD")
     default_llm_model: str = Field("claude-3-5-sonnet-20241022", env="DEFAULT_LLM_MODEL")
     
-    # Rate Limiting
+    # Rate Limiting (adjusted for local models)
     max_api_calls_per_minute: int = Field(10, env="MAX_API_CALLS_PER_MINUTE")
     perplexity_requests_per_minute: int = Field(60, env="PERPLEXITY_REQUESTS_PER_MINUTE")
+    local_model_requests_per_minute: int = Field(1000, env="LOCAL_MODEL_REQUESTS_PER_MINUTE")
     
     # File Paths
     data_dir: str = Field("./data", env="DATA_DIR")
@@ -49,6 +69,7 @@ class Settings(BaseSettings):
     class Config:
         env_file = "config.env"
         case_sensitive = False
+        extra = "allow"  # Allow extra fields for new model configurations
 
 # Global settings instance
 settings = Settings()
@@ -70,6 +91,101 @@ def get_reports_path() -> Path:
     path = Path(settings.reports_dir)
     path.mkdir(parents=True, exist_ok=True)
     return path
+
+# === MODEL SELECTION LOGIC ===
+
+def get_preferred_connector():
+    """Get the preferred data collection connector based on configuration."""
+    if settings.use_local_models:
+        # Import here to avoid circular imports
+        try:
+            from aih.gather.searxng_direct import SearXNGDirectConnector
+            return SearXNGDirectConnector
+        except ImportError:
+            # Fallback to external if local not available
+            if settings.fallback_to_external_apis and settings.perplexity_api_key:
+                from aih.gather.perplexity import PerplexityConnector
+                return PerplexityConnector
+            else:
+                raise ImportError("Local models requested but SearXNG Direct not available")
+    else:
+        # Use external APIs
+        from aih.gather.perplexity import PerplexityConnector
+        return PerplexityConnector
+
+def get_preferred_llm_client():
+    """Get the preferred LLM client based on configuration."""
+    if settings.use_local_models:
+        try:
+            from aih.utils.ollama_client import OllamaClient
+            return OllamaClient()
+        except ImportError:
+            if settings.fallback_to_external_apis:
+                # Fallback to external APIs
+                if settings.anthropic_api_key:
+                    from anthropic import Anthropic
+                    return Anthropic(api_key=settings.anthropic_api_key)
+                elif settings.openai_api_key:
+                    from openai import OpenAI
+                    return OpenAI(api_key=settings.openai_api_key)
+            raise ImportError("Local models requested but not available")
+    else:
+        # Use external APIs based on default model
+        if "claude" in settings.default_llm_model.lower():
+            from anthropic import Anthropic
+            return Anthropic(api_key=settings.anthropic_api_key)
+        else:
+            from openai import OpenAI
+            return OpenAI(api_key=settings.openai_api_key)
+
+def validate_model_configuration() -> dict:
+    """Validate current model configuration and return status."""
+    status = {
+        "use_local_models": settings.use_local_models,
+        "perplexica_available": False,
+        "ollama_available": False,
+        "external_apis_available": False,
+        "ready": False,
+        "warnings": []
+    }
+    
+    if settings.use_local_models:
+        # Check local model availability
+        try:
+            import requests
+            # Test Perplexica
+            response = requests.get(f"{settings.perplexica_url}/api/search", timeout=5)
+            status["perplexica_available"] = response.status_code in [200, 400]  # 400 expected without query
+        except:
+            status["warnings"].append("Perplexica not accessible at configured URL")
+        
+        try:
+            # Test Ollama
+            response = requests.get(f"{settings.ollama_url}/api/tags", timeout=5)
+            status["ollama_available"] = response.status_code == 200
+        except:
+            status["warnings"].append("Ollama not accessible at configured URL")
+        
+        # For now, we only need Ollama for classification/wisdom/chat
+        # Perplexical is only needed for data collection
+        status["ready"] = status["ollama_available"]
+        
+        if not status["ready"] and settings.fallback_to_external_apis:
+            status["external_apis_available"] = bool(
+                settings.perplexity_api_key and 
+                (settings.openai_api_key or settings.anthropic_api_key)
+            )
+            status["ready"] = status["external_apis_available"]
+    
+    else:
+        # Check external API availability
+        status["external_apis_available"] = bool(
+            settings.perplexity_api_key and 
+            (settings.openai_api_key or settings.anthropic_api_key)
+        )
+        status["ready"] = status["external_apis_available"]
+    
+    return status
 
 # AI Impact Categories
 AI_IMPACT_CATEGORIES = {

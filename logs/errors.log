@@ -1220,3 +1220,236 @@
 2025-06-15 16:40:10 | ERROR    | scripts.manual_entry.manual_entry_processor:ai_categorize_content:214 - Failed to parse AI response as JSON
 2025-06-16 01:39:18 | ERROR    | __main__:view_entry:3411 - View entry error: 'metadata' is undefined
 2025-06-16 01:39:51 | ERROR    | __main__:view_entry:3411 - View entry error: 'metadata' is undefined
+2025-06-17 01:34:38 | ERROR    | aih.gather.perplexica:validate_config:57 - ❌ Perplexica API check failed: HTTP 405
+2025-06-17 01:34:38 | ERROR    | aih.gather.perplexica:collect:136 - ❌ Perplexica search failed: HTTP 400
+2025-06-17 01:34:38 | ERROR    | aih.gather.perplexica:collect:137 -    Response: {"message":"Missing focus mode or query"}
+2025-06-17 01:34:39 | ERROR    | aih.gather.perplexica:collect:136 - ❌ Perplexica search failed: HTTP 400
+2025-06-17 01:34:39 | ERROR    | aih.gather.perplexica:collect:137 -    Response: {"message":"Missing focus mode or query"}
+2025-06-17 01:34:40 | ERROR    | aih.gather.perplexica:collect:136 - ❌ Perplexica search failed: HTTP 400
+2025-06-17 01:34:40 | ERROR    | aih.gather.perplexica:collect:137 -    Response: {"message":"Missing focus mode or query"}
+2025-06-17 01:34:41 | ERROR    | aih.gather.perplexica:collect:136 - ❌ Perplexica search failed: HTTP 400
+2025-06-17 01:34:41 | ERROR    | aih.gather.perplexica:collect:137 -    Response: {"message":"Missing focus mode or query"}
+2025-06-17 01:34:42 | ERROR    | aih.gather.perplexica:collect:136 - ❌ Perplexica search failed: HTTP 400
+2025-06-17 01:34:42 | ERROR    | aih.gather.perplexica:collect:137 -    Response: {"message":"Missing focus mode or query"}
+2025-06-17 01:34:43 | ERROR    | aih.gather.perplexica:collect:136 - ❌ Perplexica search failed: HTTP 400
+2025-06-17 01:34:43 | ERROR    | aih.gather.perplexica:collect:137 -    Response: {"message":"Missing focus mode or query"}
+2025-06-17 10:20:47 | ERROR    | aih.gather.perplexica:validate_config:57 - ❌ Perplexica API check failed: HTTP 405
+2025-06-17 10:23:40 | ERROR    | aih.gather.perplexica:_parse_perplexica_results:270 - ❌ Error parsing Perplexica results: Artifact.__init__() got an unexpected keyword argument 'source'
+2025-06-17 10:45:59 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Error collecting from Perplexica: HTTPConnectionPool(host='localhost', port=3000): Read timed out. (read timeout=120)
+2025-06-17 10:45:59 | ERROR    | scripts.collection.collect_comprehensive:collect_comprehensive:278 - ❌ Error in query 2 for replace: HTTPConnectionPool(host='localhost', port=3000): Read timed out. (read timeout=120)
+2025-06-17 10:47:59 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Error collecting from Perplexica: HTTPConnectionPool(host='localhost', port=3000): Read timed out. (read timeout=120)
+2025-06-17 10:47:59 | ERROR    | scripts.collection.collect_comprehensive:collect_comprehensive:278 - ❌ Error in query 3 for replace: HTTPConnectionPool(host='localhost', port=3000): Read timed out. (read timeout=120)
+2025-06-17 10:49:59 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Error collecting from Perplexica: HTTPConnectionPool(host='localhost', port=3000): Read timed out. (read timeout=120)
+2025-06-17 10:49:59 | ERROR    | scripts.collection.collect_comprehensive:collect_comprehensive:278 - ❌ Error in query 4 for replace: HTTPConnectionPool(host='localhost', port=3000): Read timed out. (read timeout=120)
+2025-06-17 10:51:59 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Error collecting from Perplexica: HTTPConnectionPool(host='localhost', port=3000): Read timed out. (read timeout=120)
+2025-06-17 10:51:59 | ERROR    | scripts.collection.collect_comprehensive:collect_comprehensive:278 - ❌ Error in query 5 for replace: HTTPConnectionPool(host='localhost', port=3000): Read timed out. (read timeout=120)
+2025-06-17 10:53:59 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Error collecting from Perplexica: HTTPConnectionPool(host='localhost', port=3000): Read timed out. (read timeout=120)
+2025-06-17 10:53:59 | ERROR    | scripts.collection.collect_comprehensive:collect_comprehensive:278 - ❌ Error in query 6 for replace: HTTPConnectionPool(host='localhost', port=3000): Read timed out. (read timeout=120)
+2025-06-17 10:56:05 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Error collecting from Perplexica: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+2025-06-17 10:56:05 | ERROR    | scripts.collection.collect_comprehensive:collect_comprehensive:278 - ❌ Error in query 8 for replace: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+2025-06-17 10:56:05 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Error collecting from Perplexica: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+2025-06-17 10:56:05 | ERROR    | scripts.collection.collect_comprehensive:collect_comprehensive:278 - ❌ Error in query 9 for replace: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+2025-06-17 10:56:05 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Error collecting from Perplexica: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+2025-06-17 10:56:05 | ERROR    | scripts.collection.collect_comprehensive:collect_comprehensive:278 - ❌ Error in query 10 for replace: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+2025-06-17 10:56:05 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Error collecting from Perplexica: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+2025-06-17 10:56:05 | ERROR    | scripts.collection.collect_comprehensive:collect_comprehensive:278 - ❌ Error in query 11 for replace: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+2025-06-17 10:56:05 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Error collecting from Perplexica: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+2025-06-17 10:56:05 | ERROR    | scripts.collection.collect_comprehensive:collect_comprehensive:278 - ❌ Error in query 12 for replace: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+2025-06-17 10:56:05 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Error collecting from Perplexica: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+2025-06-17 10:56:05 | ERROR    | scripts.collection.collect_comprehensive:collect_comprehensive:278 - ❌ Error in query 13 for replace: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+2025-06-17 10:56:05 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Error collecting from Perplexica: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+2025-06-17 10:56:05 | ERROR    | scripts.collection.collect_comprehensive:collect_comprehensive:278 - ❌ Error in query 14 for replace: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+2025-06-17 10:56:05 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Error collecting from Perplexica: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+2025-06-17 10:56:05 | ERROR    | scripts.collection.collect_comprehensive:collect_comprehensive:278 - ❌ Error in query 15 for replace: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+2025-06-17 10:56:05 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Error collecting from Perplexica: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+2025-06-17 10:56:05 | ERROR    | scripts.collection.collect_comprehensive:collect_comprehensive:278 - ❌ Error in query 16 for replace: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+2025-06-17 10:56:05 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Error collecting from Perplexica: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+2025-06-17 10:56:05 | ERROR    | scripts.collection.collect_comprehensive:collect_comprehensive:278 - ❌ Error in query 17 for replace: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+2025-06-17 10:56:05 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Error collecting from Perplexica: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+2025-06-17 10:56:05 | ERROR    | scripts.collection.collect_comprehensive:collect_comprehensive:278 - ❌ Error in query 18 for replace: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+2025-06-17 10:56:05 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Error collecting from Perplexica: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+2025-06-17 10:56:05 | ERROR    | scripts.collection.collect_comprehensive:collect_comprehensive:278 - ❌ Error in query 19 for replace: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+2025-06-17 10:56:05 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Error collecting from Perplexica: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+2025-06-17 10:56:05 | ERROR    | scripts.collection.collect_comprehensive:collect_comprehensive:278 - ❌ Error in query 20 for replace: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+2025-06-17 10:58:09 | ERROR    | aih.gather.perplexica:collect:148 - ⏰ Perplexica request timed out after 30 seconds
+2025-06-17 10:58:41 | ERROR    | aih.gather.perplexica:collect:148 - ⏰ Perplexica request timed out after 30 seconds
+2025-06-17 10:59:13 | ERROR    | aih.gather.perplexica:collect:148 - ⏰ Perplexica request timed out after 30 seconds
+2025-06-17 10:59:45 | ERROR    | aih.gather.perplexica:collect:148 - ⏰ Perplexica request timed out after 30 seconds
+2025-06-17 11:00:17 | ERROR    | aih.gather.perplexica:collect:148 - ⏰ Perplexica request timed out after 30 seconds
+2025-06-17 11:00:49 | ERROR    | aih.gather.perplexica:collect:148 - ⏰ Perplexica request timed out after 30 seconds
+2025-06-17 11:01:21 | ERROR    | aih.gather.perplexica:collect:148 - ⏰ Perplexica request timed out after 30 seconds
+2025-06-17 11:01:53 | ERROR    | aih.gather.perplexica:collect:148 - ⏰ Perplexica request timed out after 30 seconds
+2025-06-17 11:02:25 | ERROR    | aih.gather.perplexica:collect:148 - ⏰ Perplexica request timed out after 30 seconds
+2025-06-17 11:02:57 | ERROR    | aih.gather.perplexica:collect:148 - ⏰ Perplexica request timed out after 30 seconds
+2025-06-17 11:03:29 | ERROR    | aih.gather.perplexica:collect:148 - ⏰ Perplexica request timed out after 30 seconds
+2025-06-17 11:04:01 | ERROR    | aih.gather.perplexica:collect:148 - ⏰ Perplexica request timed out after 30 seconds
+2025-06-17 11:04:33 | ERROR    | aih.gather.perplexica:collect:148 - ⏰ Perplexica request timed out after 30 seconds
+2025-06-17 11:13:08 | ERROR    | aih.gather.perplexica:collect:153 - 🔌 Cannot connect to Perplexica on http://localhost:3000
+2025-06-17 11:13:08 | ERROR    | aih.gather.perplexica:collect:154 -    Please ensure Perplexica is running on port 3000
+2025-06-17 11:13:44 | ERROR    | aih.gather.perplexica:collect:153 - 🔌 Cannot connect to Perplexica on http://localhost:3000
+2025-06-17 11:13:44 | ERROR    | aih.gather.perplexica:collect:154 -    Please ensure Perplexica is running on port 3000
+2025-06-17 11:14:19 | ERROR    | aih.gather.perplexica:collect:153 - 🔌 Cannot connect to Perplexica on http://localhost:3000
+2025-06-17 11:14:19 | ERROR    | aih.gather.perplexica:collect:154 -    Please ensure Perplexica is running on port 3000
+2025-06-17 11:14:54 | ERROR    | aih.gather.perplexica:collect:153 - 🔌 Cannot connect to Perplexica on http://localhost:3000
+2025-06-17 11:14:54 | ERROR    | aih.gather.perplexica:collect:154 -    Please ensure Perplexica is running on port 3000
+2025-06-17 11:15:30 | ERROR    | aih.gather.perplexica:collect:153 - 🔌 Cannot connect to Perplexica on http://localhost:3000
+2025-06-17 11:15:30 | ERROR    | aih.gather.perplexica:collect:154 -    Please ensure Perplexica is running on port 3000
+2025-06-17 11:16:05 | ERROR    | aih.gather.perplexica:collect:153 - 🔌 Cannot connect to Perplexica on http://localhost:3000
+2025-06-17 11:16:05 | ERROR    | aih.gather.perplexica:collect:154 -    Please ensure Perplexica is running on port 3000
+2025-06-17 11:16:41 | ERROR    | aih.gather.perplexica:collect:153 - 🔌 Cannot connect to Perplexica on http://localhost:3000
+2025-06-17 11:16:41 | ERROR    | aih.gather.perplexica:collect:154 -    Please ensure Perplexica is running on port 3000
+2025-06-17 11:23:21 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:23:21 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:23:23 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:23:23 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:23:25 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:23:25 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:23:27 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:23:27 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:23:29 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:23:29 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:23:31 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:23:31 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:23:33 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:23:33 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:23:35 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:23:35 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:23:38 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:23:38 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:23:40 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:23:40 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:23:42 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:23:42 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:23:44 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:23:44 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:23:46 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:23:46 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:23:48 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:23:48 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:23:50 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:23:50 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:23:55 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:23:55 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:23:57 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:23:57 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:23:59 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:23:59 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:24:01 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:24:01 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:24:03 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:24:03 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:24:05 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:24:05 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:24:07 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:24:07 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:24:09 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:24:09 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:24:11 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:24:11 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:24:13 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:24:13 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:24:15 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:24:15 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:24:17 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:24:17 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:24:19 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:24:19 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:24:21 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:24:21 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:24:23 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:24:23 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:24:25 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:24:25 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:24:27 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:24:27 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:24:29 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:24:29 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:24:31 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:24:31 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:24:33 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:24:33 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:24:38 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:24:38 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:24:40 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:24:40 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:24:42 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:24:42 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:24:44 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:24:44 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:24:46 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:24:46 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:24:48 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:24:48 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:24:50 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:24:50 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:24:52 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:24:52 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:24:54 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:24:54 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:24:56 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:24:56 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:24:58 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:24:58 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:25:00 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:25:00 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:25:02 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:25:02 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:25:04 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:25:04 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:25:06 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:25:06 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:25:08 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:25:08 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:25:10 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:25:10 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:25:12 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:25:12 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:25:14 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:25:14 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:25:16 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:25:16 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:25:21 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:25:21 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:25:23 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:25:23 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:25:25 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:25:25 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:25:27 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:25:27 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:25:29 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:25:29 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:25:31 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:25:31 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:25:33 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:25:33 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:25:35 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:25:35 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:25:37 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:25:37 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:25:39 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:25:39 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:25:41 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:25:41 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:25:43 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:25:43 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:25:46 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:25:46 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:25:48 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:25:48 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:25:50 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:25:50 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:25:52 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:25:52 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:25:54 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:25:54 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:25:56 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:25:56 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:25:58 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:25:58 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:26:00 | ERROR    | aih.gather.perplexica:collect:148 - ❌ Perplexica search failed: HTTP 500
+2025-06-17 11:26:00 | ERROR    | aih.gather.perplexica:collect:149 -    Response: {"message":"An error occurred while processing chat request"}
+2025-06-17 11:29:43 | ERROR    | aih.gather.searxng_direct:_generate_ai_analysis:217 - ❌ AI analysis generation failed: 'OllamaClient' object has no attribute 'generate_async'
+2025-06-17 11:34:16 | ERROR    | aih.gather.searxng_direct:_generate_ai_analysis:217 - ❌ AI analysis generation failed: 'OllamaClient' object has no attribute 'generate_async'
+2025-06-17 11:35:30 | ERROR    | aih.gather.searxng_direct:collect:147 - ❌ Error in SearXNG Direct collection: object OllamaResponse can't be used in 'await' expression
+2025-06-17 14:10:28 | ERROR    | aih.chat.rag_chat:generate_response:255 - Error generating response with local: 'OllamaClient' object has no attribute 'generate_response'
+2025-06-17 14:10:28 | ERROR    | aih.chat.rag_chat:generate_response:263 - Local model fallback failed: 'OllamaClient' object has no attribute 'generate_response'
