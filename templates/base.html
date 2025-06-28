@@ -239,6 +239,13 @@
                 </div>
             </a>
             
+            {% if user %}
+            <div class="user-info" style="display: flex; align-items: center; gap: 15px; margin-left: auto; color: white; font-size: 0.9rem;">
+                <span>👋 {{ user.name }} ({{ role_info.name }})</span>
+                <a href="/logout" style="color: #ff6b6b; text-decoration: none; font-weight: 600;">Logout</a>
+            </div>
+            {% endif %}
+            
             <div class="nav-links">
                 <!-- Data Gathering Section -->
                 <div class="nav-group">
@@ -325,6 +332,12 @@
                         <span class="nav-link-icon">💰</span>
                         Cost Analysis
                     </a>
+                    {% if user and user.role == 'admin' %}
+                    <a href="/user_management" class="nav-link {% if request.endpoint == 'user_management' %}active{% endif %}">
+                        <span class="nav-link-icon">👥</span>
+                        User Management
+                    </a>
+                    {% endif %}
                 </div>
             </div>
         </nav>

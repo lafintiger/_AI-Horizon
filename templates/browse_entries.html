@@ -366,8 +366,7 @@
             {% endif %}
         </div>
 
-        <div class="main-content">
-            <h2 style="color: #667eea; margin-bottom: 30px;">📚 Database Entries</h2>
+        <h2 style="color: #667eea; margin-bottom: 30px;">📚 Database Entries</h2>
             
             {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
@@ -443,13 +442,84 @@
                 </div>
             </div>
 
+            <!-- Search Bar -->
+            <div style="background: rgba(102, 126, 234, 0.1); border-radius: 15px; padding: 20px; margin-bottom: 30px;">
+                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                    <div style="flex: 1;">
+                        <input type="text" 
+                               id="search-input" 
+                               placeholder="🔍 Search articles by title, content, URL, or keywords..." 
+                               style="width: 100%; padding: 12px 16px; border: 2px solid #e1e5e9; border-radius: 10px; font-size: 16px; transition: border-color 0.3s; background: white;"
+                               onkeyup="performSearch()"
+                               onfocus="this.style.borderColor='#667eea'"
+                               onblur="this.style.borderColor='#e1e5e9'">
+                    </div>
+                    <button onclick="clearSearch()" 
+                            style="padding: 12px 20px; background: #6c757d; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s;"
+                            onmouseover="this.style.background='#5a6268'"
+                            onmouseout="this.style.background='#6c757d'">
+                        ✕ Clear
+                    </button>
+                </div>
+                
+                <!-- Search Results Summary -->
+                <div id="search-results-summary" style="display: none; color: #667eea; font-weight: 600; font-size: 14px;">
+                    <span id="search-results-text"></span>
+                </div>
+                
+                <!-- Advanced Search Options -->
+                <details style="margin-top: 10px;">
+                    <summary style="cursor: pointer; color: #667eea; font-weight: 600; font-size: 14px;">
+                        ⚙️ Advanced Search Options
+                    </summary>
+                    <div style="margin-top: 10px; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                        <div>
+                            <label style="display: block; font-weight: 600; color: #333; margin-bottom: 5px;">Search In:</label>
+                            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                                <label style="display: flex; align-items: center; gap: 5px; font-size: 14px;">
+                                    <input type="checkbox" id="search-title" checked> Title
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 5px; font-size: 14px;">
+                                    <input type="checkbox" id="search-content" checked> Content
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 5px; font-size: 14px;">
+                                    <input type="checkbox" id="search-url" checked> URL
+                                </label>
+                            </div>
+                        </div>
+                        <div>
+                            <label style="display: block; font-weight: 600; color: #333; margin-bottom: 5px;">Filter by Type:</label>
+                            <select id="filter-type" onchange="performSearch()" style="width: 100%; padding: 8px; border: 1px solid #e1e5e9; border-radius: 6px;">
+                                <option value="">All Types</option>
+                                <option value="manual_url">🔗 URLs</option>
+                                <option value="manual_file">📁 Files</option>
+                                <option value="manual_youtube">📺 Videos</option>
+                                <option value="perplexity">🤖 Perplexity</option>
+                                <option value="demo">🎯 Demo</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="display: block; font-weight: 600; color: #333; margin-bottom: 5px;">Filter by Quality:</label>
+                            <select id="filter-quality" onchange="performSearch()" style="width: 100%; padding: 8px; border: 1px solid #e1e5e9; border-radius: 6px;">
+                                <option value="">All Quality Levels</option>
+                                <option value="excellent">Excellent</option>
+                                <option value="good">Good</option>
+                                <option value="fair">Fair</option>
+                                <option value="poor">Poor</option>
+                                <option value="unknown">Unknown</option>
+                            </select>
+                        </div>
+                    </div>
+                </details>
+            </div>
+
             <!-- Tab Navigation -->
             <div class="section-tabs">
                 <div class="tab active" onclick="showTab('manual')">
-                    📝 Manual Entries ({{ total_manual }})
+                    📝 Manual Entries (<span id="manual-count">{{ total_manual }}</span>)
                 </div>
                 <div class="tab" onclick="showTab('automated')">
-                    🤖 Automated Collections ({{ total_automated }})
+                    🤖 Automated Collections (<span id="automated-count">{{ total_automated }}</span>)
                 </div>
                 {% if not category_filter %}
                     <div class="tab" onclick="showTab('categories')">
@@ -485,7 +555,7 @@
                         <tbody>
                             {% for entry in manual_entries %}
                                 {% set metadata = entry.raw_metadata|from_json if entry.raw_metadata else {} %}
-                                <tr>
+                                <tr data-source-type="{{ entry.source_type }}" data-quality="{{ entry.quality_grade.lower() if entry.quality_grade else 'unknown' }}">
                                     <td>
                                         <strong>{{ "%04d"|format(loop.index) }}</strong>
                                         <br><small style="color: #999; font-size: 0.7em;">{{ entry.id }}</small>
@@ -615,7 +685,7 @@
                             {% for entry in automated_entries %}
                                 {% set loop_index = loop.index0 %}
                                 {% set metadata = entry.raw_metadata|from_json if entry.raw_metadata else {} %}
-                                <tr{% if loop_index >= 50 %} style="display: none;"{% endif %}>
+                                <tr data-source-type="{{ entry.source_type }}" data-quality="{{ entry.quality_grade.lower() if entry.quality_grade else 'unknown' }}"{% if loop_index >= 50 %} style="display: none;"{% endif %}>
                                     <td>
                                         <strong>{{ "%04d"|format(loop.index) }}</strong>
                                         <br><small style="color: #999; font-size: 0.7em;">{{ entry.id }}</small>
@@ -941,66 +1011,170 @@
             // Navigate to filtered browse entries page for this category
             window.location.href = `/browse_entries?category=${category}`;
         }
-    </script>
-    </div>
-{% endblock %}
 
-{% block scripts %}
-<script>
-function showTab(tabName) {
-            // Hide all tab contents
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.remove('active');
-            });
+        // Search functionality
+        function performSearch() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            const searchTitle = document.getElementById('search-title').checked;
+            const searchContent = document.getElementById('search-content').checked;
+            const searchUrl = document.getElementById('search-url').checked;
+            const filterType = document.getElementById('filter-type').value;
+            const filterQuality = document.getElementById('filter-quality').value;
             
-            // Remove active class from all tabs
-            document.querySelectorAll('.tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
+            // Search in both manual and automated tables
+            searchInTable('manual-entries-table', searchTerm, searchTitle, searchContent, searchUrl, filterType, filterQuality);
+            searchInTable('automated-entries-table', searchTerm, searchTitle, searchContent, searchUrl, filterType, filterQuality);
             
-            // Show selected tab content
-            document.getElementById(tabName + '-tab').classList.add('active');
-            
-            // Add active class to clicked tab
-            event.target.classList.add('active');
+            updateSearchResultsSummary();
         }
         
-        function showAllAutomatedEntries() {
-            // Show all hidden rows
-            const hiddenRows = document.querySelectorAll('#automated-tab tbody tr[style*="display: none"]');
-            hiddenRows.forEach(row => {
-                row.style.display = '';
-            });
+        function searchInTable(tableId, searchTerm, searchTitle, searchContent, searchUrl, filterType, filterQuality) {
+            const table = document.getElementById(tableId);
+            if (!table) return;
             
-            // Update buttons
-            document.getElementById('showAllBtn').style.display = 'none';
-            document.getElementById('showLessBtn').style.display = 'inline-block';
+            const rows = table.querySelectorAll('tbody tr');
+            let visibleCount = 0;
             
-            // Update text
-            const statusText = document.querySelector('#automated-tab .pagination-status');
-            if (statusText) {
-                statusText.textContent = 'Showing all {{ automated_entries|length }} automated entries';
-            }
-        }
-        
-        function showFirstFiftyEntries() {
-            // Hide rows after the first 50
-            const allRows = document.querySelectorAll('#automated-tab tbody tr');
-            allRows.forEach((row, index) => {
-                if (index >= 50) {
+            rows.forEach(row => {
+                let shouldShow = true;
+                
+                // Get row data
+                const titleCell = row.cells[1];
+                const typeCell = row.cells[2];
+                const qualityCell = row.cells[4];
+                
+                const titleText = titleCell ? titleCell.textContent.toLowerCase() : '';
+                const typeText = typeCell ? typeCell.textContent.toLowerCase() : '';
+                const qualityText = qualityCell ? qualityCell.textContent.toLowerCase() : '';
+                
+                // Extract URL from title cell if it exists
+                const urlElement = titleCell ? titleCell.querySelector('small') : null;
+                const urlText = urlElement ? urlElement.textContent.toLowerCase() : '';
+                
+                // Apply search term filter
+                if (searchTerm) {
+                    let matchFound = false;
+                    
+                    if (searchTitle && titleText.includes(searchTerm)) {
+                        matchFound = true;
+                    }
+                    if (searchUrl && urlText.includes(searchTerm)) {
+                        matchFound = true;
+                    }
+                    if (searchContent) {
+                        // For content search, we'll search in the title as a proxy since content isn't displayed
+                        if (titleText.includes(searchTerm)) {
+                            matchFound = true;
+                        }
+                    }
+                    
+                    if (!matchFound) {
+                        shouldShow = false;
+                    }
+                }
+                
+                // Apply type filter
+                if (filterType && shouldShow) {
+                    const sourceType = row.dataset.sourceType || '';
+                    if (!sourceType.includes(filterType)) {
+                        shouldShow = false;
+                    }
+                }
+                
+                // Apply quality filter
+                if (filterQuality && shouldShow) {
+                    const qualityGrade = row.dataset.quality || '';
+                    if (qualityGrade !== filterQuality) {
+                        shouldShow = false;
+                    }
+                }
+                
+                // Show/hide row
+                if (shouldShow) {
+                    row.style.display = '';
+                    visibleCount++;
+                } else {
                     row.style.display = 'none';
                 }
             });
             
-            // Update buttons
-            document.getElementById('showAllBtn').style.display = 'inline-block';
-            document.getElementById('showLessBtn').style.display = 'none';
-            
-            // Update text
-            const statusText = document.querySelector('#automated-tab .pagination-status');
-            if (statusText) {
-                statusText.textContent = 'Showing first 50 of {{ automated_entries|length }} automated entries';
-            }
+            return visibleCount;
         }
-</script>
+        
+        function updateSearchResultsSummary() {
+            const searchTerm = document.getElementById('search-input').value;
+            const summaryDiv = document.getElementById('search-results-summary');
+            const summaryText = document.getElementById('search-results-text');
+            
+            if (searchTerm.trim() === '' && 
+                document.getElementById('filter-type').value === '' && 
+                document.getElementById('filter-quality').value === '') {
+                summaryDiv.style.display = 'none';
+                return;
+            }
+            
+            // Count visible rows
+            let manualVisible = 0;
+            let automatedVisible = 0;
+            
+            const manualTable = document.getElementById('manual-entries-table');
+            if (manualTable) {
+                manualVisible = manualTable.querySelectorAll('tbody tr:not([style*="display: none"])').length;
+            }
+            
+            const automatedTable = document.getElementById('automated-entries-table');
+            if (automatedTable) {
+                automatedVisible = automatedTable.querySelectorAll('tbody tr:not([style*="display: none"])').length;
+            }
+            
+            const totalVisible = manualVisible + automatedVisible;
+            
+            let message = `Found ${totalVisible} matching articles`;
+            if (searchTerm.trim()) {
+                message += ` for "${searchTerm}"`;
+            }
+            
+            summaryText.textContent = message;
+            summaryDiv.style.display = 'block';
+            
+            // Update tab counts
+            document.getElementById('manual-count').textContent = manualVisible;
+            document.getElementById('automated-count').textContent = automatedVisible;
+        }
+        
+        function clearSearch() {
+            // Clear search input
+            document.getElementById('search-input').value = '';
+            
+            // Reset filters
+            document.getElementById('filter-type').value = '';
+            document.getElementById('filter-quality').value = '';
+            
+            // Reset checkboxes
+            document.getElementById('search-title').checked = true;
+            document.getElementById('search-content').checked = true;
+            document.getElementById('search-url').checked = true;
+            
+            // Show all rows
+            const allRows = document.querySelectorAll('.entries-table tbody tr');
+            allRows.forEach(row => {
+                row.style.display = '';
+            });
+            
+            // Hide search summary
+            document.getElementById('search-results-summary').style.display = 'none';
+            
+            // Reset tab counts to original values
+            document.getElementById('manual-count').textContent = '{{ total_manual }}';
+            document.getElementById('automated-count').textContent = '{{ total_automated }}';
+        }
+        
+        // Add event listeners for advanced search options
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('search-title').addEventListener('change', performSearch);
+            document.getElementById('search-content').addEventListener('change', performSearch);
+            document.getElementById('search-url').addEventListener('change', performSearch);
+        });
+    </script>
+    </div>
 {% endblock %}

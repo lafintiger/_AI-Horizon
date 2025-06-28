@@ -323,6 +323,7 @@
                                                 <button class="btn btn-small btn-success" onclick="downloadReport('${report.path}', '${report.name}')">
                                                     💾 Download
                                                 </button>
+                                                <a href="/api/export_intelligence_pdf?title=${encodeURIComponent(report.name)}&id=${encodeURIComponent(report.path)}" class="btn btn-small btn-secondary" title="Export as PDF with disclaimer and NSF attribution">📄 Export PDF</a>
                                             </div>
                                         </div>
                                     `).join('') : '<p>No student reports available.</p>'}
@@ -347,6 +348,7 @@
                                                 <button class="btn btn-small btn-success" onclick="downloadReport('${report.path}', '${report.name}')">
                                                     💾 Download
                                                 </button>
+                                                <a href="/api/export_intelligence_pdf?title=${encodeURIComponent(report.name)}&id=${encodeURIComponent(report.path)}" class="btn btn-small btn-secondary" title="Export as PDF with disclaimer and NSF attribution">📄 Export PDF</a>
                                             </div>
                                         </div>
                                     `).join('') : '<p>No web reports available.</p>'}

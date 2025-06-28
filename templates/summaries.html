@@ -696,6 +696,14 @@
                         <div class="meta-value">${new Date(report.generated_at).toLocaleDateString()}</div>
                         <div class="meta-label">Generated</div>
                     </div>
+                    <div class="meta-item">
+                        <a href="/api/export_summary_pdf/${category}" 
+                           class="generate-all-btn" 
+                           style="font-size: 14px; padding: 8px 16px; margin: 0;"
+                           title="Export ${category.replace('_', ' ').toUpperCase()} summary as PDF with disclaimer and NSF attribution">
+                            📄 Export PDF
+                        </a>
+                    </div>
                 </div>
                 
                 <div class="executive-summary">

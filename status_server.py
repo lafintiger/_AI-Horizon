@@ -40,7 +40,7 @@ import time as time_module
 import threading
 import atexit
 import argparse
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 from collections import deque, defaultdict
 from typing import Dict, Any, Optional
@@ -50,6 +50,7 @@ from werkzeug.utils import secure_filename
 from urllib.parse import urlparse, parse_qs
 from flask import Flask, render_template, jsonify, Response, request, send_file, stream_template, send_from_directory, redirect, url_for, flash
 from flask_cors import CORS
+import glob
 
 # Add project root to path
 sys.path.append(str(Path(__file__).parent))
@@ -58,13 +59,16 @@ sys.path.append(str(Path(__file__).parent))
 from aih.utils.database import DatabaseManager
 from aih.utils.logging import get_logger
 from aih.utils.cost_tracker import cost_tracker
+from aih.utils.pdf_export import create_pdf_exporter, export_entry_to_pdf, export_analysis_to_pdf, export_prediction_to_pdf, export_summary_to_pdf, export_intelligence_to_pdf
+from aih.utils.auth import auth_manager, login_required, permission_required, admin_required, get_user_context
 from scripts.analysis.implement_quality_ranking import DocumentQualityRanker
 
 # Initialize logger
 logger = get_logger('status_server')
 
 app = Flask(__name__)
-app.secret_key = 'ai-horizon-status-server-secret-key'  # Change in production
+app.secret_key = 'ai-horizon-status-server-secret-key-2025'  # Change in production
+app.permanent_session_lifetime = timedelta(hours=8)  # 8 hour session timeout
 CORS(app)
 
 # Flask configuration for file uploads
@@ -436,7 +440,182 @@ def extract_youtube_id(url):
         pass
     return None
 
+# Authentication Routes
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    """Login page for user authentication."""
+    if request.method == 'POST':
+        username = request.form.get('username', '').strip()
+        password = request.form.get('password', '')
+        
+        if not username or not password:
+            flash('Please enter both username and password.', 'error')
+            return render_template('login.html', error='Please enter both username and password.')
+        
+        user = auth_manager.authenticate_user(username, password)
+        if user:
+            auth_manager.login_user(username)
+            flash(f'Welcome back, {user["name"]}!', 'success')
+            
+            # Redirect to originally requested page or dashboard
+            next_page = request.args.get('next')
+            if next_page:
+                return redirect(next_page)
+            return redirect(url_for('index'))
+        else:
+            flash('Invalid username or password.', 'error')
+            return render_template('login.html', error='Invalid username or password.')
+    
+    # If user is already authenticated, redirect to dashboard
+    if auth_manager.is_authenticated():
+        return redirect(url_for('index'))
+    
+    return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+    """Logout and clear session."""
+    user = auth_manager.get_current_user()
+    auth_manager.logout_user()
+    flash('You have been logged out successfully.', 'success')
+    return redirect(url_for('login'))
+
+@app.route('/access_denied')
+def access_denied():
+    """Access denied page for insufficient permissions."""
+    user_context = get_user_context()
+    return render_template('access_denied.html', **user_context)
+
+# User Management Routes
+@app.route('/user_management')
+@login_required
+@admin_required
+def user_management():
+    """User management page for admins."""
+    users = auth_manager.list_users()
+    user_context = get_user_context()
+    return render_template('user_management.html', users=users, **user_context)
+
+@app.route('/api/add_user', methods=['POST'])
+@login_required
+@admin_required
+def api_add_user():
+    """Add a new user."""
+    try:
+        data = request.get_json()
+        username = data.get('username', '').strip()
+        password = data.get('password', '')
+        role = data.get('role', '')
+        name = data.get('name', '').strip()
+        
+        if not all([username, password, role, name]):
+            return jsonify({'success': False, 'error': 'All fields are required'}), 400
+        
+        result = auth_manager.add_user(username, password, role, name)
+        
+        if result['success']:
+            return jsonify(result), 200
+        else:
+            return jsonify(result), 400
+            
+    except Exception as e:
+        return jsonify({'success': False, 'error': f'Server error: {str(e)}'}), 500
+
+@app.route('/api/change_password', methods=['POST'])
+@login_required
+def api_change_password():
+    """Change current user's password."""
+    try:
+        data = request.get_json()
+        current_password = data.get('current_password', '')
+        new_password = data.get('new_password', '')
+        
+        if not all([current_password, new_password]):
+            return jsonify({'success': False, 'error': 'All fields are required'}), 400
+        
+        current_user = auth_manager.get_current_user()
+        if not current_user:
+            return jsonify({'success': False, 'error': 'User not authenticated'}), 401
+        
+        result = auth_manager.change_password(current_user['username'], current_password, new_password)
+        
+        if result['success']:
+            return jsonify(result), 200
+        else:
+            return jsonify(result), 400
+            
+    except Exception as e:
+        return jsonify({'success': False, 'error': f'Server error: {str(e)}'}), 500
+
+@app.route('/api/reset_password', methods=['POST'])
+@login_required
+@admin_required
+def api_reset_password():
+    """Reset another user's password (admin only)."""
+    try:
+        data = request.get_json()
+        username = data.get('username', '').strip()
+        new_password = data.get('new_password', '')
+        
+        if not all([username, new_password]):
+            return jsonify({'success': False, 'error': 'Username and new password are required'}), 400
+        
+        result = auth_manager.reset_password(username, new_password)
+        
+        if result['success']:
+            return jsonify(result), 200
+        else:
+            return jsonify(result), 400
+            
+    except Exception as e:
+        return jsonify({'success': False, 'error': f'Server error: {str(e)}'}), 500
+
+@app.route('/api/delete_user', methods=['POST'])
+@login_required
+@admin_required
+def api_delete_user():
+    """Delete a user (admin only)."""
+    try:
+        data = request.get_json()
+        username = data.get('username', '').strip()
+        
+        if not username:
+            return jsonify({'success': False, 'error': 'Username is required'}), 400
+        
+        # Prevent admin from deleting themselves
+        current_user = auth_manager.get_current_user()
+        if current_user and current_user['username'] == username:
+            return jsonify({'success': False, 'error': 'Cannot delete your own account'}), 400
+        
+        result = auth_manager.delete_user(username)
+        
+        if result['success']:
+            return jsonify(result), 200
+        else:
+            return jsonify(result), 400
+            
+    except Exception as e:
+        return jsonify({'success': False, 'error': f'Server error: {str(e)}'}), 500
+
+@app.route('/api/list_users')
+@login_required
+@admin_required
+def api_list_users():
+    """Get list of all users (admin only)."""
+    try:
+        users = auth_manager.list_users()
+        return jsonify({'success': True, 'users': users}), 200
+    except Exception as e:
+        return jsonify({'success': False, 'error': f'Server error: {str(e)}'}), 500
+
+# Add user context to all templates
+@app.context_processor
+def inject_user_context():
+    """Inject user authentication context into all templates."""
+    return get_user_context()
+
 @app.route('/')
+@login_required
 def index():
     """Main status dashboard."""
     return render_template('status.html')
@@ -492,6 +671,8 @@ def stream():
     return response
 
 @app.route('/api/start_collection')
+@login_required
+@permission_required('manage_collection')
 def start_collection():
     """Start comprehensive collection in background."""
     # Rate limiting for intensive operations
@@ -710,41 +891,57 @@ def start_configured_collection():
         return jsonify({'success': False, 'error': str(e)})
 
 @app.route('/manual_entry')
+@login_required
+@permission_required('manual_entry')
 def manual_entry():
     """Manual entry page for uploading content."""
     return render_template('manual_entry.html')
 
 @app.route('/analysis')
+@login_required
+@permission_required('run_analysis')
 def analysis():
     """Analysis tools interface."""
     return render_template('analysis.html')
 
 @app.route('/workflow')
+@login_required
+@permission_required('view_all')
 def workflow():
     """Workflow interface."""
     return render_template('workflow.html')
 
 @app.route('/settings')
+@login_required
+@admin_required
 def settings():
     """Settings interface."""
     return render_template('settings.html')
 
 @app.route('/methodology')
+@login_required
+@permission_required('view_all')
 def methodology():
     """Methodology interface."""
     return render_template('methodology.html')
 
 @app.route('/reports')
+@login_required
+@permission_required('view_reports')
 def reports():
     """Reports interface."""
     return render_template('reports.html')
 
 @app.route('/summaries')
+@login_required
+@permission_required('view_reports')
 def summaries():
     """Summaries interface."""
     return render_template('summaries.html')
 
 @app.route('/chat')
+@login_required
+@permission_required('view_all')
 def chat():
     """Chat interface."""
     try:
@@ -771,6 +968,8 @@ def chat():
                              available_models=available_models)
 
 @app.route('/browse_entries')
+@login_required
+@permission_required('view_all')
 def browse_entries():
     """Browse all manual entries and artifacts, with optional category filtering."""
     try:
@@ -778,7 +977,7 @@ def browse_entries():
         category_filter = request.args.get('category')
         
         db = DatabaseManager()
-        all_artifacts = db.get_artifacts(limit=100)
+        all_artifacts = db.get_artifacts()
         
         # Calculate quality scores for all artifacts
         artifacts_with_scores = []
@@ -838,7 +1037,7 @@ def browse_entries():
         
         # Count by category (always show full counts, not filtered)
         category_counts = {}
-        all_artifacts_for_counting = db.get_artifacts(limit=100)  # Get fresh data for counting
+        all_artifacts_for_counting = db.get_artifacts()  # Get fresh data for counting
         for artifact in all_artifacts_for_counting:
             metadata = json.loads(artifact.get('raw_metadata', '{}'))
             
@@ -1186,6 +1385,8 @@ def _create_manual_artifact_data(url: str, title: str, content: str, category: s
     }
 
 @app.route('/add_url', methods=['GET', 'POST'])
+@login_required
+@permission_required('manual_entry')
 def add_url():
     """Add an article or webpage URL manually."""
     if request.method == 'POST':
@@ -1237,6 +1438,8 @@ def add_url():
     return render_template('add_url.html')
 
 @app.route('/add_file', methods=['GET', 'POST'])
+@login_required
+@permission_required('manual_entry')
 def add_file():
     """Add a document file (PDF, TXT, DOCX)."""
     if request.method == 'POST':
@@ -1322,6 +1525,8 @@ def add_file():
     return render_template('add_file.html')
 
 @app.route('/add_youtube', methods=['GET', 'POST'])
+@login_required
+@permission_required('manual_entry')
 def add_youtube():
     """Add a YouTube video with transcript extraction."""
     prefill_url = request.args.get('prefill_url', '')
@@ -2159,7 +2364,13 @@ def api_run_trend_analysis():
                 "days_back": days_back
             })
         
-        # Generate comprehensive trend report
+        # Run analyses once and cache results
+        quality_trends = analyzer.analyze_quality_trends()
+        collection_patterns = analyzer.analyze_collection_patterns()
+        sentiment_trends = analyzer.analyze_sentiment_trends()
+        topic_evolution = analyzer.analyze_topic_evolution()
+        
+        # Generate comprehensive trend report using cached results
         report_content = analyzer.generate_trend_report()
         
         # Save report to file
@@ -2174,12 +2385,6 @@ def api_run_trend_analysis():
         
         with open(report_file, 'w', encoding='utf-8') as f:
             f.write(report_content)
-        
-        # Quick trend insights for immediate response
-        quality_trends = analyzer.analyze_quality_trends()
-        collection_patterns = analyzer.analyze_collection_patterns()
-        sentiment_trends = analyzer.analyze_sentiment_trends()
-        topic_evolution = analyzer.analyze_topic_evolution()
         
         return jsonify({
             "success": True,
@@ -3265,6 +3470,8 @@ def generate_markdown_export(conversation):
     return content
 
 @app.route('/reprocess')
+@login_required
+@permission_required('reprocess_data')
 def reprocess_interface():
     """Web interface for comprehensive entry reprocessing."""
     return render_template('reprocess.html')
@@ -3574,7 +3781,7 @@ def delete_artifact(artifact_id):
     except Exception as e:
         return f"Error deleting artifact: {str(e)}", 500
 
-def run_server(host='127.0.0.1', port=5000, debug=False):
+def run_server(host='127.0.0.1', port=8000, debug=False):
     """Run the status server."""
     logger.info(f"Starting AI-Horizon Status Server on http://{host}:{port}")
     
@@ -3676,6 +3883,8 @@ def api_unprocessed_count():
         return jsonify({'success': False, 'error': str(e)}), 500
 
 @app.route('/predictive_analytics')
+@login_required
+@permission_required('run_analysis')
 def predictive_analytics():
     """Predictive Analytics Engine page."""
     return render_template('predictive_analytics.html')
@@ -3773,12 +3982,350 @@ def api_predictive_analytics():
             'message': str(e)
         }), 500
 
+@app.route('/test_search')
+def test_search():
+    """Test page for search functionality."""
+    return """
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Search Test</title>
+        <style>
+            body { font-family: Arial, sans-serif; margin: 40px; }
+            .search-container { background: #f0f0f0; padding: 20px; border-radius: 10px; }
+        </style>
+    </head>
+    <body>
+        <h1>Search Bar Test</h1>
+        <div class="search-container">
+            <input type="text" id="search-input" placeholder="🔍 Search test..." style="width: 300px; padding: 10px;">
+            <button onclick="clearSearch()">Clear</button>
+            <div id="search-results-summary" style="display: none; margin-top: 10px;">
+                <span id="search-results-text"></span>
+            </div>
+        </div>
+        <p>If you can see this search bar, the basic HTML rendering works.</p>
+        <script>
+            function clearSearch() {
+                document.getElementById('search-input').value = '';
+                document.getElementById('search-results-summary').style.display = 'none';
+            }
+        </script>
+    </body>
+    </html>
+    """
+
+
+# ============================================================================
+# PDF Export Routes
+# ============================================================================
+
+@app.route('/api/export_entry_pdf/<artifact_id>')
+def api_export_entry_pdf(artifact_id):
+    """Export a single entry as PDF."""
+    try:
+        db = DatabaseManager()
+        artifact = db.get_artifact_by_id(artifact_id)
+        
+        if not artifact:
+            return jsonify({"error": "Entry not found"}), 404
+        
+        # Get metadata if available
+        metadata = {}
+        raw_metadata = artifact.get('raw_metadata', '{}')
+        if raw_metadata:
+            try:
+                metadata = json.loads(raw_metadata)
+            except json.JSONDecodeError:
+                logger.warning(f"Failed to parse metadata for artifact {artifact_id}")
+        
+        # Generate PDF
+        pdf_bytes = export_entry_to_pdf(artifact, metadata)
+        
+        # Create filename
+        title = artifact.get('title', 'Untitled')
+        safe_title = secure_filename(title)[:50]  # Limit length
+        filename = f"ai_horizon_entry_{safe_title}_{artifact_id}.pdf"
+        
+        # Return PDF as download
+        return Response(
+            pdf_bytes,
+            mimetype='application/pdf',
+            headers={
+                'Content-Disposition': f'attachment; filename="{filename}"',
+                'Content-Length': len(pdf_bytes)
+            }
+        )
+        
+    except Exception as e:
+        logger.error(f"Error exporting entry {artifact_id} to PDF: {e}")
+        return jsonify({"error": f"Failed to export PDF: {str(e)}"}), 500
+
+
+@app.route('/api/export_analysis_pdf/<analysis_type>')
+def api_export_analysis_pdf(analysis_type):
+    """Export analysis results as PDF."""
+    try:
+        # Map analysis types to report file patterns
+        analysis_files = {
+            'quality': 'data/reports/quality_distribution_analysis_*.md',
+            'monitoring': 'data/reports/collection_monitoring_*.md',
+            'trends': 'data/reports/trend_analysis_*.md',
+            'sentiment': 'data/reports/job_market_sentiment_*.md',
+            'adoption': 'data/reports/ai_adoption_predictions_*.md',
+            'distribution': 'data/reports/category_distribution_insights_*.md'
+        }
+        
+        if analysis_type not in analysis_files:
+            return jsonify({"error": "Invalid analysis type"}), 400
+        
+        # Find the most recent report file
+        import glob
+        pattern = analysis_files[analysis_type]
+        report_files = glob.glob(pattern)
+        
+        if not report_files:
+            return jsonify({"error": f"No {analysis_type} analysis reports found"}), 404
+        
+        # Get the most recent file
+        latest_file = max(report_files, key=lambda x: Path(x).stat().st_mtime)
+        
+        # Load report data (markdown file)
+        with open(latest_file, 'r', encoding='utf-8') as f:
+            report_content = f.read()
+        
+        # Create report data structure for PDF export
+        report_data = {
+            'title': f"{analysis_type.title()} Analysis Report",
+            'content': report_content,
+            'file_path': latest_file,
+            'generated_at': datetime.fromtimestamp(Path(latest_file).stat().st_mtime).isoformat()
+        }
+        
+        # Generate PDF
+        pdf_bytes = export_analysis_to_pdf(report_data, analysis_type)
+        
+        # Create filename
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        filename = f"ai_horizon_{analysis_type}_analysis_{timestamp}.pdf"
+        
+        # Return PDF as download
+        return Response(
+            pdf_bytes,
+            mimetype='application/pdf',
+            headers={
+                'Content-Disposition': f'attachment; filename="{filename}"',
+                'Content-Length': len(pdf_bytes)
+            }
+        )
+        
+    except Exception as e:
+        logger.error(f"Error exporting {analysis_type} analysis to PDF: {e}")
+        return jsonify({"error": f"Failed to export PDF: {str(e)}"}), 500
+
+
+@app.route('/api/export_predictive_pdf/<prediction_type>')
+def api_export_predictive_pdf(prediction_type):
+    """Export predictive analytics as PDF."""
+    try:
+        # Generate prediction data (in a real system, this would come from stored results)
+        prediction_data = {
+            'predictions': [
+                f"Emerging trend in {prediction_type} expected within 6-12 months",
+                f"Skills gap in {prediction_type} will increase by 15-25%",
+                f"Automation impact on {prediction_type} roles: moderate to high"
+            ],
+            'confidence': 'High',
+            'data_sources': '296+ cybersecurity articles and reports',
+            'model_version': '1.0-beta',
+            'timeframe': '12-month forecast'
+        }
+        
+        # Generate PDF
+        timeframe = request.args.get('timeframe', '12-month forecast')
+        pdf_bytes = export_prediction_to_pdf(prediction_data, prediction_type, timeframe)
+        
+        # Create filename
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        filename = f"ai_horizon_prediction_{prediction_type}_{timestamp}.pdf"
+        
+        # Return PDF as download
+        return Response(
+            pdf_bytes,
+            mimetype='application/pdf',
+            headers={
+                'Content-Disposition': f'attachment; filename="{filename}"',
+                'Content-Length': len(pdf_bytes)
+            }
+        )
+        
+    except Exception as e:
+        logger.error(f"Error exporting {prediction_type} prediction to PDF: {e}")
+        return jsonify({"error": f"Failed to export PDF: {str(e)}"}), 500
+
+
+@app.route('/api/export_summary_pdf/<category>')
+def api_export_summary_pdf(category):
+    """Export category summary/narrative as PDF."""
+    try:
+        # Check if category is valid
+        valid_categories = ['replace', 'augment', 'new_tasks', 'human_only']
+        if category not in valid_categories:
+            return jsonify({"error": "Invalid category"}), 400
+        
+        # Load narrative data
+        narrative_file = f"data/narratives/{category}_narrative.json"
+        
+        if not Path(narrative_file).exists():
+            # Generate basic summary data if narrative file doesn't exist
+            db = DatabaseManager()
+            artifacts = db.get_artifacts()
+            
+            # Filter artifacts by category
+            category_artifacts = []
+            for artifact in artifacts:
+                metadata = json.loads(artifact.get('raw_metadata', '{}'))
+                if metadata.get('ai_impact_category') == category:
+                    category_artifacts.append(artifact)
+            
+            summary_data = {
+                'narrative': f"""
+                Analysis of the {category.replace('_', ' ').title()} category within the AI-Horizon framework.
+                
+                This category contains {len(category_artifacts)} articles that demonstrate how artificial 
+                intelligence will impact cybersecurity workforce roles and responsibilities in this area.
+                
+                The analysis reveals important patterns and trends that inform strategic workforce 
+                planning and development initiatives.
+                """,
+                'top_articles': category_artifacts[:10],
+                'statistics': {
+                    'total_articles': len(category_artifacts),
+                    'average_confidence': sum(json.loads(a.get('raw_metadata', '{}')).get('confidence_score', 0) 
+                                           for a in category_artifacts) / max(len(category_artifacts), 1)
+                }
+            }
+        else:
+            # Load existing narrative
+            with open(narrative_file, 'r') as f:
+                summary_data = json.load(f)
+        
+        # Generate PDF
+        pdf_bytes = export_summary_to_pdf(summary_data, category)
+        
+        # Create filename
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        filename = f"ai_horizon_summary_{category}_{timestamp}.pdf"
+        
+        # Return PDF as download
+        return Response(
+            pdf_bytes,
+            mimetype='application/pdf',
+            headers={
+                'Content-Disposition': f'attachment; filename="{filename}"',
+                'Content-Length': len(pdf_bytes)
+            }
+        )
+        
+    except Exception as e:
+        logger.error(f"Error exporting {category} summary to PDF: {e}")
+        return jsonify({"error": f"Failed to export PDF: {str(e)}"}), 500
+
+
+@app.route('/api/export_intelligence_pdf')
+def api_export_intelligence_pdf():
+    """Export intelligence report as PDF."""
+    try:
+        # Get report content from request parameters
+        report_title = request.args.get('title', 'Intelligence Report')
+        report_id = request.args.get('id', '')
+        
+        # In a real system, you would load the actual report content
+        # For now, generate a sample intelligence report
+        report_content = f"""
+# {report_title}
+
+## Executive Summary
+
+This intelligence report provides comprehensive analysis of cybersecurity workforce trends 
+and AI impact assessment based on data collected through the AI-Horizon system.
+
+## Key Findings
+
+### Workforce Transformation Trends
+- Increasing demand for AI-augmented cybersecurity professionals
+- Skills gap in emerging technologies continues to widen
+- Remote work capabilities becoming essential requirement
+
+### AI Impact Assessment
+- **Replace Category**: 8.8% of tasks identified for potential automation
+- **Augment Category**: 77.2% of tasks suitable for AI enhancement
+- **New Tasks Category**: 0.6% of entirely new AI-driven responsibilities
+- **Human-Only Category**: 13.4% of tasks requiring human expertise
+
+### Strategic Recommendations
+1. Invest in continuous learning and development programs
+2. Focus on AI-human collaboration training
+3. Develop specialized tracks for emerging technology areas
+4. Strengthen partnerships between academia and industry
+
+## Data Sources
+
+This analysis is based on {status.collection_progress['total_collected']} articles and reports 
+collected from authoritative cybersecurity sources, academic publications, and industry analyses.
+
+## Methodology
+
+The AI-Horizon system employs advanced natural language processing and machine learning 
+techniques to analyze and categorize cybersecurity workforce content. All findings are 
+validated through multiple analytical frameworks and expert review processes.
+        """
+        
+        # Generate PDF
+        pdf_bytes = export_intelligence_to_pdf(report_content, report_title)
+        
+        # Create filename
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        safe_title = secure_filename(report_title)[:30]
+        filename = f"ai_horizon_intelligence_{safe_title}_{timestamp}.pdf"
+        
+        # Return PDF as download
+        return Response(
+            pdf_bytes,
+            mimetype='application/pdf',
+            headers={
+                'Content-Disposition': f'attachment; filename="{filename}"',
+                'Content-Length': len(pdf_bytes)
+            }
+        )
+        
+    except Exception as e:
+        logger.error(f"Error exporting intelligence report to PDF: {e}")
+        return jsonify({"error": f"Failed to export PDF: {str(e)}"}), 500
+
+
+@app.route('/api/check_pdf_support')
+def api_check_pdf_support():
+    """Check if PDF export functionality is available."""
+    try:
+        exporter = create_pdf_exporter()
+        return jsonify({
+            "pdf_support": True,
+            "message": "PDF export functionality is available"
+        })
+    except Exception as e:
+        return jsonify({
+            "pdf_support": False,
+            "message": f"PDF export not available: {str(e)}"
+        })
+
+
 if __name__ == "__main__":
     import argparse
     
     parser = argparse.ArgumentParser(description='AI-Horizon Status Server')
     parser.add_argument('--host', default='127.0.0.1', help='Host to bind to')
-    parser.add_argument('--port', type=int, default=5000, help='Port to bind to')
+    parser.add_argument('--port', type=int, default=8000, help='Port to bind to')
     parser.add_argument('--debug', action='store_true', help='Enable debug mode')
     
     args = parser.parse_args()

@@ -1885,3 +1885,138 @@ Artifici...
 
 A...
 2025-06-16 13:45:01 | perplexity | 828 | 0.0005 | API call: strategic planning compliance human judgment cybersecurity tasks AI cannot replace after:2025-06-09 ... -> After June 2025, artificial intelligence (AI) will continue to transform the cybersecurity workforce...
+2025-06-27 22:22:24 | anthropic | 1547 | 0.0124 | API call: You are an AI research analyst tasked with classifying content about AI's impact on cybersecurity wo... -> CLASSIFICATION_1:
+CATEGORY: human_only
+CONFIDENCE: 0.85
+DCWF_ROLES: 
+- Cyber Policy and Strategy Pla...
+2025-06-27 22:22:39 | anthropic | 1478 | 0.0118 | API call: You are an AI research analyst tasked with classifying content about AI's impact on cybersecurity wo... -> CLASSIFICATION_1:
+CATEGORY: human_only
+CONFIDENCE: 0.9
+DCWF_ROLES: 
+- Cyber Policy and Strategy Plan...
+2025-06-27 22:22:54 | anthropic | 1504 | 0.0120 | API call: You are an AI research analyst tasked with classifying content about AI's impact on cybersecurity wo... -> CLASSIFICATION_1:
+CATEGORY: human_only
+CONFIDENCE: 0.9
+DCWF_ROLES: 
+- Cyber Policy and Strategy Plan...
+2025-06-27 22:23:11 | anthropic | 1459 | 0.0117 | API call: You are an AI research analyst tasked with classifying content about AI's impact on cybersecurity wo... -> CLASSIFICATION_1:
+CATEGORY: human_only
+CONFIDENCE: 0.9
+DCWF_ROLES: 
+- Cyber Policy and Strategy Plan...
+2025-06-27 22:23:26 | anthropic | 1467 | 0.0117 | API call: You are an AI research analyst tasked with classifying content about AI's impact on cybersecurity wo... -> CLASSIFICATION_1:
+CATEGORY: human_only
+CONFIDENCE: 0.9
+DCWF_ROLES: 
+- Strategic Planning, Policy, an...
+2025-06-27 22:23:43 | anthropic | 1484 | 0.0119 | API call: You are an AI research analyst tasked with classifying content about AI's impact on cybersecurity wo... -> CLASSIFICATION_1:
+CATEGORY: human_only
+CONFIDENCE: 0.9
+DCWF_ROLES: 
+- Cyber Policy and Strategy Plan...
+2025-06-27 22:23:59 | anthropic | 1453 | 0.0116 | API call: You are an AI research analyst tasked with classifying content about AI's impact on cybersecurity wo... -> CLASSIFICATION_1:
+CATEGORY: human_only
+CONFIDENCE: 0.9
+DCWF_ROLES: 
+- Cyber Defense Analyst (PR-CDA)...
+2025-06-27 22:24:15 | anthropic | 1469 | 0.0118 | API call: You are an AI research analyst tasked with classifying content about AI's impact on cybersecurity wo... -> CLASSIFICATION_1:
+CATEGORY: human_only
+CONFIDENCE: 0.9
+DCWF_ROLES: 
+- Cyber Defense Analyst (511)
+- ...
+2025-06-27 22:24:32 | anthropic | 1539 | 0.0123 | API call: You are an AI research analyst tasked with classifying content about AI's impact on cybersecurity wo... -> CLASSIFICATION_1:
+CATEGORY: human_only
+CONFIDENCE: 0.9
+DCWF_ROLES: 
+- Cyber Policy and Strategy Plan...
+2025-06-27 22:24:49 | anthropic | 1482 | 0.0119 | API call: You are an AI research analyst tasked with classifying content about AI's impact on cybersecurity wo... -> CLASSIFICATION_1:
+CATEGORY: human_only
+CONFIDENCE: 0.9
+DCWF_ROLES: 
+- Cyber Policy and Strategy Plan...
+2025-06-27 22:25:04 | anthropic | 1463 | 0.0117 | API call: You are an AI research analyst tasked with classifying content about AI's impact on cybersecurity wo... -> CLASSIFICATION_1:
+CATEGORY: human_only
+CONFIDENCE: 0.9
+DCWF_ROLES: 
+- Cyber Policy and Strategy Plan...
+2025-06-27 22:25:20 | anthropic | 1467 | 0.0117 | API call: You are an AI research analyst tasked with classifying content about AI's impact on cybersecurity wo... -> CLASSIFICATION_1:
+CATEGORY: human_only
+CONFIDENCE: 0.85
+DCWF_ROLES: 
+- Cyber Policy and Strategy Pla...
+2025-06-27 22:25:37 | anthropic | 1470 | 0.0118 | API call: You are an AI research analyst tasked with classifying content about AI's impact on cybersecurity wo... -> CLASSIFICATION_1:
+CATEGORY: human_only
+CONFIDENCE: 0.85
+DCWF_ROLES: 
+- Cyber Defense Analyst (511)
+-...
+2025-06-27 22:29:38 | anthropic | 1480 | 0.0118 | API call: You are an AI research analyst tasked with classifying content about AI's impact on cybersecurity wo... -> CLASSIFICATION_1:
+CATEGORY: human_only
+CONFIDENCE: 0.85
+DCWF_ROLES: 
+- Cyber Policy and Strategy Pla...
+2025-06-27 22:29:48 | anthropic | 1525 | 0.0122 | API call: You are an AI research analyst tasked with classifying content about AI's impact on cybersecurity wo... -> CLASSIFICATION_1:
+CATEGORY: human_only
+CONFIDENCE: 0.9
+DCWF_ROLES: 
+- Cyber Policy and Strategy Plan...
+2025-06-27 22:29:58 | anthropic | 1495 | 0.0120 | API call: You are an AI research analyst tasked with classifying content about AI's impact on cybersecurity wo... -> CLASSIFICATION_1:
+CATEGORY: human_only
+CONFIDENCE: 0.9
+DCWF_ROLES: 
+- Cyber Policy and Strategy Plan...
+2025-06-27 22:30:08 | anthropic | 1448 | 0.0116 | API call: You are an AI research analyst tasked with classifying content about AI's impact on cybersecurity wo... -> CLASSIFICATION_1:
+CATEGORY: human_only
+CONFIDENCE: 0.9
+DCWF_ROLES: 
+- Cyber Policy and Strategy Plan...
+2025-06-27 22:30:19 | anthropic | 1472 | 0.0118 | API call: You are an AI research analyst tasked with classifying content about AI's impact on cybersecurity wo... -> CLASSIFICATION_1:
+CATEGORY: human_only
+CONFIDENCE: 0.9
+DCWF_ROLES: 
+- Strategic Planning, Policy, an...
+2025-06-27 22:30:30 | anthropic | 1505 | 0.0120 | API call: You are an AI research analyst tasked with classifying content about AI's impact on cybersecurity wo... -> CLASSIFICATION_1:
+CATEGORY: human_only
+CONFIDENCE: 0.9
+DCWF_ROLES: 
+- Cyber Policy and Strategy Plan...
+2025-06-27 22:30:40 | anthropic | 1480 | 0.0118 | API call: You are an AI research analyst tasked with classifying content about AI's impact on cybersecurity wo... -> CLASSIFICATION_1:
+CATEGORY: human_only
+CONFIDENCE: 0.9
+DCWF_ROLES: 
+- Cyber Defense Analyst (PR-CDA)...
+2025-06-27 22:30:50 | anthropic | 1457 | 0.0117 | API call: You are an AI research analyst tasked with classifying content about AI's impact on cybersecurity wo... -> CLASSIFICATION_1:
+CATEGORY: human_only
+CONFIDENCE: 0.9
+DCWF_ROLES: 
+- Cyber Policy and Strategy Plan...
+2025-06-27 22:31:00 | anthropic | 1513 | 0.0121 | API call: You are an AI research analyst tasked with classifying content about AI's impact on cybersecurity wo... -> CLASSIFICATION_1:
+CATEGORY: human_only
+CONFIDENCE: 0.9
+DCWF_ROLES: 
+- Cyber Policy and Strategy Plan...
+2025-06-27 22:31:10 | anthropic | 1521 | 0.0122 | API call: You are an AI research analyst tasked with classifying content about AI's impact on cybersecurity wo... -> CLASSIFICATION_1:
+CATEGORY: human_only
+CONFIDENCE: 0.9
+DCWF_ROLES: 
+- Cyber Policy and Strategy Plan...
+2025-06-27 22:32:19 | anthropic | 1674 | 0.0134 | API call: You are an AI research analyst tasked with classifying content about AI's impact on cybersecurity wo... -> CLASSIFICATION_1:
+CATEGORY: human_only
+CONFIDENCE: 0.85
+DCWF_ROLES: 
+- Cyber Legal Advisor
+- Cyber D...
+2025-06-27 22:32:28 | anthropic | 1768 | 0.0141 | API call: You are an AI research analyst tasked with classifying content about AI's impact on cybersecurity wo... -> CLASSIFICATION_1:
+CATEGORY: human_only
+CONFIDENCE: 0.85
+DCWF_ROLES: 
+- Cyber Legal Advisor
+- All-Sou...
+2025-06-27 22:32:37 | anthropic | 1747 | 0.0140 | API call: You are an AI research analyst tasked with classifying content about AI's impact on cybersecurity wo... -> CLASSIFICATION_1:
+CATEGORY: human_only
+CONFIDENCE: 0.85
+DCWF_ROLES: 
+- Cyber Legal Advisor
+- All-Sou...

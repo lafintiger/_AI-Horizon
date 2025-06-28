@@ -758,6 +758,7 @@
                     <button class="viz-button" onclick="openVisualization('quality')">
                         📊 View Charts
                     </button>
+                    <a href="/api/export_analysis_pdf/quality" class="viz-button" title="Export quality analysis as PDF with disclaimer and NSF attribution">📄 Export PDF</a>
                 </div>
                 <div class="loading" id="qualityLoading">
                     <div class="spinner"></div>
@@ -789,6 +790,7 @@
                     <button class="viz-button" onclick="openVisualization('monitoring')">
                         📊 View Charts
                     </button>
+                    <a href="/api/export_analysis_pdf/monitoring" class="viz-button" title="Export collection monitoring as PDF with disclaimer and NSF attribution">📄 Export PDF</a>
                 </div>
                 <div class="loading" id="monitoringLoading">
                     <div class="spinner"></div>
@@ -820,6 +822,7 @@
                     <button class="viz-button" onclick="openVisualization('trends')">
                         📈 View Charts
                     </button>
+                    <a href="/api/export_analysis_pdf/trends" class="viz-button" title="Export trend analysis as PDF with disclaimer and NSF attribution">📄 Export PDF</a>
                 </div>
                 <div class="loading" id="trendLoading">
                     <div class="spinner"></div>
@@ -847,6 +850,7 @@
                 <div class="button-group">
                     <button class="run-button" onclick="runJobMarketSentiment()">🚀 Run Sentiment Analysis</button>
                     <button class="viz-button" onclick="openVisualization('sentiment')">📊 View Charts</button>
+                    <a href="/api/export_analysis_pdf/sentiment" class="viz-button" title="Export sentiment analysis as PDF with disclaimer and NSF attribution">📄 Export PDF</a>
                 </div>
                 
                 <!-- Loading Animation -->
@@ -909,6 +913,7 @@
                 <div class="button-group">
                     <button class="run-button" onclick="runAIAdoptionPredictions()">🔮 Run DCWF Task Analysis</button>
                     <button class="viz-button" onclick="openVisualization('adoption')">📊 View Charts</button>
+                    <a href="/api/export_analysis_pdf/adoption" class="viz-button" title="Export AI adoption predictions as PDF with disclaimer and NSF attribution">📄 Export PDF</a>
                 </div>
                 
                 <!-- Loading Animation -->
@@ -984,6 +989,7 @@
                 <div class="card-actions">
                     <button class="btn-primary" onclick="runCategoryDistributionInsights()">🚀 Run Advanced Analysis</button>
                     <button class="btn-secondary" onclick="showCategoryVisualization()">📊 View Interactive Charts</button>
+                    <a href="/api/export_analysis_pdf/distribution" class="btn-secondary" title="Export distribution analysis as PDF with disclaimer and NSF attribution">📄 Export PDF</a>
                 </div>
                 <div class="card-results" id="categoryDistributionResults" style="display: none;">
                     <div class="results-summary">
@@ -1090,6 +1096,7 @@
                 <div class="card-actions">
                     <button class="btn-primary" onclick="runComprehensiveCategoryNarratives()">🚀 Generate Narratives</button>
                     <button class="btn-secondary" onclick="showCategoryNarratives()">📋 View Narratives</button>
+                    <a href="/api/export_summary_pdf/replace" class="btn-secondary" title="Export category narratives as PDF with disclaimer and NSF attribution">📄 Export PDF</a>
                 </div>
                 <div class="card-results" id="narrativesResults" style="display: none;">
                     <div class="results-summary">

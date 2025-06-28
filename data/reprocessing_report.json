@@ -1,24 +1,24 @@
 {
-  "processing_completed_at": "2025-06-16T01:56:09.974168",
+  "processing_completed_at": "2025-06-27T22:32:37.433881",
   "statistics": {
-    "total_processed": 9,
+    "total_processed": 3,
     "quality_updated": 0,
-    "categories_updated": 0,
-    "multicategory_updated": 0,
-    "wisdom_updated": 9,
+    "categories_updated": 3,
+    "multicategory_updated": 3,
+    "wisdom_updated": 0,
     "content_enhanced": 0,
     "metadata_standardized": 0,
-    "skipped": 1,
+    "skipped": 0,
     "errors": 0
   },
   "summary": {
-    "total_entries_processed": 9,
+    "total_entries_processed": 3,
     "success_rate": 100.0,
     "processing_breakdown": {
       "quality_scoring": 0,
-      "categorization": 0,
-      "multicategory_analysis": 0,
-      "wisdom_extraction": 9,
+      "categorization": 3,
+      "multicategory_analysis": 3,
+      "wisdom_extraction": 0,
       "content_enhancement": 0,
       "metadata_standardization": 0
     }

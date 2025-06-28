@@ -62,15 +62,24 @@ class TrendAnalyzer:
                 # Calculate quality score
                 quality_score, _ = self.quality_ranker.calculate_document_score(artifact)
                 
-                # Parse date
-                created_at = artifact.get('created_at')
-                if not created_at:
+                # Parse date - try collected_at first, then created_at
+                date_field = artifact.get('collected_at') or artifact.get('created_at')
+                if not date_field:
                     continue
                     
-                if isinstance(created_at, str):
-                    date_obj = datetime.fromisoformat(created_at.replace('Z', '+00:00'))
+                if isinstance(date_field, str):
+                    # Handle different date formats
+                    date_str = date_field.replace('Z', '+00:00')
+                    # Remove microseconds if present for ISO parsing
+                    if '.' in date_str and '+' in date_str:
+                        date_str = date_str.split('.')[0] + date_str.split('+')[1]
+                    try:
+                        date_obj = datetime.fromisoformat(date_str)
+                    except:
+                        # Try parsing without timezone info
+                        date_obj = datetime.fromisoformat(date_field.split('.')[0])
                 else:
-                    date_obj = created_at
+                    date_obj = date_field
                 
                 month_key = date_obj.strftime('%Y-%m')
                 
@@ -175,15 +184,24 @@ class TrendAnalyzer:
         
         for artifact in self.artifacts:
             try:
-                # Parse date
-                created_at = artifact.get('created_at')
-                if not created_at:
+                # Parse date - try collected_at first, then created_at
+                date_field = artifact.get('collected_at') or artifact.get('created_at')
+                if not date_field:
                     continue
                     
-                if isinstance(created_at, str):
-                    date_obj = datetime.fromisoformat(created_at.replace('Z', '+00:00'))
+                if isinstance(date_field, str):
+                    # Handle different date formats
+                    date_str = date_field.replace('Z', '+00:00')
+                    # Remove microseconds if present for ISO parsing
+                    if '.' in date_str and '+' in date_str:
+                        date_str = date_str.split('.')[0] + date_str.split('+')[1]
+                    try:
+                        date_obj = datetime.fromisoformat(date_str)
+                    except:
+                        # Try parsing without timezone info
+                        date_obj = datetime.fromisoformat(date_field.split('.')[0])
                 else:
-                    date_obj = created_at
+                    date_obj = date_field
                 
                 month_key = date_obj.strftime('%Y-%m')
                 
@@ -296,14 +314,24 @@ class TrendAnalyzer:
         
         for artifact in self.artifacts:
             try:
-                created_at = artifact.get('created_at')
-                if not created_at:
+                # Parse date - try collected_at first, then created_at
+                date_field = artifact.get('collected_at') or artifact.get('created_at')
+                if not date_field:
                     continue
                     
-                if isinstance(created_at, str):
-                    date_obj = datetime.fromisoformat(created_at.replace('Z', '+00:00'))
+                if isinstance(date_field, str):
+                    # Handle different date formats
+                    date_str = date_field.replace('Z', '+00:00')
+                    # Remove microseconds if present for ISO parsing
+                    if '.' in date_str and '+' in date_str:
+                        date_str = date_str.split('.')[0] + date_str.split('+')[1]
+                    try:
+                        date_obj = datetime.fromisoformat(date_str)
+                    except:
+                        # Try parsing without timezone info
+                        date_obj = datetime.fromisoformat(date_field.split('.')[0])
                 else:
-                    date_obj = created_at
+                    date_obj = date_field
                 
                 # Date keys
                 day_key = date_obj.strftime('%Y-%m-%d')
@@ -401,14 +429,24 @@ class TrendAnalyzer:
         
         for artifact in self.artifacts:
             try:
-                created_at = artifact.get('created_at')
-                if not created_at:
+                # Parse date - try collected_at first, then created_at
+                date_field = artifact.get('collected_at') or artifact.get('created_at')
+                if not date_field:
                     continue
                     
-                if isinstance(created_at, str):
-                    date_obj = datetime.fromisoformat(created_at.replace('Z', '+00:00'))
+                if isinstance(date_field, str):
+                    # Handle different date formats
+                    date_str = date_field.replace('Z', '+00:00')
+                    # Remove microseconds if present for ISO parsing
+                    if '.' in date_str and '+' in date_str:
+                        date_str = date_str.split('.')[0] + date_str.split('+')[1]
+                    try:
+                        date_obj = datetime.fromisoformat(date_str)
+                    except:
+                        # Try parsing without timezone info
+                        date_obj = datetime.fromisoformat(date_field.split('.')[0])
                 else:
-                    date_obj = created_at
+                    date_obj = date_field
                 
                 month_key = date_obj.strftime('%Y-%m')
                 
@@ -509,7 +547,7 @@ class TrendAnalyzer:
         sentiment_trends = self.analyze_sentiment_trends()
         
         # Get analysis period safely
-        valid_dates = [a.get('created_at', '') for a in self.artifacts if a.get('created_at')]
+        valid_dates = [a.get('collected_at', '') or a.get('created_at', '') for a in self.artifacts if a.get('collected_at') or a.get('created_at')]
         if valid_dates:
             min_date = min(valid_dates)
             max_date = max(valid_dates)

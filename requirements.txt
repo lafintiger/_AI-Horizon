@@ -21,6 +21,10 @@ PyPDF2>=3.0.0
 pdfplumber>=0.7.0
 python-docx>=0.8.11
 
+# PDF Generation for Export Feature
+reportlab>=4.0.0
+weasyprint>=61.0
+
 # YouTube Processing
 youtube-transcript-api>=0.6.0
 yt-dlp>=2023.7.6

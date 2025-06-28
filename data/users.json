@@ -1,0 +1,30 @@
+{
+  "admin": {
+    "password_hash": "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9",
+    "role": "admin",
+    "name": "System Administrator",
+    "created_at": "2025-06-28T00:00:00",
+    "last_login": null
+  },
+  "viewer": {
+    "password_hash": "65375049b9e4d7cad6c9ba286fdeb9394b28135a3e84136404cfccfdcc438894",
+    "role": "viewer",
+    "name": "System Viewer",
+    "created_at": "2025-06-28T00:00:00",
+    "last_login": null
+  },
+  "manual": {
+    "password_hash": "b33ec035015d85651e98335776ce92a159dcae7f7108c469d7a35c335c069cf6",
+    "role": "manual_entry",
+    "name": "Manual Entry User",
+    "created_at": "2025-06-28T00:00:00",
+    "last_login": null
+  },
+  "lafintiger": {
+    "password_hash": "9cf6205f5b508879a338037f0d523c7c32186635e1466a915b92c0d00e470377",
+    "role": "admin",
+    "name": "lafin tiger",
+    "created_at": "2025-06-28T10:56:15.613399",
+    "last_login": "2025-06-28T10:56:34.938398"
+  }
+}

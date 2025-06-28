@@ -612,6 +612,7 @@
                 {% if artifact.url and not artifact.url.startswith('file://') %}
                 <a href="{{ artifact.url }}" target="_blank" class="btn btn-primary">🔗 Open Original</a>
                 {% endif %}
+                <a href="/api/export_entry_pdf/{{ artifact.id }}" class="btn btn-primary" title="Export this entry as PDF with disclaimer and NSF attribution">📄 Export PDF</a>
             </div>
         </div>
     </div>

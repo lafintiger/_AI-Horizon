@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Horizon Login</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            width: 100%;
+            max-width: 450px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo h1 {
+            color: #333;
+            font-size: 2.5em;
+            font-weight: 300;
+            margin-bottom: 10px;
+        }
+
+        .logo .subtitle {
+            color: #666;
+            font-size: 1.1em;
+            font-weight: 400;
+        }
+
+        .login-form {
+            margin-top: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+            font-size: 0.95em;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
+        }
+
+        .error-message {
+            background: #fee;
+            color: #c33;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #c33;
+            font-size: 0.95em;
+        }
+
+        .success-message {
+            background: #efe;
+            color: #3c3;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #3c3;
+            font-size: 0.95em;
+        }
+
+        .user-roles {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e1e5e9;
+        }
+
+        .user-roles h3 {
+            color: #333;
+            font-size: 1.1em;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .role-item {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .role-item .role-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .role-item .role-desc {
+            font-size: 0.9em;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .demo-credentials {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f0f7ff;
+            border-radius: 8px;
+            border: 1px solid #b3d9ff;
+        }
+
+        .demo-credentials h4 {
+            color: #0066cc;
+            margin-bottom: 10px;
+            font-size: 0.95em;
+        }
+
+        .demo-credentials .cred-item {
+            margin-bottom: 8px;
+            font-size: 0.9em;
+            color: #333;
+        }
+
+        .demo-credentials .cred-item strong {
+            color: #0066cc;
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 30px 20px;
+                margin: 10px;
+            }
+
+            .logo h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo">
+            <h1>🤖 AI-Horizon</h1>
+            <div class="subtitle">Cybersecurity Workforce Intelligence</div>
+        </div>
+
+        {% if error %}
+        <div class="error-message">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        {% if success %}
+        <div class="success-message">
+            {{ success }}
+        </div>
+        {% endif %}
+
+        <form class="login-form" method="POST">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required 
+                       placeholder="Enter your username" value="{{ request.form.username or '' }}">
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required 
+                       placeholder="Enter your password">
+            </div>
+
+            <button type="submit" class="login-btn">
+                🔐 Sign In
+            </button>
+        </form>
+
+        <div class="user-roles">
+            <h3>👥 User Roles</h3>
+            
+            <div class="role-item">
+                <div class="role-name">🔧 Administrator</div>
+                <div class="role-desc">Full system access with all permissions including user management and system settings</div>
+            </div>
+
+            <div class="role-item">
+                <div class="role-name">👁️ Viewer</div>
+                <div class="role-desc">Read-only access to view data, reports, and export information</div>
+            </div>
+
+            <div class="role-item">
+                <div class="role-name">📝 Manual Entry</div>
+                <div class="role-desc">Can add documents manually and view existing data and reports</div>
+            </div>
+        </div>
+
+        <div class="demo-credentials">
+            <h4>🔑 Demo Credentials</h4>
+            <div class="cred-item"><strong>Admin:</strong> admin / admin123</div>
+            <div class="cred-item"><strong>Viewer:</strong> viewer / viewer123</div>
+            <div class="cred-item"><strong>Manual Entry:</strong> manual / manual123</div>
+        </div>
+    </div>
+
+    <script>
+        // Auto-focus username field
+        document.getElementById('username').focus();
+
+        // Form validation
+        document.querySelector('.login-form').addEventListener('submit', function(e) {
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+
+            if (!username || !password) {
+                e.preventDefault();
+                alert('Please enter both username and password.');
+                return;
+            }
+        });
+
+        // Quick login buttons (for demo purposes)
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.shiftKey) {
+                const usernameField = document.getElementById('username');
+                const passwordField = document.getElementById('password');
+                
+                switch(e.key) {
+                    case 'A':
+                        usernameField.value = 'admin';
+                        passwordField.value = 'admin123';
+                        break;
+                    case 'V':
+                        usernameField.value = 'viewer';
+                        passwordField.value = 'viewer123';
+                        break;
+                    case 'M':
+                        usernameField.value = 'manual';
+                        passwordField.value = 'manual123';
+                        break;
+                }
+            }
+        });
+    </script>
+</body>
+</html> 
