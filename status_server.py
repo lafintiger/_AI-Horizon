@@ -922,8 +922,10 @@ def settings():
 @login_required
 @permission_required('view_all')
 def methodology():
-    """Methodology interface."""
-    return render_template('methodology.html')
+    """Methodology interface with current date for documentation."""
+    from datetime import datetime
+    return render_template('methodology.html', 
+                         current_date=datetime.now().strftime('%B %d, %Y'))
 
 @app.route('/reports')
 @login_required

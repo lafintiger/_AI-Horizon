@@ -308,8 +308,13 @@ class JobMarketSentimentAnalyzer:
                 elif early_avg > recent_avg * 1.1:
                     opportunity_threat_analysis['trend_direction'] = 'becoming more threat-focused'
         
-        print(f"   ⚖️ Balance ratio: {opportunity_threat_analysis['overall_balance']['balance_ratio']} (opportunities:threats)")
-        print(f"   📈 Narrative trend: {opportunity_threat_analysis['trend_direction']}")
+        # Validate results before printing
+        if total_opportunities > 0 or total_threats > 0:
+            print(f"   ⚖️ Balance ratio: {opportunity_threat_analysis['overall_balance']['balance_ratio']} (opportunities:threats)")
+            print(f"   📈 Narrative trend: {opportunity_threat_analysis['trend_direction']}")
+        else:
+            print("   ⚠️ No opportunity/threat signals detected in articles")
+            print(f"   📊 Analysis confidence: low (insufficient data)")
         
         return opportunity_threat_analysis
     
@@ -518,9 +523,16 @@ class JobMarketSentimentAnalyzer:
             else:
                 perspective_analysis['alignment_status'] = 'moderate difference'
         
-        print(f"   🏢 Employer sentiment: {perspective_analysis['employer_perspective']['sentiment_classification']}")
-        print(f"   👨‍💼 Employee sentiment: {perspective_analysis['employee_perspective']['sentiment_classification']}")
+        # Add data sufficiency check
+        emp_articles = perspective_analysis['employer_perspective']['article_count']
+        employee_articles = perspective_analysis['employee_perspective']['article_count']
+        
+        print(f"   🏢 Employer sentiment: {perspective_analysis['employer_perspective']['sentiment_classification']} ({emp_articles} articles)")
+        print(f"   👨‍💼 Employee sentiment: {perspective_analysis['employee_perspective']['sentiment_classification']} ({employee_articles} articles)")
         print(f"   🤝 Alignment: {perspective_analysis['alignment_status']}")
+        
+        if emp_articles == 0 and employee_articles == 0:
+            print("   ⚠️ Insufficient perspective data for meaningful analysis")
         
         return perspective_analysis
     

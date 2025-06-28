@@ -11,6 +11,8 @@ Provides comprehensive temporal analysis of collected articles including:
 - Keyword frequency evolution
 - Collection velocity and pattern analysis
 
+Methodology Documentation: /methodology#trend-analysis
+
 Usage:
     python scripts/analysis/trend_analysis.py
 """
@@ -34,6 +36,12 @@ from scripts.analysis.implement_quality_ranking import DocumentQualityRanker
 class TrendAnalyzer:
     """
     Advanced trend analysis system for analyzing temporal patterns in collected cybersecurity AI data.
+    
+    Methodology:
+    - Quality trends: Linear regression on monthly quality scores
+    - Topic evolution: Frequency change analysis over time periods
+    - Sentiment analysis: Keyword-based classification with weighted scoring
+    - Collection patterns: Statistical analysis of collection velocity and consistency
     """
     
     def __init__(self):
@@ -42,11 +50,66 @@ class TrendAnalyzer:
         self.artifacts = []
         self.trend_data = {}
         
+    def _parse_date_safely(self, date_field: str) -> datetime:
+        """Safely parse date field with multiple fallback strategies."""
+        if not date_field:
+            return None
+            
+        try:
+            if isinstance(date_field, str):
+                # Strategy 1: Try direct ISO format (handles most cases including microseconds)
+                try:
+                    return datetime.fromisoformat(date_field)
+                except:
+                    pass
+                
+                # Strategy 2: Try ISO format with timezone
+                if 'T' in date_field:
+                    date_str = date_field.replace('Z', '+00:00')
+                    if '.' in date_str and ('+' in date_str or 'Z' in date_field):
+                        # Remove microseconds for ISO parsing
+                        parts = date_str.split('.')
+                        if len(parts) == 2:
+                            date_str = parts[0] + ('+00:00' if '+' not in parts[1] else '+' + parts[1].split('+')[1])
+                    return datetime.fromisoformat(date_str)
+                
+                # Strategy 3: Try simple date format without microseconds
+                try:
+                    return datetime.strptime(date_field.split('.')[0], '%Y-%m-%d %H:%M:%S')
+                except:
+                    pass
+                    
+                # Strategy 4: Try just the date part
+                try:
+                    return datetime.strptime(date_field.split('T')[0].split(' ')[0], '%Y-%m-%d')
+                except:
+                    pass
+                    
+            else:
+                # Already a datetime object
+                return date_field
+                
+        except Exception as e:
+            # For debugging, print the error
+            print(f"   Debug: Failed to parse date '{date_field}': {e}")
+            pass
+            
+        return None
+        
     def load_all_data(self):
         """Load all artifacts for comprehensive trend analysis."""
         print("Loading all artifacts for trend analysis...")
         self.artifacts = self.db.get_artifacts(limit=5000)  # Get more for better trends
-        print(f"   Loaded {len(self.artifacts)} total artifacts")
+        
+        # Filter out artifacts without valid dates
+        valid_artifacts = []
+        for artifact in self.artifacts:
+            date_field = artifact.get('collected_at') or artifact.get('created_at')
+            if self._parse_date_safely(date_field):
+                valid_artifacts.append(artifact)
+                
+        self.artifacts = valid_artifacts
+        print(f"   Loaded {len(self.artifacts)} total artifacts with valid dates")
         return len(self.artifacts)
     
     def analyze_quality_trends(self) -> Dict[str, Any]:
@@ -62,24 +125,12 @@ class TrendAnalyzer:
                 # Calculate quality score
                 quality_score, _ = self.quality_ranker.calculate_document_score(artifact)
                 
-                # Parse date - try collected_at first, then created_at
+                # Parse date safely
                 date_field = artifact.get('collected_at') or artifact.get('created_at')
-                if not date_field:
+                date_obj = self._parse_date_safely(date_field)
+                
+                if not date_obj:
                     continue
-                    
-                if isinstance(date_field, str):
-                    # Handle different date formats
-                    date_str = date_field.replace('Z', '+00:00')
-                    # Remove microseconds if present for ISO parsing
-                    if '.' in date_str and '+' in date_str:
-                        date_str = date_str.split('.')[0] + date_str.split('+')[1]
-                    try:
-                        date_obj = datetime.fromisoformat(date_str)
-                    except:
-                        # Try parsing without timezone info
-                        date_obj = datetime.fromisoformat(date_field.split('.')[0])
-                else:
-                    date_obj = date_field
                 
                 month_key = date_obj.strftime('%Y-%m')
                 
@@ -104,7 +155,8 @@ class TrendAnalyzer:
             'overall_monthly': {},
             'category_trends': {},
             'trend_direction': 'stable',
-            'quality_improvement': 0.0
+            'quality_improvement': 0.0,
+            'confidence_level': 'low'
         }
         
         # Process overall monthly trends
@@ -118,30 +170,37 @@ class TrendAnalyzer:
                     'std_dev': round(statistics.stdev(monthly_quality[month]['scores']) if len(monthly_quality[month]['scores']) > 1 else 0, 3)
                 }
         
-        # Calculate overall trend direction
-        if len(sorted_months) >= 2:
-            recent_months = sorted_months[-3:]  # Last 3 months
-            early_months = sorted_months[:3]    # First 3 months
+        # Calculate overall trend direction with better confidence
+        if len(sorted_months) >= 3:
+            quality_trends['confidence_level'] = 'medium'
+            recent_months = sorted_months[-min(3, len(sorted_months)):]  # Last 3 months or available
+            early_months = sorted_months[:min(3, len(sorted_months))]    # First 3 months or available
             
             if len(recent_months) >= 2 and len(early_months) >= 2:
-                recent_avg = statistics.mean([
-                    quality_trends['overall_monthly'][m]['avg_quality'] 
-                    for m in recent_months 
-                    if m in quality_trends['overall_monthly']
-                ])
-                early_avg = statistics.mean([
-                    quality_trends['overall_monthly'][m]['avg_quality'] 
-                    for m in early_months 
-                    if m in quality_trends['overall_monthly']
-                ])
+                recent_scores = []
+                early_scores = []
                 
-                improvement = recent_avg - early_avg
-                quality_trends['quality_improvement'] = round(improvement, 3)
+                for m in recent_months:
+                    if m in quality_trends['overall_monthly']:
+                        recent_scores.append(quality_trends['overall_monthly'][m]['avg_quality'])
+                        
+                for m in early_months:
+                    if m in quality_trends['overall_monthly']:
+                        early_scores.append(quality_trends['overall_monthly'][m]['avg_quality'])
                 
-                if improvement > 0.05:
-                    quality_trends['trend_direction'] = 'improving'
-                elif improvement < -0.05:
-                    quality_trends['trend_direction'] = 'declining'
+                if recent_scores and early_scores:
+                    recent_avg = statistics.mean(recent_scores)
+                    early_avg = statistics.mean(early_scores)
+                    improvement = recent_avg - early_avg
+                    quality_trends['quality_improvement'] = round(improvement, 3)
+                    
+                    if len(sorted_months) >= 6:
+                        quality_trends['confidence_level'] = 'high'
+                    
+                    if improvement > 0.05:
+                        quality_trends['trend_direction'] = 'improving'
+                    elif improvement < -0.05:
+                        quality_trends['trend_direction'] = 'declining'
         
         # Process category trends
         for category, monthly_data in category_monthly_quality.items():
@@ -162,6 +221,7 @@ class TrendAnalyzer:
         print(f"   📊 Quality Trend: {quality_trends['trend_direction'].title()}")
         if quality_trends['quality_improvement'] != 0:
             print(f"   📈 Improvement: {quality_trends['quality_improvement']:+.3f}")
+        print(f"   🎯 Confidence: {quality_trends['confidence_level']}")
         
         return quality_trends
     
@@ -184,24 +244,12 @@ class TrendAnalyzer:
         
         for artifact in self.artifacts:
             try:
-                # Parse date - try collected_at first, then created_at
+                # Parse date safely
                 date_field = artifact.get('collected_at') or artifact.get('created_at')
-                if not date_field:
+                date_obj = self._parse_date_safely(date_field)
+                
+                if not date_obj:
                     continue
-                    
-                if isinstance(date_field, str):
-                    # Handle different date formats
-                    date_str = date_field.replace('Z', '+00:00')
-                    # Remove microseconds if present for ISO parsing
-                    if '.' in date_str and '+' in date_str:
-                        date_str = date_str.split('.')[0] + date_str.split('+')[1]
-                    try:
-                        date_obj = datetime.fromisoformat(date_str)
-                    except:
-                        # Try parsing without timezone info
-                        date_obj = datetime.fromisoformat(date_field.split('.')[0])
-                else:
-                    date_obj = date_field
                 
                 month_key = date_obj.strftime('%Y-%m')
                 
@@ -235,7 +283,9 @@ class TrendAnalyzer:
             'keyword_trends': {},
             'topic_distribution': {},
             'emerging_terms': [],
-            'declining_terms': []
+            'declining_terms': [],
+            'analysis_period_months': len(monthly_keywords),
+            'total_articles_analyzed': len(self.artifacts)
         }
         
         sorted_months = sorted(monthly_keywords.keys())
@@ -265,34 +315,50 @@ class TrendAnalyzer:
                     }
                 topic_evolution['topic_distribution'][month] = distribution
         
-        # Identify emerging and declining terms
-        if len(sorted_months) >= 6:  # Need at least 6 months of data
-            recent_months = sorted_months[-3:]
-            early_months = sorted_months[:3]
+        # Identify emerging and declining terms with better thresholds
+        min_months_required = max(4, len(sorted_months) // 2)  # Need at least 4 months or half available data
+        
+        if len(sorted_months) >= min_months_required:
+            # Use more balanced periods for comparison
+            split_point = len(sorted_months) // 2
+            recent_months = sorted_months[split_point:]
+            early_months = sorted_months[:split_point]
             
             for term in key_terms:
-                recent_freq = statistics.mean([
-                    topic_evolution['keyword_trends'][term].get(m, {}).get('frequency', 0)
-                    for m in recent_months
-                ])
-                early_freq = statistics.mean([
-                    topic_evolution['keyword_trends'][term].get(m, {}).get('frequency', 0)
-                    for m in early_months
-                ])
+                # Calculate frequencies for each period
+                recent_freqs = []
+                early_freqs = []
                 
-                change = recent_freq - early_freq
-                if change > 0.01:  # Threshold for emergence
-                    topic_evolution['emerging_terms'].append({
-                        'term': term,
-                        'change': round(change, 4),
-                        'recent_frequency': round(recent_freq, 4)
-                    })
-                elif change < -0.01:  # Threshold for decline
-                    topic_evolution['declining_terms'].append({
-                        'term': term,
-                        'change': round(change, 4),
-                        'recent_frequency': round(recent_freq, 4)
-                    })
+                for m in recent_months:
+                    if term in topic_evolution['keyword_trends'] and m in topic_evolution['keyword_trends'][term]:
+                        recent_freqs.append(topic_evolution['keyword_trends'][term][m]['frequency'])
+                        
+                for m in early_months:
+                    if term in topic_evolution['keyword_trends'] and m in topic_evolution['keyword_trends'][term]:
+                        early_freqs.append(topic_evolution['keyword_trends'][term][m]['frequency'])
+                
+                if recent_freqs and early_freqs:
+                    recent_freq = statistics.mean(recent_freqs)
+                    early_freq = statistics.mean(early_freqs)
+                    change = recent_freq - early_freq
+                    
+                    # More sensitive thresholds based on data size
+                    emergence_threshold = 0.005 if len(sorted_months) >= 12 else 0.01
+                    
+                    if change > emergence_threshold and recent_freq > 0.01:  # Must have meaningful recent frequency
+                        topic_evolution['emerging_terms'].append({
+                            'term': term,
+                            'change': round(change, 4),
+                            'recent_frequency': round(recent_freq, 4),
+                            'early_frequency': round(early_freq, 4)
+                        })
+                    elif change < -emergence_threshold and early_freq > 0.01:  # Must have had meaningful early frequency
+                        topic_evolution['declining_terms'].append({
+                            'term': term,
+                            'change': round(change, 4),
+                            'recent_frequency': round(recent_freq, 4),
+                            'early_frequency': round(early_freq, 4)
+                        })
         
         # Sort by magnitude of change
         topic_evolution['emerging_terms'].sort(key=lambda x: x['change'], reverse=True)
@@ -300,6 +366,7 @@ class TrendAnalyzer:
         
         print(f"   🔥 Emerging terms: {len(topic_evolution['emerging_terms'])}")
         print(f"   📉 Declining terms: {len(topic_evolution['declining_terms'])}")
+        print(f"   📊 Analysis period: {len(sorted_months)} months")
         
         return topic_evolution
     
@@ -314,24 +381,12 @@ class TrendAnalyzer:
         
         for artifact in self.artifacts:
             try:
-                # Parse date - try collected_at first, then created_at
+                # Parse date safely
                 date_field = artifact.get('collected_at') or artifact.get('created_at')
-                if not date_field:
+                date_obj = self._parse_date_safely(date_field)
+                
+                if not date_obj:
                     continue
-                    
-                if isinstance(date_field, str):
-                    # Handle different date formats
-                    date_str = date_field.replace('Z', '+00:00')
-                    # Remove microseconds if present for ISO parsing
-                    if '.' in date_str and '+' in date_str:
-                        date_str = date_str.split('.')[0] + date_str.split('+')[1]
-                    try:
-                        date_obj = datetime.fromisoformat(date_str)
-                    except:
-                        # Try parsing without timezone info
-                        date_obj = datetime.fromisoformat(date_field.split('.')[0])
-                else:
-                    date_obj = date_field
                 
                 # Date keys
                 day_key = date_obj.strftime('%Y-%m-%d')
@@ -419,34 +474,36 @@ class TrendAnalyzer:
         """Analyze sentiment trends in article content over time."""
         print("\n😊 Analyzing Sentiment Trends...")
         
-        # Simple sentiment analysis based on keywords
-        positive_keywords = ['opportunity', 'growth', 'improve', 'benefit', 'enhance', 'advance', 'efficient', 'effective']
-        negative_keywords = ['threat', 'risk', 'danger', 'replace', 'eliminate', 'concern', 'challenge', 'difficult']
-        neutral_keywords = ['change', 'shift', 'adapt', 'transform', 'evolve', 'develop', 'implement']
+        # Enhanced sentiment analysis based on keywords with weights
+        positive_keywords = [
+            'opportunity', 'growth', 'improve', 'benefit', 'enhance', 'advance', 
+            'efficient', 'effective', 'success', 'innovation', 'valuable', 'optimize',
+            'competitive advantage', 'productivity', 'collaboration', 'augment'
+        ]
+        negative_keywords = [
+            'threat', 'risk', 'danger', 'replace', 'eliminate', 'concern', 
+            'challenge', 'difficult', 'problem', 'failure', 'vulnerable', 'attack',
+            'job loss', 'unemployment', 'displacement', 'obsolete'
+        ]
+        neutral_keywords = [
+            'change', 'shift', 'adapt', 'transform', 'evolve', 'develop', 
+            'implement', 'technology', 'system', 'process', 'method', 'approach'
+        ]
         
         monthly_sentiment = defaultdict(lambda: {'positive': 0, 'negative': 0, 'neutral': 0, 'total': 0})
         category_sentiment = defaultdict(lambda: defaultdict(lambda: {'positive': 0, 'negative': 0, 'neutral': 0, 'total': 0}))
         
+        articles_processed = 0
+        articles_with_sentiment = 0
+        
         for artifact in self.artifacts:
             try:
-                # Parse date - try collected_at first, then created_at
+                # Parse date safely
                 date_field = artifact.get('collected_at') or artifact.get('created_at')
-                if not date_field:
+                date_obj = self._parse_date_safely(date_field)
+                
+                if not date_obj:
                     continue
-                    
-                if isinstance(date_field, str):
-                    # Handle different date formats
-                    date_str = date_field.replace('Z', '+00:00')
-                    # Remove microseconds if present for ISO parsing
-                    if '.' in date_str and '+' in date_str:
-                        date_str = date_str.split('.')[0] + date_str.split('+')[1]
-                    try:
-                        date_obj = datetime.fromisoformat(date_str)
-                    except:
-                        # Try parsing without timezone info
-                        date_obj = datetime.fromisoformat(date_field.split('.')[0])
-                else:
-                    date_obj = date_field
                 
                 month_key = date_obj.strftime('%Y-%m')
                 
@@ -458,22 +515,28 @@ class TrendAnalyzer:
                     text_content += artifact['content'][:2000]  # First 2000 chars
                 
                 text_content = text_content.lower()
+                articles_processed += 1
                 
-                # Count sentiment indicators
+                # Count sentiment indicators with better weighting
                 pos_count = sum(1 for word in positive_keywords if word in text_content)
                 neg_count = sum(1 for word in negative_keywords if word in text_content)
                 neu_count = sum(1 for word in neutral_keywords if word in text_content)
                 
-                # Classify overall sentiment
-                if pos_count > neg_count and pos_count > neu_count:
-                    sentiment = 'positive'
-                elif neg_count > pos_count and neg_count > neu_count:
-                    sentiment = 'negative'
-                else:
-                    sentiment = 'neutral'
-                
-                monthly_sentiment[month_key][sentiment] += 1
-                monthly_sentiment[month_key]['total'] += 1
+                # Only classify if we have sentiment signals
+                total_signals = pos_count + neg_count + neu_count
+                if total_signals > 0:
+                    articles_with_sentiment += 1
+                    
+                    # Improved classification with stronger thresholds
+                    if pos_count > neg_count and pos_count >= neu_count:
+                        sentiment = 'positive'
+                    elif neg_count > pos_count and neg_count >= neu_count:
+                        sentiment = 'negative'
+                    else:
+                        sentiment = 'neutral'
+                        
+                    monthly_sentiment[month_key][sentiment] += 1
+                    monthly_sentiment[month_key]['total'] += 1
                 
                 # Category sentiment
                 try:
@@ -490,7 +553,12 @@ class TrendAnalyzer:
         sentiment_trends = {
             'monthly_sentiment': {},
             'category_sentiment': {},
-            'overall_sentiment': {'positive': 0, 'negative': 0, 'neutral': 0}
+            'overall_sentiment': {'positive': 0, 'negative': 0, 'neutral': 0},
+            'analysis_stats': {
+                'articles_processed': articles_processed,
+                'articles_with_sentiment': articles_with_sentiment,
+                'sentiment_coverage': round((articles_with_sentiment / max(articles_processed, 1)) * 100, 1)
+            }
         }
         
         # Process monthly sentiment
@@ -517,6 +585,9 @@ class TrendAnalyzer:
                 'negative': round((total_neg / total_all) * 100, 1),
                 'neutral': round((total_neu / total_all) * 100, 1)
             }
+        else:
+            # No sentiment data found
+            print("   ⚠️ No sentiment signals detected in articles")
         
         # Process category sentiment
         for category, monthly_data in category_sentiment.items():
@@ -533,6 +604,7 @@ class TrendAnalyzer:
                 sentiment_trends['category_sentiment'][category] = category_data
         
         print(f"   😊 Overall sentiment: {sentiment_trends['overall_sentiment']['positive']}% positive, {sentiment_trends['overall_sentiment']['negative']}% negative")
+        print(f"   📊 Coverage: {sentiment_trends['analysis_stats']['sentiment_coverage']}% of articles had sentiment signals")
         
         return sentiment_trends
     

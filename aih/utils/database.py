@@ -118,6 +118,131 @@ class DatabaseManager:
                 )
             """)
             
+            # PHASE 1: TASK-CENTRIC ENHANCEMENT TABLES
+            
+            # DCWF Tasks table - Individual tasks from the framework
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS dcwf_tasks (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    dcwf_task_id TEXT UNIQUE NOT NULL,  -- e.g., "DCWF_543"
+                    task_name TEXT NOT NULL,  -- e.g., "Develop secure code and error handling"
+                    task_description TEXT,
+                    dcwf_work_role_id TEXT,  -- Links to work role (e.g., "DCWF_621")
+                    work_role_name TEXT,  -- e.g., "Software Developer"
+                    category TEXT,  -- Core category: Cybersecurity, Cyber IT, etc.
+                    complexity_level TEXT,  -- Basic, Intermediate, Advanced
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )
+            """)
+            
+            # Task-WorkRole Relationships (Many-to-Many)
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS task_work_role_relationships (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    task_id INTEGER NOT NULL,
+                    work_role_id TEXT NOT NULL,  -- DCWF work role ID
+                    relationship_type TEXT DEFAULT 'primary',  -- primary, secondary, supportive
+                    importance_weight REAL DEFAULT 1.0,  -- 0.0-1.0 importance for this role
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (task_id) REFERENCES dcwf_tasks (id),
+                    UNIQUE(task_id, work_role_id)
+                )
+            """)
+            
+            # AI Impact Analysis per Task
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS task_ai_impact_analysis (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    task_id INTEGER NOT NULL,
+                    ai_impact_category TEXT NOT NULL,  -- replace, augment, new_tasks, human_only
+                    confidence_score REAL NOT NULL,  -- 0.0-1.0
+                    evidence TEXT,  -- JSON array of evidence from articles
+                    analysis_rationale TEXT,
+                    tools_mentioned TEXT,  -- JSON array of AI tools
+                    example_prompts TEXT,  -- JSON array of example prompts
+                    supporting_articles TEXT,  -- JSON array of article IDs
+                    analyzed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (task_id) REFERENCES dcwf_tasks (id)
+                )
+            """)
+            
+            # AI Tools Database
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS ai_tools (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    tool_name TEXT UNIQUE NOT NULL,  -- e.g., "Cursor", "ChatGPT", "Windsurf"
+                    tool_category TEXT,  -- Code Assistant, Analysis Tool, etc.
+                    vendor TEXT,
+                    description TEXT,
+                    capabilities TEXT,  -- JSON array of capabilities
+                    pricing_model TEXT,  -- Free, Subscription, Usage-based
+                    target_tasks TEXT,  -- JSON array of task types this tool helps with
+                    website_url TEXT,
+                    api_available BOOLEAN DEFAULT FALSE,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )
+            """)
+            
+            # Task-Tool Relationships with Example Prompts
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS task_tool_recommendations (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    task_id INTEGER NOT NULL,
+                    tool_id INTEGER NOT NULL,
+                    effectiveness_rating REAL,  -- 0.0-1.0 how effective this tool is for this task
+                    example_prompts TEXT,  -- JSON array of example prompts
+                    use_case_description TEXT,
+                    configuration_notes TEXT,
+                    supporting_articles TEXT,  -- JSON array of article IDs that support this recommendation
+                    confidence_score REAL DEFAULT 0.5,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (task_id) REFERENCES dcwf_tasks (id),
+                    FOREIGN KEY (tool_id) REFERENCES ai_tools (id),
+                    UNIQUE(task_id, tool_id)
+                )
+            """)
+            
+            # Article-Task Mappings (connects articles to specific tasks they discuss)
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS article_task_mappings (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    artifact_id TEXT NOT NULL,
+                    task_id INTEGER NOT NULL,
+                    relevance_score REAL NOT NULL,  -- 0.0-1.0 how relevant this article is to the task
+                    mentions_count INTEGER DEFAULT 1,  -- How many times the task is mentioned
+                    context_snippets TEXT,  -- JSON array of relevant text snippets
+                    ai_impact_mentioned TEXT,  -- What type of AI impact is mentioned for this task
+                    confidence_level REAL DEFAULT 0.5,
+                    extracted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (artifact_id) REFERENCES artifacts (id),
+                    FOREIGN KEY (task_id) REFERENCES dcwf_tasks (id),
+                    UNIQUE(artifact_id, task_id)
+                )
+            """)
+            
+            # Task Analysis Summary (aggregated insights per task)
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS task_analysis_summary (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    task_id INTEGER UNIQUE NOT NULL,
+                    total_articles_analyzed INTEGER DEFAULT 0,
+                    replace_confidence REAL DEFAULT 0.0,
+                    augment_confidence REAL DEFAULT 0.0,
+                    new_tasks_confidence REAL DEFAULT 0.0,
+                    human_only_confidence REAL DEFAULT 0.0,
+                    primary_ai_impact TEXT,  -- The category with highest confidence
+                    recommended_tools TEXT,  -- JSON array of top recommended tools
+                    key_insights TEXT,  -- JSON array of key insights
+                    example_prompts TEXT,  -- JSON array of most effective prompts
+                    last_analyzed TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (task_id) REFERENCES dcwf_tasks (id)
+                )
+            """)
+            
             conn.commit()
             logger.info("Database initialized successfully")
         except Exception as e:
@@ -552,4 +677,369 @@ class DatabaseManager:
             
             conn.commit()
             logger.info(f"Updated metadata for artifact {artifact_id}")
-            return True 
+            return True
+
+    # =====================================================
+    # TASK-CENTRIC DATABASE METHODS
+    # =====================================================
+    
+    def save_dcwf_task(self, task_data: Dict[str, Any]) -> Optional[int]:
+        """
+        Save a DCWF task to the database.
+        
+        Args:
+            task_data: Dictionary containing task information
+            
+        Returns:
+            The task ID or None if failed
+        """
+        try:
+            with self.get_connection() as conn:
+                cursor = conn.cursor()
+                
+                cursor.execute("""
+                    INSERT OR REPLACE INTO dcwf_tasks 
+                    (dcwf_task_id, task_name, task_description, dcwf_work_role_id, 
+                     work_role_name, category, complexity_level)
+                    VALUES (?, ?, ?, ?, ?, ?, ?)
+                """, (
+                    task_data['dcwf_task_id'],
+                    task_data['task_name'],
+                    task_data.get('task_description', ''),
+                    task_data.get('dcwf_work_role_id', ''),
+                    task_data.get('work_role_name', ''),
+                    task_data.get('category', ''),
+                    task_data.get('complexity_level', 'Intermediate')
+                ))
+                
+                task_id = cursor.lastrowid
+                conn.commit()
+                logger.info(f"Saved DCWF task {task_data['dcwf_task_id']}")
+                return task_id
+                
+        except Exception as e:
+            logger.error(f"Error saving DCWF task: {e}")
+            return None
+    
+    def save_ai_tool(self, tool_data: Dict[str, Any]) -> Optional[int]:
+        """
+        Save an AI tool to the database.
+        
+        Args:
+            tool_data: Dictionary containing tool information
+            
+        Returns:
+            The tool ID or None if failed
+        """
+        try:
+            with self.get_connection() as conn:
+                cursor = conn.cursor()
+                
+                cursor.execute("""
+                    INSERT OR REPLACE INTO ai_tools 
+                    (tool_name, tool_category, vendor, description, capabilities, 
+                     pricing_model, target_tasks, website_url, api_available)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """, (
+                    tool_data['tool_name'],
+                    tool_data.get('tool_category', ''),
+                    tool_data.get('vendor', ''),
+                    tool_data.get('description', ''),
+                    json.dumps(tool_data.get('capabilities', [])),
+                    tool_data.get('pricing_model', ''),
+                    json.dumps(tool_data.get('target_tasks', [])),
+                    tool_data.get('website_url', ''),
+                    tool_data.get('api_available', False)
+                ))
+                
+                tool_id = cursor.lastrowid
+                conn.commit()
+                logger.info(f"Saved AI tool {tool_data['tool_name']}")
+                return tool_id
+                
+        except Exception as e:
+            logger.error(f"Error saving AI tool: {e}")
+            return None
+    
+    def save_task_tool_recommendation(self, recommendation_data: Dict[str, Any]) -> Optional[int]:
+        """
+        Save a task-tool recommendation with example prompts.
+        
+        Args:
+            recommendation_data: Dictionary containing recommendation information
+            
+        Returns:
+            The recommendation ID or None if failed
+        """
+        try:
+            with self.get_connection() as conn:
+                cursor = conn.cursor()
+                
+                cursor.execute("""
+                    INSERT OR REPLACE INTO task_tool_recommendations 
+                    (task_id, tool_id, effectiveness_rating, example_prompts, 
+                     use_case_description, configuration_notes, supporting_articles, confidence_score)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                """, (
+                    recommendation_data['task_id'],
+                    recommendation_data['tool_id'],
+                    recommendation_data.get('effectiveness_rating', 0.5),
+                    json.dumps(recommendation_data.get('example_prompts', [])),
+                    recommendation_data.get('use_case_description', ''),
+                    recommendation_data.get('configuration_notes', ''),
+                    json.dumps(recommendation_data.get('supporting_articles', [])),
+                    recommendation_data.get('confidence_score', 0.5)
+                ))
+                
+                rec_id = cursor.lastrowid
+                conn.commit()
+                logger.info(f"Saved task-tool recommendation {rec_id}")
+                return rec_id
+                
+        except Exception as e:
+            logger.error(f"Error saving task-tool recommendation: {e}")
+            return None
+    
+    def save_article_task_mapping(self, mapping_data: Dict[str, Any]) -> Optional[int]:
+        """
+        Save an article-task mapping.
+        
+        Args:
+            mapping_data: Dictionary containing mapping information
+            
+        Returns:
+            The mapping ID or None if failed
+        """
+        try:
+            with self.get_connection() as conn:
+                cursor = conn.cursor()
+                
+                cursor.execute("""
+                    INSERT OR REPLACE INTO article_task_mappings 
+                    (artifact_id, task_id, relevance_score, mentions_count, 
+                     context_snippets, ai_impact_mentioned, confidence_level)
+                    VALUES (?, ?, ?, ?, ?, ?, ?)
+                """, (
+                    mapping_data['artifact_id'],
+                    mapping_data['task_id'],
+                    mapping_data['relevance_score'],
+                    mapping_data.get('mentions_count', 1),
+                    json.dumps(mapping_data.get('context_snippets', [])),
+                    mapping_data.get('ai_impact_mentioned', ''),
+                    mapping_data.get('confidence_level', 0.5)
+                ))
+                
+                mapping_id = cursor.lastrowid
+                conn.commit()
+                logger.info(f"Saved article-task mapping {mapping_id}")
+                return mapping_id
+                
+        except Exception as e:
+            logger.error(f"Error saving article-task mapping: {e}")
+            return None
+    
+    def get_tasks_by_work_role(self, work_role_id: str) -> List[Dict[str, Any]]:
+        """Get all tasks for a specific DCWF work role."""
+        try:
+            with self.get_connection() as conn:
+                cursor = conn.cursor()
+                cursor.execute("""
+                    SELECT dt.*, tas.primary_ai_impact, tas.replace_confidence, 
+                           tas.augment_confidence, tas.new_tasks_confidence, tas.human_only_confidence
+                    FROM dcwf_tasks dt
+                    LEFT JOIN task_analysis_summary tas ON dt.id = tas.task_id
+                    WHERE dt.dcwf_work_role_id = ?
+                    ORDER BY dt.task_name
+                """, (work_role_id,))
+                return [dict(row) for row in cursor.fetchall()]
+        except Exception as e:
+            logger.error(f"Error getting tasks for work role {work_role_id}: {e}")
+            return []
+    
+    def get_tools_for_task(self, task_id: int) -> List[Dict[str, Any]]:
+        """Get all AI tools recommended for a specific task."""
+        try:
+            with self.get_connection() as conn:
+                cursor = conn.cursor()
+                cursor.execute("""
+                    SELECT at.*, ttr.effectiveness_rating, ttr.example_prompts, 
+                           ttr.use_case_description, ttr.confidence_score
+                    FROM ai_tools at
+                    JOIN task_tool_recommendations ttr ON at.id = ttr.tool_id
+                    WHERE ttr.task_id = ?
+                    ORDER BY ttr.effectiveness_rating DESC, ttr.confidence_score DESC
+                """, (task_id,))
+                
+                results = []
+                for row in cursor.fetchall():
+                    row_dict = dict(row)
+                    # Parse JSON fields
+                    if row_dict.get('example_prompts'):
+                        row_dict['example_prompts'] = json.loads(row_dict['example_prompts'])
+                    if row_dict.get('capabilities'):
+                        row_dict['capabilities'] = json.loads(row_dict['capabilities'])
+                    if row_dict.get('target_tasks'):
+                        row_dict['target_tasks'] = json.loads(row_dict['target_tasks'])
+                    results.append(row_dict)
+                
+                return results
+        except Exception as e:
+            logger.error(f"Error getting tools for task {task_id}: {e}")
+            return []
+    
+    def get_articles_for_task(self, task_id: int) -> List[Dict[str, Any]]:
+        """Get all articles that discuss a specific task."""
+        try:
+            with self.get_connection() as conn:
+                cursor = conn.cursor()
+                cursor.execute("""
+                    SELECT a.*, atm.relevance_score, atm.mentions_count, 
+                           atm.context_snippets, atm.ai_impact_mentioned
+                    FROM artifacts a
+                    JOIN article_task_mappings atm ON a.id = atm.artifact_id
+                    WHERE atm.task_id = ?
+                    ORDER BY atm.relevance_score DESC, atm.mentions_count DESC
+                """, (task_id,))
+                
+                results = []
+                for row in cursor.fetchall():
+                    row_dict = dict(row)
+                    # Parse JSON fields
+                    if row_dict.get('context_snippets'):
+                        row_dict['context_snippets'] = json.loads(row_dict['context_snippets'])
+                    if row_dict.get('raw_metadata'):
+                        row_dict['raw_metadata'] = json.loads(row_dict['raw_metadata'])
+                    results.append(row_dict)
+                
+                return results
+        except Exception as e:
+            logger.error(f"Error getting articles for task {task_id}: {e}")
+            return []
+    
+    def update_task_analysis_summary(self, task_id: int, analysis_data: Dict[str, Any]) -> bool:
+        """Update the analysis summary for a task."""
+        try:
+            with self.get_connection() as conn:
+                cursor = conn.cursor()
+                cursor.execute("""
+                    INSERT OR REPLACE INTO task_analysis_summary 
+                    (task_id, total_articles_analyzed, replace_confidence, augment_confidence,
+                     new_tasks_confidence, human_only_confidence, primary_ai_impact, 
+                     recommended_tools, key_insights, example_prompts)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """, (
+                    task_id,
+                    analysis_data.get('total_articles_analyzed', 0),
+                    analysis_data.get('replace_confidence', 0.0),
+                    analysis_data.get('augment_confidence', 0.0),
+                    analysis_data.get('new_tasks_confidence', 0.0),
+                    analysis_data.get('human_only_confidence', 0.0),
+                    analysis_data.get('primary_ai_impact', ''),
+                    json.dumps(analysis_data.get('recommended_tools', [])),
+                    json.dumps(analysis_data.get('key_insights', [])),
+                    json.dumps(analysis_data.get('example_prompts', []))
+                ))
+                
+                conn.commit()
+                logger.info(f"Updated analysis summary for task {task_id}")
+                return True
+                
+        except Exception as e:
+            logger.error(f"Error updating task analysis summary: {e}")
+            return False
+    
+    def get_task_analysis_summary(self, task_id: int) -> Optional[Dict[str, Any]]:
+        """Get the analysis summary for a specific task."""
+        try:
+            with self.get_connection() as conn:
+                cursor = conn.cursor()
+                cursor.execute("""
+                    SELECT dt.*, tas.*
+                    FROM dcwf_tasks dt
+                    LEFT JOIN task_analysis_summary tas ON dt.id = tas.task_id
+                    WHERE dt.id = ?
+                """, (task_id,))
+                
+                row = cursor.fetchone()
+                if row:
+                    result = dict(row)
+                    # Parse JSON fields
+                    for field in ['recommended_tools', 'key_insights', 'example_prompts']:
+                        if result.get(field):
+                            result[field] = json.loads(result[field])
+                    return result
+                return None
+                
+        except Exception as e:
+            logger.error(f"Error getting task analysis summary: {e}")
+            return None
+    
+    def search_tasks_by_keyword(self, keyword: str) -> List[Dict[str, Any]]:
+        """Search for tasks by keyword in name or description."""
+        try:
+            with self.get_connection() as conn:
+                cursor = conn.cursor()
+                cursor.execute("""
+                    SELECT dt.*, tas.primary_ai_impact, tas.replace_confidence, 
+                           tas.augment_confidence, tas.new_tasks_confidence, tas.human_only_confidence
+                    FROM dcwf_tasks dt
+                    LEFT JOIN task_analysis_summary tas ON dt.id = tas.task_id
+                    WHERE dt.task_name LIKE ? OR dt.task_description LIKE ?
+                    ORDER BY dt.task_name
+                """, (f'%{keyword}%', f'%{keyword}%'))
+                return [dict(row) for row in cursor.fetchall()]
+        except Exception as e:
+            logger.error(f"Error searching tasks by keyword {keyword}: {e}")
+            return []
+    
+    def get_task_statistics(self) -> Dict[str, Any]:
+        """Get statistics about the task-centric database."""
+        try:
+            with self.get_connection() as conn:
+                cursor = conn.cursor()
+                
+                # Get basic counts
+                cursor.execute("SELECT COUNT(*) FROM dcwf_tasks")
+                total_tasks = cursor.fetchone()[0]
+                
+                cursor.execute("SELECT COUNT(*) FROM ai_tools")
+                total_tools = cursor.fetchone()[0]
+                
+                cursor.execute("SELECT COUNT(*) FROM task_tool_recommendations")
+                total_recommendations = cursor.fetchone()[0]
+                
+                cursor.execute("SELECT COUNT(*) FROM article_task_mappings")
+                total_mappings = cursor.fetchone()[0]
+                
+                # Get AI impact distribution
+                cursor.execute("""
+                    SELECT primary_ai_impact, COUNT(*) 
+                    FROM task_analysis_summary 
+                    WHERE primary_ai_impact IS NOT NULL 
+                    GROUP BY primary_ai_impact
+                """)
+                ai_impact_distribution = dict(cursor.fetchall())
+                
+                # Get most analyzed work roles
+                cursor.execute("""
+                    SELECT work_role_name, COUNT(*) as task_count
+                    FROM dcwf_tasks 
+                    WHERE work_role_name IS NOT NULL 
+                    GROUP BY work_role_name 
+                    ORDER BY task_count DESC 
+                    LIMIT 10
+                """)
+                top_work_roles = dict(cursor.fetchall())
+                
+                return {
+                    'total_tasks': total_tasks,
+                    'total_tools': total_tools,
+                    'total_recommendations': total_recommendations,
+                    'total_mappings': total_mappings,
+                    'ai_impact_distribution': ai_impact_distribution,
+                    'top_work_roles': top_work_roles
+                }
+                
+        except Exception as e:
+            logger.error(f"Error getting task statistics: {e}")
+            return {} 

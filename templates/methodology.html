@@ -4,1023 +4,571 @@
 
 {% block extra_styles %}
 <style>
-
-
-        .header {
-            text-align: center;
-            color: #000000;
-            margin-bottom: 30px;
-        }
-
-        .header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            color: #000000;
-            font-weight: 900;
-            text-shadow: 0 2px 4px rgba(255, 255, 255, 0.8), 0 1px 2px rgba(255, 255, 255, 0.6);
-            letter-spacing: 0.5px;
-        }
-
-        .header p {
-            font-size: 1.1rem;
-            color: #000000;
-            font-weight: 600;
-            text-shadow: 0 2px 4px rgba(255, 255, 255, 0.8), 0 1px 2px rgba(255, 255, 255, 0.6);
-            letter-spacing: 0.3px;
-        }
-
-        .content {
-            background: white;
-            border-radius: 12px;
-            padding: 40px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-        }
-
-        .section {
-            margin-bottom: 40px;
-        }
-
-        .section h2 {
-            color: #4a5568;
-            font-size: 1.8rem;
-            margin-bottom: 20px;
-            border-bottom: 3px solid #4299e1;
-            padding-bottom: 10px;
-        }
-
-        .section h3 {
-            color: #2d3748;
-            font-size: 1.4rem;
-            margin-bottom: 15px;
-            margin-top: 25px;
-        }
-
-        .section h4 {
-            color: #4a5568;
-            font-size: 1.2rem;
-            margin-bottom: 12px;
-            margin-top: 20px;
-        }
-
-        .section p {
-            color: #4a5568;
-            margin-bottom: 15px;
-            text-align: justify;
-        }
-
-        .categories-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-            margin: 30px 0;
-        }
-
-        .category-card {
-            background: #f7fafc;
-            border-radius: 8px;
-            padding: 20px;
-            border-left: 4px solid #4299e1;
-        }
-
-        .category-card.replace {
-            border-left-color: #f56565;
-        }
-
-        .category-card.augment {
-            border-left-color: #ed8936;
-        }
-
-        .category-card.new-tasks {
-            border-left-color: #48bb78;
-        }
-
-        .category-card.human-only {
-            border-left-color: #9f7aea;
-        }
-
-        .category-card h4 {
-            color: #2d3748;
-            font-size: 1.2rem;
-            margin-bottom: 10px;
-        }
-
-        .category-card p {
-            color: #718096;
-            font-size: 0.95rem;
-            margin-bottom: 10px;
-        }
-
-        .methodology-steps {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
-            margin: 30px 0;
-        }
-
-        .step-card {
-            background: #ebf8ff;
-            border-radius: 8px;
-            padding: 25px;
-            position: relative;
-        }
-
-        .step-number {
-            position: absolute;
-            top: -15px;
-            left: 20px;
-            background: #4299e1;
-            color: white;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-        }
-
-        .step-card h4 {
-            color: #2d3748;
-            margin-bottom: 10px;
-            margin-top: 5px;
-        }
-
-        .data-sources {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin: 20px 0;
-        }
-
-        .source-tag {
-            background: #4299e1;
-            color: white;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: 600;
-        }
-
-        .highlight-box {
-            background: #fff3cd;
-            border: 1px solid #ffeaa7;
-            border-radius: 8px;
-            padding: 20px;
-            margin: 20px 0;
-        }
-
-        .transparency-box {
-            background: #e8f5e8;
-            border: 1px solid #81c784;
-            border-radius: 8px;
-            padding: 20px;
-            margin: 20px 0;
-        }
-
-        .highlight-box h4, .transparency-box h4 {
-            color: #2d3748;
-            margin-bottom: 10px;
-        }
-
-        .highlight-box p, .transparency-box p {
-            color: #4a5568;
-            margin: 0;
-        }
-
-        .stats-row {
-            display: flex;
-            justify-content: space-around;
-            margin: 30px 0;
-            text-align: center;
-            flex-wrap: wrap;
-        }
-
-        .stat-item {
-            background: #f7fafc;
-            padding: 20px;
-            border-radius: 8px;
-            min-width: 120px;
-            margin: 5px;
-        }
-
-        .stat-number {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #4299e1;
-        }
-
-        .stat-label {
-            color: #718096;
-            font-size: 0.9rem;
-            margin-top: 5px;
-        }
-
-        ul, ol {
-            margin-left: 20px;
-            margin-bottom: 15px;
-        }
-
-        li {
-            margin-bottom: 8px;
-            color: #4a5568;
-        }
-
-        .code-block {
-            background: #1a202c;
-            color: #e2e8f0;
-            padding: 20px;
-            border-radius: 8px;
-            font-family: 'Courier New', monospace;
-            font-size: 0.9rem;
-            margin: 20px 0;
-            overflow-x: auto;
-        }
-
-        .tech-stack {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 15px;
-            margin: 20px 0;
-        }
-
-        .tech-item {
-            background: #f8f9fa;
-            border: 1px solid #dee2e6;
-            border-radius: 8px;
-            padding: 15px;
-        }
-
-        .tech-item h5 {
-            color: #495057;
-            margin-bottom: 8px;
-            font-size: 1rem;
-        }
-
-        .tech-item p {
-            color: #6c757d;
-            font-size: 0.9rem;
-            margin: 0;
-        }
-
-        .quality-metrics {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin: 20px 0;
-        }
-
-        .metric-card {
-            background: #fff5f5;
-            border-left: 4px solid #e53e3e;
-            padding: 15px;
-            border-radius: 0 8px 8px 0;
-        }
-
-        .metric-card.excellent {
-            background: #f0fff4;
-            border-left-color: #38a169;
-        }
-
-        .metric-card.good {
-            background: #f7fafc;
-            border-left-color: #3182ce;
-        }
-
-        .metric-card.warning {
-            background: #fffbf0;
-            border-left-color: #d69e2e;
-        }
+    .methodology-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    .methodology-header {
+        text-align: center;
+        margin-bottom: 40px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 40px;
+        border-radius: 10px;
+    }
+    
+    .methodology-section {
+        background: white;
+        border-radius: 8px;
+        padding: 30px;
+        margin-bottom: 30px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .methodology-section h2 {
+        color: #2c3e50;
+        border-bottom: 3px solid #3498db;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+    }
+    
+    .methodology-section h3 {
+        color: #34495e;
+        margin-top: 25px;
+        margin-bottom: 15px;
+    }
+    
+    .formula-box {
+        background: #f8f9fa;
+        border: 2px solid #e9ecef;
+        border-radius: 5px;
+        padding: 15px;
+        margin: 15px 0;
+        font-family: 'Courier New', monospace;
+        overflow-x: auto;
+    }
+    
+    .formula-title {
+        font-weight: bold;
+        color: #495057;
+        margin-bottom: 8px;
+    }
+    
+    .confidence-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 15px 0;
+    }
+    
+    .confidence-table th,
+    .confidence-table td {
+        border: 1px solid #dee2e6;
+        padding: 8px 12px;
+        text-align: left;
+    }
+    
+    .confidence-table th {
+        background-color: #f8f9fa;
+        font-weight: bold;
+    }
+    
+    .threshold-list {
+        background: #fff3cd;
+        border: 1px solid #ffeaa7;
+        border-radius: 5px;
+        padding: 15px;
+        margin: 15px 0;
+    }
+    
+    .threshold-list h4 {
+        margin-top: 0;
+        color: #856404;
+    }
+    
+    .warning-box {
+        background: #f8d7da;
+        border: 1px solid #f5c6cb;
+        border-radius: 5px;
+        padding: 15px;
+        margin: 15px 0;
+        color: #721c24;
+    }
+    
+    .data-sources {
+        background: #d4edda;
+        border: 1px solid #c3e6cb;
+        border-radius: 5px;
+        padding: 15px;
+        margin: 15px 0;
+    }
+    
+    .navigation-links {
+        text-align: center;
+        margin: 30px 0;
+    }
+    
+    .nav-button {
+        display: inline-block;
+        padding: 10px 20px;
+        margin: 0 10px;
+        background: #3498db;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: background 0.3s;
+    }
+    
+    .nav-button:hover {
+        background: #2980b9;
+    }
 </style>
 {% endblock %}
 
 {% block content %}
-    <div class="main-content">
-<!-- Navigation Header -->
+    <div class="methodology-container">
+        <div class="methodology-header">
+            <h1>🔬 AI-Horizon Analysis Methodology</h1>
+            <p>Understanding the Science Behind Our Intelligence Platform</p>
+            <p><em>Transparent, reproducible methods for cybersecurity workforce analysis</em></p>
+        </div>
+
+        <div class="navigation-links">
+            <a href="/" class="nav-button">🏠 Home</a>
+            <a href="/analysis" class="nav-button">📊 Analysis</a>
+            <a href="/summaries" class="nav-button">📋 Reports</a>
+        </div>
+
+        <!-- Quality Analysis Methodology -->
+        <div class="methodology-section" id="quality-analysis">
+            <h2>📈 Quality Distribution Analysis</h2>
+            
+            <h3>Overview</h3>
+            <p>Our quality analysis system evaluates collected articles using a multi-factor scoring algorithm that considers content depth, source reliability, recency, and relevance to cybersecurity AI topics.</p>
+            
+            <h3>Quality Score Calculation</h3>
+            <div class="formula-box">
+                <div class="formula-title">Quality Score Formula:</div>
+                <code>
+                Quality Score = (Content_Score × 0.4) + (Source_Score × 0.3) + (Recency_Score × 0.2) + (Relevance_Score × 0.1)
+                <br><br>
+                Where:
+                <br>• Content_Score = Length_Factor × Structure_Factor × Depth_Factor
+                <br>• Source_Score = Domain_Reputation × Author_Credibility
+                <br>• Recency_Score = 1.0 - (Days_Since_Publication / 365)
+                <br>• Relevance_Score = AI_Keywords_Count × Cybersecurity_Keywords_Count
+                </code>
+            </div>
+            
+            <h3>Quality Categories</h3>
+            <table class="confidence-table">
+                <tr>
+                    <th>Score Range</th>
+                    <th>Classification</th>
+                    <th>Criteria</th>
+                </tr>
+                <tr>
+                    <td>0.8 - 1.0</td>
+                    <td>Excellent</td>
+                    <td>Comprehensive analysis, authoritative source, recent publication</td>
+                </tr>
+                <tr>
+                    <td>0.6 - 0.79</td>
+                    <td>Good</td>
+                    <td>Solid content with good insights, reliable source</td>
+                </tr>
+                <tr>
+                    <td>0.4 - 0.59</td>
+                    <td>Average</td>
+                    <td>Basic information, standard sources</td>
+                </tr>
+                <tr>
+                    <td>0.2 - 0.39</td>
+                    <td>Below Average</td>
+                    <td>Limited insights, questionable sources</td>
+                </tr>
+                <tr>
+                    <td>0.0 - 0.19</td>
+                    <td>Poor</td>
+                    <td>Minimal value, unreliable sources</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Trend Analysis Methodology -->
+        <div class="methodology-section" id="trend-analysis">
+            <h2>📊 Comprehensive Trend Analysis</h2>
+            
+            <h3>Quality Trends</h3>
+            <div class="formula-box">
+                <div class="formula-title">Quality Improvement Calculation:</div>
+                <code>
+                Quality_Improvement = Recent_Average - Early_Average
+                <br><br>
+                Where:
+                <br>• Recent_Average = Mean quality score of last 3 months
+                <br>• Early_Average = Mean quality score of first 3 months
+                <br>• Trend_Direction = "improving" if Quality_Improvement > 0.05
+                <br>• Trend_Direction = "declining" if Quality_Improvement < -0.05
+                <br>• Trend_Direction = "stable" otherwise
+                </code>
+            </div>
+            
+            <h3>Topic Evolution Analysis</h3>
+            <div class="formula-box">
+                <div class="formula-title">Emerging/Declining Term Detection:</div>
+                <code>
+                Term_Frequency = Term_Count / Total_Articles_Per_Month
+                <br>
+                Change_Score = Recent_Period_Frequency - Early_Period_Frequency
+                <br><br>
+                Emerging: Change_Score > 0.01 AND Recent_Frequency > 0.01
+                <br>Declining: Change_Score < -0.01 AND Early_Frequency > 0.01
+                </code>
+            </div>
+            
+            <h3>Collection Pattern Analysis</h3>
+            <div class="formula-box">
+                <div class="formula-title">Collection Consistency Score:</div>
+                <code>
+                Coefficient_of_Variation = Standard_Deviation / Mean_Daily_Collections
+                <br>
+                Consistency_Score = max(0, 1 - Coefficient_of_Variation)
+                <br><br>
+                Score Interpretation:
+                <br>• 1.0 = Perfect consistency
+                <br>• 0.8-0.99 = High consistency
+                <br>• 0.6-0.79 = Moderate consistency
+                <br>• < 0.6 = Low consistency
+                </code>
+            </div>
+            
+            <h3>Sentiment Analysis</h3>
+            <div class="formula-box">
+                <div class="formula-title">Keyword-Based Sentiment Classification:</div>
+                <code>
+                Positive_Count = Σ(positive_keywords in text)
+                <br>Negative_Count = Σ(negative_keywords in text)
+                <br>Neutral_Count = Σ(neutral_keywords in text)
+                <br><br>
+                Classification Rules:
+                <br>• "positive" if Positive_Count > Negative_Count AND Positive_Count ≥ Neutral_Count
+                <br>• "negative" if Negative_Count > Positive_Count AND Negative_Count ≥ Neutral_Count
+                <br>• "neutral" otherwise
+                </code>
+            </div>
+            
+            <div class="threshold-list">
+                <h4>⚡ Analysis Thresholds</h4>
+                <ul>
+                    <li><strong>Minimum months for trend detection:</strong> 4 months</li>
+                    <li><strong>Emergence threshold:</strong> 0.01 frequency change (0.005 for 12+ months)</li>
+                    <li><strong>Quality improvement threshold:</strong> ±0.05 points</li>
+                    <li><strong>Minimum article count for sentiment:</strong> Articles must contain sentiment keywords</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Job Market Sentiment Methodology -->
+        <div class="methodology-section" id="job-market-sentiment">
+            <h2>🎯 Job Market Sentiment Analysis</h2>
+            
+            <h3>Overall Sentiment Calculation</h3>
+            <div class="formula-box">
+                <div class="formula-title">Sentiment Score Formula:</div>
+                <code>
+                Sentiment_Score = (Positive_Signals - Negative_Signals) / Total_Signals
+                <br><br>
+                Where:
+                <br>• Positive_Signals = Count of positive job-related terms
+                <br>• Negative_Signals = Count of negative job-related terms
+                <br>• Total_Signals = Positive_Signals + Negative_Signals + Neutral_Signals
+                <br>• Score ranges from -1.0 (very negative) to +1.0 (very positive)
+                </code>
+            </div>
+            
+            <h3>Opportunity vs. Threat Analysis</h3>
+            <div class="formula-box">
+                <div class="formula-title">Balance Ratio Calculation:</div>
+                <code>
+                Balance_Ratio = Total_Opportunities / max(Total_Threats, 1)
+                <br><br>
+                Narrative Classification:
+                <br>• "opportunity-focused" if Balance_Ratio > 1.2
+                <br>• "threat-focused" if Balance_Ratio < 0.8
+                <br>• "balanced" otherwise
+                </code>
+            </div>
+            
+            <h3>Skill Demand Analysis</h3>
+            <div class="formula-box">
+                <div class="formula-title">Skill Ranking Algorithm:</div>
+                <code>
+                Skill_Sentiment = (Positive_Context - Negative_Context) / Total_Context_Signals
+                <br>
+                Overall_Rating = (Skill_Sentiment + 1) × Mention_Count
+                <br><br>
+                Where context is analyzed within ±200 characters of skill mention
+                </code>
+            </div>
+            
+            <h3>Employer vs. Employee Perspective</h3>
+            <div class="formula-box">
+                <div class="formula-title">Perspective Detection:</div>
+                <code>
+                Employer_Signals = Count of employer-related terms
+                <br>Employee_Signals = Count of employee-related terms
+                <br><br>
+                Classification:
+                <br>• "employer" if Employer_Signals > Employee_Signals × 1.5
+                <br>• "employee" if Employee_Signals > Employer_Signals × 1.5
+                <br>• "mixed" if both present
+                </code>
+            </div>
+            
+            <div class="data-sources">
+                <h4>📊 Data Sources</h4>
+                <p>Job market sentiment is derived from:</p>
+                <ul>
+                    <li>Industry reports and whitepapers</li>
+                    <li>News articles and press releases</li>
+                    <li>Academic research publications</li>
+                    <li>Government and regulatory documents</li>
+                    <li>Professional association publications</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- AI Adoption Predictions Methodology -->
+        <div class="methodology-section" id="ai-adoption-predictions">
+            <h2>🚀 AI Adoption Rate Predictions</h2>
+            
+            <h3>Predictive Model Overview</h3>
+            <p>Our AI adoption prediction system uses machine learning algorithms to analyze temporal patterns in collected data and forecast future adoption trends in cybersecurity workforce transformation.</p>
+            
+            <h3>Feature Engineering</h3>
+            <div class="formula-box">
+                <div class="formula-title">Time Series Features:</div>
+                <code>
+                Features = [
+                    monthly_article_count,
+                    avg_quality_score,
+                    sentiment_distribution,
+                    category_distribution,
+                    keyword_frequency_trends,
+                    source_diversity_index
+                ]
+                </code>
+            </div>
+            
+            <h3>Adoption Phase Classification</h3>
+            <table class="confidence-table">
+                <tr>
+                    <th>Phase</th>
+                    <th>Characteristics</th>
+                    <th>Indicators</th>
+                </tr>
+                <tr>
+                    <td>Early Exploration</td>
+                    <td>Initial awareness and experimentation</td>
+                    <td>Low volume, high uncertainty</td>
+                </tr>
+                <tr>
+                    <td>Early Majority</td>
+                    <td>Broader adoption beginning</td>
+                    <td>Increasing volume, positive sentiment</td>
+                </tr>
+                <tr>
+                    <td>Late Majority</td>
+                    <td>Mainstream adoption</td>
+                    <td>High volume, practical focus</td>
+                </tr>
+                <tr>
+                    <td>Maturity</td>
+                    <td>Established practices</td>
+                    <td>Stable patterns, optimization focus</td>
+                </tr>
+            </table>
+            
+            <h3>Transformation Speed Metrics</h3>
+            <div class="formula-box">
+                <div class="formula-title">Speed Classification:</div>
+                <code>
+                Speed = Change_Rate / Time_Period
+                <br><br>
+                Classifications:
+                <br>• "rapid" if Speed > 0.1 per month
+                <br>• "moderate" if 0.05 < Speed ≤ 0.1 per month
+                <br>• "gradual" if Speed ≤ 0.05 per month
+                </code>
+            </div>
+        </div>
+
+        <!-- Collection Monitoring Methodology -->
+        <div class="methodology-section" id="collection-monitoring">
+            <h2>🔍 Collection Monitoring Dashboard</h2>
+            
+            <h3>Collection Velocity Tracking</h3>
+            <div class="formula-box">
+                <div class="formula-title">Velocity Metrics:</div>
+                <code>
+                Collection_Rate = Articles_Collected / Time_Period_Hours
+                <br>
+                Peak_Hour_Detection = max(hourly_collection_counts)
+                <br>
+                Efficiency_Score = Successful_Collections / Total_Attempts
+                </code>
+            </div>
+            
+            <h3>Source Health Assessment</h3>
+            <div class="formula-box">
+                <div class="formula-title">Source Health Score:</div>
+                <code>
+                Health_Score = (Quality_Score × 0.4) + (Reliability_Score × 0.3) + (Freshness_Score × 0.3)
+                <br><br>
+                Where:
+                <br>• Quality_Score = Average quality of articles from source
+                <br>• Reliability_Score = Success rate of collections
+                <br>• Freshness_Score = Recency of last successful collection
+                </code>
+            </div>
+            
+            <h3>Anomaly Detection</h3>
+            <div class="formula-box">
+                <div class="formula-title">Anomaly Thresholds:</div>
+                <code>
+                Quality_Anomaly = |current_quality - rolling_average| > 2 × standard_deviation
+                <br>
+                Volume_Anomaly = |current_volume - expected_volume| > 3 × standard_deviation
+                <br>
+                Source_Issue = consecutive_failures > 3 OR response_time > 30_seconds
+                </code>
+            </div>
+        </div>
+
+        <!-- Category Distribution Methodology -->
+        <div class="methodology-section" id="category-distribution">
+            <h2>📊 Category Distribution Insights</h2>
+            
+            <h3>AI Impact Category Classification</h3>
+            <p>Articles are classified into four primary AI impact categories using advanced natural language processing:</p>
+            
+            <div class="formula-box">
+                <div class="formula-title">Category Classification Logic:</div>
+                <code>
+                Categories:
+                <br>• AI_REPLACE: Articles discussing AI replacing human tasks
+                <br>• AI_AUGMENT: Articles about AI enhancing human capabilities
+                <br>• NEW_TASKS: Articles describing new roles created by AI
+                <br>• HUMAN_ONLY: Articles emphasizing tasks requiring human skills
+                </code>
+            </div>
+            
+            <h3>Balance Score Calculation</h3>
+            <div class="formula-box">
+                <div class="formula-title">Distribution Balance:</div>
+                <code>
+                Balance_Score = 1 - Gini_Coefficient(category_distribution)
+                <br><br>
+                Where:
+                <br>• Perfect balance (0.25 each) = Score of 1.0
+                <br>• Complete imbalance (100% one category) = Score of 0.0
+                <br>• Higher scores indicate more balanced coverage
+                </code>
+            </div>
+        </div>
+
+        <!-- Confidence and Limitations -->
+        <div class="methodology-section" id="confidence-limitations">
+            <h2>⚠️ Confidence Levels and Limitations</h2>
+            
+            <h3>Confidence Assessment</h3>
+            <table class="confidence-table">
+                <tr>
+                    <th>Confidence Level</th>
+                    <th>Data Requirements</th>
+                    <th>Reliability</th>
+                </tr>
+                <tr>
+                    <td>High</td>
+                    <td>6+ months, 100+ articles</td>
+                    <td>Results are statistically significant</td>
+                </tr>
+                <tr>
+                    <td>Medium</td>
+                    <td>3-5 months, 50+ articles</td>
+                    <td>Trends are indicative but may change</td>
+                </tr>
+                <tr>
+                    <td>Low</td>
+                    <td>< 3 months, < 50 articles</td>
+                    <td>Preliminary insights only</td>
+                </tr>
+            </table>
+            
+            <div class="warning-box">
+                <h4>⚠️ Important Limitations</h4>
+                <ul>
+                    <li><strong>Data Bias:</strong> Results reflect available sources and may not represent all perspectives</li>
+                    <li><strong>Temporal Sensitivity:</strong> Analysis is based on historical data and may not predict future changes</li>
+                    <li><strong>Keyword Limitations:</strong> Sentiment analysis is keyword-based and may miss nuanced context</li>
+                    <li><strong>Sample Size:</strong> Small datasets may produce unreliable results</li>
+                    <li><strong>Source Quality:</strong> Analysis quality depends on the quality of collected sources</li>
+                </ul>
+            </div>
+            
+            <h3>Best Practices for Interpretation</h3>
+            <ul>
+                <li>Always consider confidence levels when interpreting results</li>
+                <li>Look for consistent patterns across multiple analysis types</li>
+                <li>Combine quantitative results with qualitative assessment</li>
+                <li>Regular re-analysis as new data becomes available</li>
+                <li>Cross-reference with external industry reports</li>
+            </ul>
+        </div>
+
+        <!-- Technical Implementation -->
+        <div class="methodology-section" id="technical-implementation">
+            <h2>🔧 Technical Implementation</h2>
+            
+            <h3>Data Processing Pipeline</h3>
+            <ol>
+                <li><strong>Collection:</strong> Automated gathering from configured sources</li>
+                <li><strong>Preprocessing:</strong> Text cleaning, normalization, metadata extraction</li>
+                <li><strong>Classification:</strong> AI impact category assignment using NLP</li>
+                <li><strong>Quality Scoring:</strong> Multi-factor quality assessment</li>
+                <li><strong>Analysis:</strong> Statistical and machine learning analysis</li>
+                <li><strong>Reporting:</strong> Automated report generation with confidence metrics</li>
+            </ol>
+            
+            <h3>Quality Assurance</h3>
+            <ul>
+                <li>Automated validation of analysis results</li>
+                <li>Statistical significance testing</li>
+                <li>Cross-validation of machine learning models</li>
+                <li>Regular methodology review and updates</li>
+            </ul>
+            
+            <h3>Update Frequency</h3>
+            <ul>
+                <li><strong>Real-time:</strong> Collection monitoring and health metrics</li>
+                <li><strong>Daily:</strong> Quality scores and basic statistics</li>
+                <li><strong>Weekly:</strong> Trend analysis and sentiment tracking</li>
+                <li><strong>Monthly:</strong> Comprehensive predictive analysis and reports</li>
+            </ul>
+        </div>
+
+        <div class="navigation-links">
+            <a href="/" class="nav-button">🏠 Return Home</a>
+            <a href="/analysis" class="nav-button">📊 Run Analysis</a>
+            <a href="/summaries" class="nav-button">📋 View Reports</a>
+        </div>
         
-
-        <div class="header">
-            <h1>📖 Research Methodology</h1>
-            <p>Transparent, reproducible framework for analyzing AI's impact on cybersecurity workforce development</p>
+        <div style="text-align: center; margin-top: 40px; color: #7f8c8d;">
+            <p><em>AI-Horizon Methodology Documentation v2.0</em></p>
+            <p>Last Updated: {{ current_date }}</p>
         </div>
-
-        <div class="content">
-            <!-- NSF Transparency Statement -->
-            <div class="section">
-                <h2>🎯 NSF Transparency & Reproducibility Statement</h2>
-                <div class="transparency-box">
-                    <h4>📋 Open Science Commitment</h4>
-                    <p>This methodology document provides complete transparency for National Science Foundation reporting requirements. All data collection methods, processing algorithms, quality metrics, and analytical frameworks are documented for full reproducibility. Source code, datasets, and processing logs are maintained for validation and replication studies.</p>
-                </div>
-                
-                <p>
-                    The AI-Horizon project employs a sophisticated multi-modal intelligence gathering and analysis framework to provide evidence-based guidance for cybersecurity students graduating in 2025. Our approach combines automated data collection, quality-based document curation, dual-mode retrieval-augmented generation (RAG), and comprehensive archival systems to ensure both immediate actionability and long-term research value.
-                </p>
-
-                <div class="stats-row">
-                    <div class="stat-item">
-                        <div class="stat-number" id="total-artifacts">118</div>
-                        <div class="stat-label">Current Artifacts</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number" id="high-quality">85</div>
-                        <div class="stat-label">High Quality Sources</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number" id="avg-quality">0.72</div>
-                        <div class="stat-label">Avg Quality Score</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number" id="processing-success">96%</div>
-                        <div class="stat-label">Processing Success</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Quality Scoring System -->
-            <div class="section">
-                <h2>🏆 Document Quality Scoring System</h2>
-                <p>
-                    The AI-Horizon system employs a comprehensive quality ranking framework that evaluates documents across multiple dimensions to ensure high-quality, actionable content for cybersecurity professionals. This system provides real-time quality assessment with visual indicators and automated sorting.
-                </p>
-
-                <h3>Quality Scoring Methodology</h3>
-                <div class="methodology-steps">
-                    <div class="step-card">
-                        <div class="step-number">1</div>
-                        <h4>Content Depth Analysis</h4>
-                        <p>Evaluates information density, technical complexity, and comprehensiveness using natural language processing metrics including text complexity scores and content structure analysis.</p>
-                    </div>
-                    <div class="step-card">
-                        <div class="step-number">2</div>
-                        <h4>Source Authority Assessment</h4>
-                        <p>Analyzes domain credibility, publication standards, author expertise, and citation patterns to determine source reliability and academic value.</p>
-                    </div>
-                    <div class="step-card">
-                        <div class="step-number">3</div>
-                        <h4>Relevance Scoring</h4>
-                        <p>Measures topic alignment with cybersecurity career development, practical applicability, and actionable insights for 2025 graduates.</p>
-                    </div>
-                    <div class="step-card">
-                        <div class="step-number">4</div>
-                        <h4>Completeness Evaluation</h4>
-                        <p>Assesses article structure, information coverage, supporting evidence, and overall content completeness for comprehensive analysis.</p>
-                    </div>
-                </div>
-
-                <h3>Quality Scoring Metrics</h3>
-                <div class="quality-metrics">
-                    <div class="metric-card excellent">
-                        <h4>🟢 Excellent (0.8 - 1.0)</h4>
-                        <p>Comprehensive, high-authority content with strong career relevance and actionable insights. Ready for immediate use in analysis and recommendations.</p>
-                    </div>
-                    <div class="metric-card good">
-                        <h4>🟡 Good (0.6 - 0.8)</h4>
-                        <p>Solid content with good insights and reliable sources. Suitable for analysis with minor supplementation or context addition.</p>
-                    </div>
-                    <div class="metric-card warning">
-                        <h4>🟠 Fair (0.4 - 0.6)</h4>
-                        <p>Acceptable content with some limitations. May require additional validation or should be used in conjunction with higher-quality sources.</p>
-                    </div>
-                    <div class="metric-card">
-                        <h4>🔴 Poor (&lt; 0.4)</h4>
-                        <p>Limited quality content that may need review, enhancement, or removal. Not recommended for primary analysis without significant improvement.</p>
-                    </div>
-                </div>
-
-                <h3>Quality-Based Features</h3>
-                <ul>
-                    <li><strong>Automatic Sorting:</strong> All content is automatically sorted by quality score with highest quality content displayed first</li>
-                    <li><strong>Visual Indicators:</strong> Color-coded quality badges provide immediate visual assessment of content value</li>
-                    <li><strong>Quality Filtering:</strong> Browse and search capabilities include quality-based filtering options</li>
-                    <li><strong>Trend Analysis:</strong> Historical quality tracking to monitor and improve content curation processes</li>
-                    <li><strong>Quality Reports:</strong> Detailed quality analytics for collection optimization and process improvement</li>
-                </ul>
-
-                <div class="highlight-box">
-                    <h4>🔬 Academic Validation</h4>
-                    <p>The quality scoring methodology is based on established information retrieval research and source credibility assessment frameworks. All scoring algorithms are documented for reproducibility and validation. Quality metrics are continuously refined based on expert feedback and outcome analysis.</p>
-                </div>
-            </div>
-
-            <!-- Technical Architecture -->
-            <div class="section">
-                <h2>🏗️ Technical Architecture</h2>
-                <p>
-                    Our system architecture ensures scalable, maintainable, and verifiable research operations while optimizing for both immediate insights and long-term analytical value.
-                </p>
-
-                <div class="tech-stack">
-                    <div class="tech-item">
-                        <h5>🗄️ Database Layer</h5>
-                        <p>SQLite with JSON metadata fields, artifact versioning, and full audit trails. Average query time: <2ms for 118 documents.</p>
-                    </div>
-                    <div class="tech-item">
-                        <h5>🔍 Collection Engine</h5>
-                        <p>Perplexity API integration with real URL extraction, multi-query strategies, intelligent duplicate detection, and configurable timeframe filtering.</p>
-                    </div>
-                    <div class="tech-item">
-                        <h5>📅 Timeframe System</h5>
-                        <p>Smart date filtering with database-driven "since last collection" logic, preset timeframes, custom ranges, and Perplexity date syntax integration.</p>
-                    </div>
-                    <div class="tech-item">
-                        <h5>📊 Quality Ranking</h5>
-                        <p>5-factor scoring system: source credibility (25%), content quality (25%), temporal relevance (20%), category balance (15%), uniqueness (15%).</p>
-                    </div>
-                    <div class="tech-item">
-                        <h5>🤖 RAG Systems</h5>
-                        <p>Dual-mode document selection: 200 optimal for chat (3.4min rebuild), 200 per category for reports (6min per category).</p>
-                    </div>
-                    <div class="tech-item">
-                        <h5>💾 Backup Systems</h5>
-                        <p>Comprehensive archival including original files, web snapshots, readable HTML versions, and complete metadata preservation.</p>
-                    </div>
-                    <div class="tech-item">
-                        <h5>📈 Processing Pipeline</h5>
-                        <p>Automated manual entry processing with keyword-based categorization, metadata enrichment, and quality validation.</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Document Quality Management -->
-            <div class="section">
-                <h2>📈 Document Quality Management System</h2>
-                <p>
-                    Our quality management framework ensures optimal RAG performance while maintaining comprehensive coverage and avoiding bias toward specific source types or perspectives.
-                </p>
-
-                <h3>Quality Scoring Framework</h3>
-                <div class="quality-metrics">
-                    <div class="metric-card excellent">
-                        <h4>Source Credibility (25%)</h4>
-                        <p>Domain authority, manual vs automated collection, academic/government domain bonuses. Current avg: 0.85</p>
-                    </div>
-                    <div class="metric-card excellent">
-                        <h4>Content Quality (25%)</h4>
-                        <p>Optimal length (300-3000 words), technical depth, title quality. Current avg: 0.78</p>
-                    </div>
-                    <div class="metric-card excellent">
-                        <h4>Temporal Relevance (20%)</h4>
-                        <p>Recency weighting: ≤30 days (1.0), ≤90 days (0.9), ≤180 days (0.8). Current avg: 0.91</p>
-                    </div>
-                    <div class="metric-card good">
-                        <h4>Category Balance (15%)</h4>
-                        <p>Promotes diversity across impact categories, prevents over-representation. Current avg: 0.72</p>
-                    </div>
-                    <div class="metric-card excellent">
-                        <h4>Uniqueness (15%)</h4>
-                        <p>Duplicate detection, title similarity analysis, URL verification. Current avg: 0.89</p>
-                    </div>
-                </div>
-
-                <h3>Tiered Quality System</h3>
-                <div class="methodology-steps">
-                    <div class="step-card">
-                        <div class="step-number">T1</div>
-                        <h4>Active RAG (200 docs)</h4>
-                        <p>Highest quality scores (0.7+), category-balanced, real-time optimized for chat interface. Rebuild time: 3.4 minutes.</p>
-                    </div>
-                    <div class="step-card">
-                        <div class="step-number">T2</div>
-                        <h4>Archive (201-500 docs)</h4>
-                        <p>Medium quality scores (0.4-0.7), available for specialized queries, backup for category balancing.</p>
-                    </div>
-                    <div class="step-card">
-                        <div class="step-number">T3</div>
-                        <h4>Deep Archive (500+ docs)</h4>
-                        <p>Lower quality scores but preserved for completeness, manual review candidates, research continuity.</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Dual-Mode RAG Architecture -->
-            <div class="section">
-                <h2>🤖 Dual-Mode RAG Architecture</h2>
-                <p>
-                    Our innovative dual-mode approach optimizes document selection for different analytical contexts while maintaining system performance and ensuring comprehensive coverage.
-                </p>
-
-                <h3>Mode 1: Chat Interface RAG</h3>
-                <ul>
-                    <li><strong>Document Count:</strong> 200 optimal documents across all categories</li>
-                    <li><strong>Selection Criteria:</strong> Highest quality scores with category balancing (40 per category)</li>
-                    <li><strong>Rebuild Time:</strong> 3.4 minutes for full re-indexing</li>
-                    <li><strong>Update Frequency:</strong> Weekly or when cache expires (24 hours)</li>
-                    <li><strong>Optimization:</strong> General-purpose Q&A, balanced perspective</li>
-                </ul>
-
-                <h3>Mode 2: Report Generation RAG</h3>
-                <ul>
-                    <li><strong>Document Count:</strong> ~200 documents per category (up to 800 total)</li>
-                    <li><strong>Selection Criteria:</strong> Top-scoring documents within each impact category</li>
-                    <li><strong>Rebuild Time:</strong> 6 minutes per category, 26 minutes for all categories</li>
-                    <li><strong>Update Frequency:</strong> On-demand for report generation</li>
-                    <li><strong>Optimization:</strong> Deep category expertise, comprehensive coverage</li>
-                </ul>
-
-                <div class="transparency-box">
-                    <h4>🔄 RAG Performance Specifications</h4>
-                    <p>Embedding generation: 1.5 seconds per document. Vector indexing: 0.3 seconds per document (minimum 30s). Total system overhead: 25 seconds. These specifications enable predictable performance scaling and resource planning.</p>
-                </div>
-            </div>
-
-            <!-- Data Collection Methodology -->
-            <div class="section">
-                <h2>📊 Enhanced Data Collection Methodology</h2>
-                <p>
-                    Our multi-source, multi-modal collection strategy captures both explicit workforce discussions and implicit organizational changes, providing comprehensive intelligence about AI's practical impact on cybersecurity work. The system includes sophisticated timeframe filtering to prevent duplicate collection and ensure focus on fresh, relevant content.
-                </p>
-
-                <h3>Timeframe Configuration System</h3>
-                <div class="highlight-box">
-                    <h4>🕒 Smart Duplicate Prevention</h4>
-                    <p>Advanced timeframe filtering system prevents redundant collection while ensuring comprehensive coverage. The system tracks collection history and provides intelligent date range options to focus on new content since the last collection run.</p>
-                </div>
-
-                <div class="methodology-steps">
-                    <div class="step-card">
-                        <div class="step-number">T1</div>
-                        <h4>Since Last Collection</h4>
-                        <p>Smart default that queries database for most recent collection date and searches only for content published after that date. Prevents duplicates and focuses on fresh content.</p>
-                    </div>
-                    <div class="step-card">
-                        <div class="step-number">T2</div>
-                        <h4>Preset Timeframes</h4>
-                        <p>Configurable preset options: 7 days, 30 days, 3 months, 6 months, 1 year. Optimized for different research scenarios and collection frequencies.</p>
-                    </div>
-                    <div class="step-card">
-                        <div class="step-number">T3</div>
-                        <h4>Custom Date Ranges</h4>
-                        <p>Flexible start and end date selection for targeted historical analysis or specific event-driven collection periods.</p>
-                    </div>
-                    <div class="step-card">
-                        <div class="step-number">T4</div>
-                        <h4>All-Time Collection</h4>
-                        <p>Comprehensive collection mode with no date restrictions for initial database population or complete topic coverage.</p>
-                    </div>
-                </div>
-
-                <h3>Collection Strategies</h3>
-                <div class="methodology-steps">
-                    <div class="step-card">
-                        <div class="step-number">1</div>
-                        <h4>Comprehensive Collection</h4>
-                        <p>Multi-query approach: 7 queries per category, 20 articles per query, sophisticated duplicate detection. Captures broad industry perspective with timeframe filtering.</p>
-                    </div>
-                    <div class="step-card">
-                        <div class="step-number">2</div>
-                        <h4>Targeted High-Value</h4>
-                        <p>Independent cybersecurity sources, expert commentary, industry insider perspectives. Focuses on credible, authoritative voices with date-based filtering.</p>
-                    </div>
-                    <div class="step-card">
-                        <div class="step-number">3</div>
-                        <h4>Student Career Intelligence</h4>
-                        <p>2025 graduate-focused collection, actionable career guidance, skills emphasis over theoretical discussions. Timeframe-aware to capture latest trends.</p>
-                    </div>
-                    <div class="step-card">
-                        <div class="step-number">4</div>
-                        <h4>Manual Expert Curation</h4>
-                        <p>Human-validated high-value sources, leaked documents, executive memos, insider perspectives not captured by automated systems.</p>
-                    </div>
-                </div>
-
-                <h3>Task-Focused Query Design</h3>
-                <p>Unlike broad "jobs being replaced" searches, our queries target specific cybersecurity tasks and workflows:</p>
-                <ul>
-                    <li><strong>Replace Category:</strong> "vulnerability scanning automated by AI tools", "AI-powered incident response systems", "automated compliance checking"</li>
-                    <li><strong>Augment Category:</strong> "AI-assisted threat hunting workflows", "machine learning SIEM enhancement", "AI-powered penetration testing"</li>
-                    <li><strong>New Tasks Category:</strong> "AI security engineer responsibilities", "MLSecOps job requirements", "AI governance cybersecurity roles"</li>
-                    <li><strong>Human-Only Category:</strong> "cybersecurity strategic planning human judgment", "crisis communication cyber incidents", "ethical AI security decisions"</li>
-                </ul>
-
-                <h3>Source Quality Verification</h3>
-                <div class="data-sources">
-                    <span class="source-tag">NIST Publications</span>
-                    <span class="source-tag">Cybersecurity Insiders</span>
-                    <span class="source-tag">Dark Reading</span>
-                    <span class="source-tag">Krebs on Security</span>
-                    <span class="source-tag">Bruce Schneier</span>
-                    <span class="source-tag">CSO Online</span>
-                    <span class="source-tag">Help Net Security</span>
-                    <span class="source-tag">IEEE Security</span>
-                    <span class="source-tag">ACM Publications</span>
-                    <span class="source-tag">Manual Expert Sources</span>
-                </div>
-            </div>
-
-            <!-- Processing and Categorization -->
-            <div class="section">
-                <h2>⚙️ Processing and Categorization Pipeline</h2>
-                <p>
-                    Our processing pipeline combines automated efficiency with quality validation to ensure reliable categorization and comprehensive metadata capture.
-                </p>
-
-                <h3>Automated Processing Workflow</h3>
-                <ol>
-                    <li><strong>Timeframe Filtering:</strong> Configurable date range filtering with smart "since last collection" logic to prevent duplicates and focus on fresh content</li>
-                    <li><strong>Content Ingestion:</strong> Support for URLs, files (PDF, TXT, DOCX), YouTube videos with metadata extraction</li>
-                    <li><strong>Quality Validation:</strong> Content length analysis, technical term density scoring, source credibility assessment</li>
-                    <li><strong>Category Classification:</strong> Keyword-based initial categorization with confidence scoring</li>
-                    <li><strong>Metadata Enrichment:</strong> Temporal tagging, source classification, processing timestamps</li>
-                    <li><strong>Duplicate Detection:</strong> URL verification, title similarity analysis, content overlap checking</li>
-                    <li><strong>Archive Integration:</strong> Comprehensive backup creation, version tracking, audit trail maintenance</li>
-                </ol>
-
-                <div class="code-block">
-# Processing Classification Logic
-classification_keywords = {
-    'replace': ['automat', 'eliminat', 'job loss', 'replace'],
-    'augment': ['assist', 'enhance', 'tool', 'help', 'augment'],
-    'new_tasks': ['new job', 'opportunit', 'creat', 'emergi'],
-    'human_only': ['human only', 'expert', 'judgment', 'creativ']
-}
-
-def classify_content(title, content):
-    combined_text = f"{title.lower()} {content.lower()}"
-    scores = {}
-    for category, keywords in classification_keywords.items():
-        score = sum(1 for keyword in keywords if keyword in combined_text)
-        scores[category] = score
-    return max(scores, key=scores.get) or 'augment'  # Default to augment
-                </div>
-
-                <h3>Manual Processing Interface</h3>
-                <p>
-                    Comprehensive manual entry system supports expert curation with processing status tracking, batch operations, and quality assurance workflows.
-                </p>
-            </div>
-
-            <!-- Backup and Archival Systems -->
-            <div class="section">
-                <h2>💾 Comprehensive Backup and Archival Systems</h2>
-                <p>
-                    Our archival framework ensures complete data preservation, disaster recovery capabilities, and long-term research continuity essential for longitudinal studies and reproducibility.
-                </p>
-
-                <h3>Multi-Format Content Preservation</h3>
-                <div class="methodology-steps">
-                    <div class="step-card">
-                        <div class="step-number">1</div>
-                        <h4>Original Source Files</h4>
-                        <p>Complete original files (PDFs, documents), raw HTML snapshots, YouTube metadata with transcription placeholders.</p>
-                    </div>
-                    <div class="step-card">
-                        <div class="step-number">2</div>
-                        <h4>Processed Content</h4>
-                        <p>Clean text extraction, structured metadata JSON, processing timestamps and method documentation.</p>
-                    </div>
-                    <div class="step-card">
-                        <div class="step-number">3</div>
-                        <h4>Readable Archives</h4>
-                        <p>Human-readable HTML versions with embedded metadata, category indicators, and source attribution for offline access.</p>
-                    </div>
-                    <div class="step-card">
-                        <div class="step-number">4</div>
-                        <h4>Database Exports</h4>
-                        <p>Complete JSON database exports with artifact relationships, processing history, and quality metrics for disaster recovery.</p>
-                    </div>
-                </div>
-
-                <div class="transparency-box">
-                    <h4>🗄️ Backup Statistics</h4>
-                    <p>Current system maintains 100% backup coverage with average 2.1MB storage per artifact including all formats. Complete backup cycle processes 118 documents in approximately 8 minutes with zero data loss incidents.</p>
-                </div>
-            </div>
-
-            <!-- Impact Categories Framework -->
-            <div class="section">
-                <h2>🧠 Refined Impact Categories Framework</h2>
-                <p>
-                    Our four-category framework provides nuanced analysis beyond binary "replacement" narratives, recognizing the complex reality of AI integration in cybersecurity workflows.
-                </p>
-
-                <div class="categories-grid">
-                    <div class="category-card replace">
-                        <h4>🔴 REPLACE (10 documents)</h4>
-                        <p>Tasks that AI can perform completely autonomously with superior efficiency, accuracy, or coverage than human operators.</p>
-                        <p><strong>Current Examples:</strong> Automated vulnerability scanning, basic log analysis, routine compliance checking, simple incident triaging</p>
-                        <p><strong>Quality Score:</strong> 0.778 average</p>
-                    </div>
-
-                    <div class="category-card augment">
-                        <h4>🟡 AUGMENT (13 documents)</h4>
-                        <p>Tasks where AI significantly enhances human capabilities while requiring human oversight, decision-making, or creative input.</p>
-                        <p><strong>Current Examples:</strong> AI-assisted threat hunting, enhanced SIEM analysis, AI-powered penetration testing, intelligent alert prioritization</p>
-                        <p><strong>Quality Score:</strong> 0.761 average</p>
-                    </div>
-
-                    <div class="category-card new-tasks">
-                        <h4>🟢 NEW TASKS (22 documents)</h4>
-                        <p>Entirely new roles, responsibilities, and career paths created by AI adoption and the need to manage AI systems in cybersecurity contexts.</p>
-                        <p><strong>Current Examples:</strong> AI security specialists, MLSecOps engineers, AI governance roles, AI model security auditors</p>
-                        <p><strong>Quality Score:</strong> 0.723 average</p>
-                    </div>
-
-                    <div class="category-card human-only">
-                        <h4>🟣 HUMAN-ONLY (37 documents)</h4>
-                        <p>Tasks that remain fundamentally human due to complexity, ethical considerations, creative requirements, or stakeholder interaction needs.</p>
-                        <p><strong>Current Examples:</strong> Strategic security planning, crisis communication, ethical decision-making, stakeholder relationship management</p>
-                        <p><strong>Quality Score:</strong> 0.811 average (highest)</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Validation and Quality Assurance -->
-            <div class="section">
-                <h2>✅ Validation & Quality Assurance Framework</h2>
-                <p>
-                    Multi-layered validation ensures research integrity, analytical rigor, and actionable insights while maintaining transparency for peer review and replication.
-                </p>
-
-                <h3>Automated Quality Metrics</h3>
-                <ul>
-                    <li><strong>Content Quality:</strong> Technical term density, optimal length ratios, title quality assessment</li>
-                    <li><strong>Source Diversity:</strong> Domain distribution analysis, perspective balance verification</li>
-                    <li><strong>Temporal Relevance:</strong> Publication date weighting, prediction timeline validation</li>
-                    <li><strong>Category Balance:</strong> Distribution monitoring, bias detection, underrepresentation alerts</li>
-                    <li><strong>Uniqueness Verification:</strong> Duplicate detection, similarity scoring, novelty assessment</li>
-                </ul>
-
-                <h3>Manual Validation Processes</h3>
-                <ul>
-                    <li><strong>Expert Review:</strong> Spot-checking of AI categorizations by cybersecurity professionals</li>
-                    <li><strong>Source Verification:</strong> Manual validation of high-impact sources and controversial claims</li>
-                    <li><strong>Student Feedback Integration:</strong> Graduate career outcome tracking for prediction accuracy</li>
-                    <li><strong>Industry Correlation:</strong> Comparison with actual organizational changes and job market data</li>
-                </ul>
-
-                <div class="highlight-box">
-                    <h4>🎯 Current Quality Metrics</h4>
-                    <p>Average quality score: 0.782 (excellent). 31 documents rated excellent (0.8+), 87 documents rated good (0.6-0.8), zero poor quality documents. Category balance within 15% variance. 100% source URL verification rate.</p>
-                </div>
-            </div>
-
-            <!-- Reproducibility and Open Science -->
-            <div class="section">
-                <h2>🔬 Reproducibility and Open Science Framework</h2>
-                <p>
-                    Complete documentation and preservation of all methodological components enables independent validation and extension of research findings.
-                </p>
-
-                <h3>Available for Replication</h3>
-                <ul>
-                    <li><strong>Source Code:</strong> Complete Python codebase with documentation, requirements files, and setup instructions</li>
-                    <li><strong>Database Schema:</strong> Full SQLite schema definitions with sample data and migration scripts</li>
-                    <li><strong>Search Queries:</strong> Complete query templates, parameter configurations, and execution logs</li>
-                    <li><strong>Processing Algorithms:</strong> Classification logic, quality scoring formulas, and validation procedures</li>
-                    <li><strong>Performance Metrics:</strong> Timing benchmarks, accuracy measurements, and quality assessments</li>
-                </ul>
-
-                <h3>Reproducibility Validation</h3>
-                <ul>
-                    <li><strong>Environment Specifications:</strong> Complete dependency versions, system requirements, and configuration files</li>
-                    <li><strong>Execution Logs:</strong> Detailed processing logs with timestamps, decision points, and error handling</li>
-                    <li><strong>Quality Checkpoints:</strong> Automated validation tests and manual verification procedures</li>
-                    <li><strong>Data Versioning:</strong> Complete artifact history with processing lineage and modification tracking</li>
-                </ul>
-
-                <div class="transparency-box">
-                    <h4>📋 NSF Data Management Compliance</h4>
-                    <p>All research data, processing code, and analytical frameworks are maintained according to NSF data management requirements. Complete audit trails, version control, and backup systems ensure data integrity and enable independent verification of all research findings.</p>
-                </div>
-            </div>
-
-            <!-- Mathematical Foundations -->
-            <div class="section">
-                <h2>📐 Mathematical Foundations & Formulas</h2>
-                <p>
-                    Complete documentation of all mathematical formulas, equations, and algorithms used throughout the AI-Horizon system for transparency, reproducibility, and peer review.
-                </p>
-
-                <details style="margin-bottom: 20px;">
-                    <summary style="font-weight: 600; color: #2c3e50; cursor: pointer; margin-bottom: 15px; font-size: 1.1rem;">
-                        🧮 Quality Scoring Algorithms
-                    </summary>
-                    
-                    <h4>📏 Document Quality Score</h4>
-                    <div class="formula-box" style="background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; padding: 20px; margin: 15px 0; font-family: 'Courier New', monospace;">
-<strong>Overall Quality Score:</strong>
-Q = 0.25 × S<sub>credibility</sub> + 0.25 × S<sub>content</sub> + 0.20 × S<sub>temporal</sub> + 0.15 × S<sub>balance</sub> + 0.15 × S<sub>uniqueness</sub>
-
-<strong>Component Calculations:</strong>
-• S<sub>credibility</sub> = Base<sub>source</sub> + Σ(Domain<sub>bonus</sub>) + Authority<sub>modifier</sub>
-• S<sub>content</sub> = 0.3 × Length<sub>norm</sub> + 0.2 × Keyword<sub>density</sub> + 0.2 × Readability + 0.3 × Structure
-• S<sub>temporal</sub> = e<sup>(-age_days/365)</sup> × Relevance<sub>factor</sub>
-• S<sub>balance</sub> = 1.0 - |Category<sub>ratio</sub> - Target<sub>ratio</sub>|
-• S<sub>uniqueness</sub> = 1.0 - max(Similarity<sub>scores</sub>)
-
-<strong>Where:</strong>
-- Length<sub>norm</sub> = min(1.0, content_length / optimal_length)
-- Keyword<sub>density</sub> = (Σ TF-IDF<sub>keywords</sub>) / total_words
-- Readability = Flesch-Kincaid normalized score
-- Authority<sub>modifier</sub> ∈ {0.95 (academic), 0.9 (government), 0.8 (industry), 0.6 (blog)}
-                    </div>
-
-                    <h4>🎯 Confidence Scoring</h4>
-                    <div class="formula-box" style="background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; padding: 20px; margin: 15px 0; font-family: 'Courier New', monospace;">
-<strong>Classification Confidence:</strong>
-C = σ(W<sub>indicators</sub>) × Q<sub>modifier</sub>
-
-<strong>Where:</strong>
-• σ(x) = 1/(1 + e<sup>-x</sup>) (sigmoid function)
-• W<sub>indicators</sub> = Σ(TF-IDF<sub>keyword</sub> × Weight<sub>category</sub>)
-• Q<sub>modifier</sub> = √(Quality<sub>score</sub>) (quality-based confidence adjustment)
-
-<strong>Category Weights:</strong>
-- Replace indicators: automated, eliminate, replace → Weight = 1.2
-- Augment indicators: enhance, assist, collaborate → Weight = 1.0  
-- New Tasks indicators: create, emerge, novel → Weight = 1.1
-- Human-Only indicators: judgment, creative, strategic → Weight = 1.3
-                    </div>
-                </details>
-
-                <details style="margin-bottom: 20px;">
-                    <summary style="font-weight: 600; color: #2c3e50; cursor: pointer; margin-bottom: 15px; font-size: 1.1rem;">
-                        🔮 Predictive Analytics Formulas
-                    </summary>
-                    
-                    <h4>📈 AI Adoption Curve Modeling</h4>
-                    <div class="formula-box" style="background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; padding: 20px; margin: 15px 0; font-family: 'Courier New', monospace;">
-<strong>Logistic Growth Model:</strong>
-A(t) = L / (1 + e<sup>-k(t-t₀)</sup>)
-
-<strong>Where:</strong>
-• A(t) = Adoption percentage at time t
-• L = Maximum adoption level (carrying capacity)
-• k = Growth rate parameter (derived from current trends)
-• t₀ = Inflection point (50% adoption time)
-• t = Time in months from baseline
-
-<strong>Parameter Estimation:</strong>
-• L = min(95%, max(Current<sub>trends</sub>) × 1.2)
-• k = ln(9) / (t₉₀ - t₁₀) where t₉₀, t₁₀ are 90% and 10% adoption times
-• t₀ = (t₉₀ + t₁₀) / 2
-                    </div>
-
-                    <h4>⚡ Job Role Automation Probability</h4>
-                    <div class="formula-box" style="background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; padding: 20px; margin: 15px 0; font-family: 'Courier New', monospace;">
-<strong>Task Automation Score:</strong>
-P<sub>automation</sub>(role) = Σ(Task<sub>i</sub> × Weight<sub>i</sub> × AI<sub>capability</sub>) / Σ(Weight<sub>i</sub>)
-
-<strong>DCWF Integration:</strong>
-• Task<sub>i</sub> ∈ {0, 0.25, 0.5, 0.75, 1.0} (automation potential)
-• Weight<sub>i</sub> = Importance<sub>DCWF</sub> × Frequency<sub>execution</sub>
-• AI<sub>capability</sub> = Current<sub>tech</sub> × Projected<sub>improvement</sub>
-
-<strong>Confidence Intervals:</strong>
-CI = P<sub>automation</sub> ± t<sub>α/2</sub> × SE
-SE = √(Var(Task<sub>scores</sub>) / n<sub>tasks</sub> + Model<sub>uncertainty</sub>)
-                    </div>
-
-                    <h4>📊 Skills Demand Forecasting</h4>
-                    <div class="formula-box" style="background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; padding: 20px; margin: 15px 0; font-family: 'Courier New', monospace;">
-<strong>Time Series Forecasting (ARIMA):</strong>
-X<sub>t</sub> = c + φ₁X<sub>t-1</sub> + φ₂X<sub>t-2</sub> + ... + θ₁ε<sub>t-1</sub> + θ₂ε<sub>t-2</sub> + ... + ε<sub>t</sub>
-
-<strong>Skill Demand Growth Rate:</strong>
-Growth<sub>rate</sub> = (Mentions<sub>current</sub> - Mentions<sub>baseline</sub>) / Mentions<sub>baseline</sub> × 100%
-
-<strong>Weighted Trend Analysis:</strong>
-Trend<sub>weighted</sub> = Σ(Mention<sub>i</sub> × Recency<sub>weight</sub> × Source<sub>authority</sub>) / Σ(Weights)
-Recency<sub>weight</sub> = e<sup>(-age_days/90)</sup>
-                    </div>
-                </details>
-
-                <details style="margin-bottom: 20px;">
-                    <summary style="font-weight: 600; color: #2c3e50; cursor: pointer; margin-bottom: 15px; font-size: 1.1rem;">
-                        🎯 DCWF Task Impact Analysis
-                    </summary>
-                    
-                    <h4>🏗️ Work Role Impact Scoring</h4>
-                    <div class="formula-box" style="background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; padding: 20px; margin: 15px 0; font-family: 'Courier New', monospace;">
-<strong>DCWF Role Vulnerability Score:</strong>
-V<sub>role</sub> = Σ(Task<sub>automation</sub> × Task<sub>criticality</sub> × Task<sub>frequency</sub>) / Total<sub>tasks</sub>
-
-<strong>Task Categorization Confidence:</strong>
-C<sub>task</sub> = (Explicit<sub>evidence</sub> × 1.0 + Inferred<sub>evidence</sub> × 0.7) / Total<sub>possible</sub>
-
-<strong>Transformation Level Calculation:</strong>
-• Minimal: C<sub>task</sub> < 0.2
-• Low: 0.2 ≤ C<sub>task</sub> < 0.4  
-• Moderate: 0.4 ≤ C<sub>task</sub> < 0.7
-• High: 0.7 ≤ C<sub>task</sub> < 1.0
-• Very High: C<sub>task</sub> ≥ 1.0
-
-<strong>AI Impact Distribution:</strong>
-Impact<sub>category</sub> = Σ(Task<sub>matches</sub> × Confidence<sub>weights</sub>) / Total<sub>DCWF_tasks</sub>
-                    </div>
-                </details>
-
-                <details style="margin-bottom: 20px;">
-                    <summary style="font-weight: 600; color: #2c3e50; cursor: pointer; margin-bottom: 15px; font-size: 1.1rem;">
-                        📈 Statistical Analysis Methods
-                    </summary>
-                    
-                    <h4>📊 Correlation Analysis</h4>
-                    <div class="formula-box" style="background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; padding: 20px; margin: 15px 0; font-family: 'Courier New', monospace;">
-<strong>Pearson Correlation Coefficient:</strong>
-r = Σ((X<sub>i</sub> - X̄)(Y<sub>i</sub> - Ȳ)) / √(Σ(X<sub>i</sub> - X̄)² × Σ(Y<sub>i</sub> - Ȳ)²)
-
-<strong>Category Relationship Strength:</strong>
-R<sub>categories</sub> = |r<sub>replace,augment</sub>| + |r<sub>newtasks,human</sub>| / 2
-
-<strong>Statistical Significance Testing:</strong>
-t = r × √(n-2) / √(1-r²)
-p-value = 2 × P(T > |t|) where T ~ t<sub>n-2</sub>
-                    </div>
-
-                    <h4>🎲 Uncertainty Quantification</h4>
-                    <div class="formula-box" style="background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; padding: 20px; margin: 15px 0; font-family: 'Courier New', monospace;">
-<strong>Monte Carlo Simulation:</strong>
-Prediction<sub>range</sub> = [Percentile<sub>5</sub>(Simulations), Percentile<sub>95</sub>(Simulations)]
-
-<strong>Bayesian Confidence Updates:</strong>
-P(H|E) = P(E|H) × P(H) / P(E)
-
-Where:
-• H = Hypothesis (e.g., "task will be automated")
-• E = Evidence (new articles, industry reports)
-• P(H|E) = Updated probability given evidence
-• P(E|H) = Likelihood of evidence given hypothesis
-• P(H) = Prior probability
-• P(E) = Total probability of evidence
-                    </div>
-                </details>
-
-                <details style="margin-bottom: 20px;">
-                    <summary style="font-weight: 600; color: #2c3e50; cursor: pointer; margin-bottom: 15px; font-size: 1.1rem;">
-                        🔍 Text Analysis & NLP Formulas
-                    </summary>
-                    
-                    <h4>📝 TF-IDF Weighting</h4>
-                    <div class="formula-box" style="background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; padding: 20px; margin: 15px 0; font-family: 'Courier New', monospace;">
-<strong>Term Frequency - Inverse Document Frequency:</strong>
-TF-IDF(t,d) = TF(t,d) × IDF(t)
-
-<strong>Where:</strong>
-• TF(t,d) = f<sub>t,d</sub> / max{f<sub>t',d</sub> : t' ∈ d}
-• IDF(t) = log(N / |{d ∈ D : t ∈ d}|)
-• f<sub>t,d</sub> = frequency of term t in document d
-• N = total number of documents
-• |{d ∈ D : t ∈ d}| = number of documents containing term t
-
-<strong>Semantic Similarity (Cosine):</strong>
-sim(d₁,d₂) = (d₁ · d₂) / (||d₁|| × ||d₂||)
-                    </div>
-
-                    <h4>📖 Readability Assessment</h4>
-                    <div class="formula-box" style="background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; padding: 20px; margin: 15px 0; font-family: 'Courier New', monospace;">
-<strong>Flesch-Kincaid Grade Level:</strong>
-FKGL = 0.39 × (Words/Sentences) + 11.8 × (Syllables/Words) - 15.59
-
-<strong>Normalized Readability Score:</strong>
-R<sub>norm</sub> = max(0, min(1, (Target<sub>grade</sub> - FKGL) / Range<sub>acceptable</sub>))
-
-Where Target<sub>grade</sub> = 12-14 for cybersecurity professionals
-                    </div>
-                </details>
-
-                <div class="transparency-box">
-                    <h4>🔬 Academic Validation</h4>
-                    <p>All formulas are based on established academic research with citations available in the system. Statistical methods follow standard practices in computational linguistics and workforce analytics. Formula parameters are calibrated using expert judgment and validated against known outcomes in the cybersecurity domain.</p>
-                </div>
-            </div>
-
-            <!-- Limitations and Future Enhancements -->
-            <div class="section">
-                <h2>⚠️ Current Limitations & Planned Enhancements</h2>
-                <p>
-                    Transparent acknowledgment of current system limitations and planned improvements maintains research integrity while guiding future development priorities.
-                </p>
-
-                <h3>Current System Limitations</h3>
-                <ul>
-                    <li><strong>Geographic Scope:</strong> Primarily English-language sources with Western organizational focus</li>
-                    <li><strong>Prediction Horizon:</strong> Most reliable for 6-18 month forecasts; longer-term predictions require validation</li>
-                    <li><strong>Sector Granularity:</strong> General cybersecurity focus; specialized domains (healthcare, finance) need targeted analysis</li>
-                    <li><strong>Classification Method:</strong> Current keyword-based categorization, planned upgrade to LLM-based classification</li>
-                    <li><strong>Sample Size:</strong> 118 documents provides solid foundation but would benefit from expansion to 500-800 documents</li>
-                </ul>
-
-                <h3>Planned Technical Enhancements</h3>
-                <ul>
-                    <li><strong>Advanced Classification:</strong> Integration of large language models for more nuanced categorization</li>
-                    <li><strong>Semantic Similarity:</strong> Vector-based content analysis for improved duplicate detection and clustering</li>
-                    <li><strong>Real-time Processing:</strong> Live data streams with immediate categorization and quality assessment</li>
-                    <li><strong>Multi-language Support:</strong> Expansion to non-English sources and regional workforce analysis</li>
-                    <li><strong>Longitudinal Tracking:</strong> Extended time-series analysis with prediction accuracy validation</li>
-                </ul>
-
-                <h3>Research Extensions</h3>
-                <ul>
-                    <li><strong>Sector-Specific Analysis:</strong> Healthcare cybersecurity, financial services, government/military applications</li>
-                    <li><strong>Skills Gap Analysis:</strong> Detailed mapping of emerging skill requirements and educational gaps</li>
-                    <li><strong>Regional Variations:</strong> Geographic differences in AI adoption and workforce impact</li>
-                    <li><strong>Career Pathway Modeling:</strong> Predictive modeling of career trajectories in AI-augmented cybersecurity</li>
-                </ul>
-            </div>
-
-        </div>
-    
     </div>
 {% endblock %}
