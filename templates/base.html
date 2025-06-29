@@ -27,15 +27,22 @@
         /* Professional Navigation Header */
         .nav-header {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: column;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 15px;
-            padding: 15px 30px;
+            padding: 20px 30px;
             margin-bottom: 30px;
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.2);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            gap: 15px;
+        }
+
+        .nav-top-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
         }
 
         .nav-brand {
@@ -72,16 +79,37 @@
             letter-spacing: 0.3px;
         }
 
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: white;
+            font-size: 0.9rem;
+        }
+
+        .user-info a {
+            color: #ff6b6b;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 5px 12px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .user-info a:hover {
+            background: rgba(255, 107, 107, 0.2);
+            transform: translateY(-1px);
+        }
+
         .nav-links {
             display: flex;
             gap: 12px;
             align-items: flex-start;
             flex-wrap: nowrap;
             justify-content: space-between;
-            flex: 1;
-            margin-left: 20px;
-            overflow-x: auto;
             width: 100%;
+            overflow-x: auto;
         }
 
         .nav-group {
@@ -95,7 +123,7 @@
         }
 
         .nav-group-label {
-            font-size: 0.6rem;
+            font-size: 0.7rem;
             color: #000000;
             font-weight: 700;
             text-transform: uppercase;
@@ -114,7 +142,7 @@
             padding: 4px 6px;
             border-radius: 5px;
             transition: all 0.3s ease;
-            font-size: 0.7rem;
+            font-size: 0.9rem;
             white-space: nowrap;
             display: flex;
             align-items: center;
@@ -145,11 +173,7 @@
 
         /* Force single row navigation */
         .nav-header {
-            min-height: 80px;
-        }
-        
-        .nav-links {
-            max-width: calc(100vw - 300px);
+            min-height: 100px;
         }
 
         /* Responsive Navigation */
@@ -161,10 +185,10 @@
                 min-width: 80px;
             }
             .nav-group-label {
-                font-size: 0.55rem;
+                font-size: 0.65rem;
             }
             .nav-link {
-                font-size: 0.65rem;
+                font-size: 0.8rem;
                 padding: 3px 5px;
             }
         }
@@ -177,10 +201,10 @@
                 min-width: 75px;
             }
             .nav-group-label {
-                font-size: 0.5rem;
+                font-size: 0.6rem;
             }
             .nav-link {
-                font-size: 0.6rem;
+                font-size: 0.75rem;
                 padding: 3px 4px;
             }
         }
@@ -196,19 +220,27 @@
 
         @media (max-width: 768px) {
             .nav-header {
-                flex-direction: column;
-                gap: 20px;
                 padding: 20px;
             }
             
+            .nav-top-row {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+            
             .nav-links {
-                margin-left: 0;
                 justify-content: center;
                 gap: 20px;
             }
             
             .nav-group {
                 min-width: 100px;
+            }
+
+            .user-info {
+                align-self: flex-end;
+                font-size: 0.8rem;
             }
         }
 
@@ -231,20 +263,22 @@
     <div class="container">
         <!-- Professional Navigation Header -->
         <nav class="nav-header">
-            <a href="/" class="nav-brand">
-                <div class="nav-brand-icon">🤖</div>
-                <div class="nav-brand-text">
-                    <h2>AI-Horizon</h2>
-                    <div class="nav-subtitle">Cybersecurity Workforce Intelligence</div>
-                </div>
-            </a>
-            
-            {% if user %}
-            <div class="user-info" style="display: flex; align-items: center; gap: 15px; margin-left: auto; color: white; font-size: 0.9rem;">
-                <span>👋 {{ user.name }} ({{ role_info.name }})</span>
-                <a href="/logout" style="color: #ff6b6b; text-decoration: none; font-weight: 600;">Logout</a>
+            <div class="nav-top-row">
+                <a href="/" class="nav-brand">
+                    <div class="nav-brand-icon">🤖</div>
+                    <div class="nav-brand-text">
+                        <h2>AI-Horizon</h2>
+                        <div class="nav-subtitle">Cybersecurity Workforce Intelligence</div>
+                    </div>
+                </a>
+                
+                                 {% if user %}
+                 <div class="user-info">
+                     <span>👋 {{ user.name }} ({{ role_info.name }})</span>
+                     <a href="/logout">Logout</a>
+                 </div>
+                 {% endif %}
             </div>
-            {% endif %}
             
             <div class="nav-links">
                 <!-- Data Gathering Section -->
