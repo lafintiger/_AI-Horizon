@@ -56,6 +56,7 @@ tqdm>=4.64.0
 
 # Logging & Output
 colorlog>=6.7.0
+loguru>=0.7.0
 
 # Development & Testing (Optional for production)
 # pytest>=7.0.0
