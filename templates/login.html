@@ -169,29 +169,7 @@
             line-height: 1.4;
         }
 
-        .demo-credentials {
-            margin-top: 20px;
-            padding: 15px;
-            background: #f0f7ff;
-            border-radius: 8px;
-            border: 1px solid #b3d9ff;
-        }
 
-        .demo-credentials h4 {
-            color: #0066cc;
-            margin-bottom: 10px;
-            font-size: 0.95em;
-        }
-
-        .demo-credentials .cred-item {
-            margin-bottom: 8px;
-            font-size: 0.9em;
-            color: #333;
-        }
-
-        .demo-credentials .cred-item strong {
-            color: #0066cc;
-        }
 
         @media (max-width: 480px) {
             .login-container {
@@ -261,12 +239,7 @@
             </div>
         </div>
 
-        <div class="demo-credentials">
-            <h4>🔑 Demo Credentials</h4>
-            <div class="cred-item"><strong>Admin:</strong> admin / admin123</div>
-            <div class="cred-item"><strong>Viewer:</strong> viewer / viewer123</div>
-            <div class="cred-item"><strong>Manual Entry:</strong> manual / manual123</div>
-        </div>
+
     </div>
 
     <script>
@@ -285,28 +258,7 @@
             }
         });
 
-        // Quick login buttons (for demo purposes)
-        document.addEventListener('keydown', function(e) {
-            if (e.ctrlKey && e.shiftKey) {
-                const usernameField = document.getElementById('username');
-                const passwordField = document.getElementById('password');
-                
-                switch(e.key) {
-                    case 'A':
-                        usernameField.value = 'admin';
-                        passwordField.value = 'admin123';
-                        break;
-                    case 'V':
-                        usernameField.value = 'viewer';
-                        passwordField.value = 'viewer123';
-                        break;
-                    case 'M':
-                        usernameField.value = 'manual';
-                        passwordField.value = 'manual123';
-                        break;
-                }
-            }
-        });
+
     </script>
 </body>
 </html> 
