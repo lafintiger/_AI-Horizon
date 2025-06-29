@@ -33,6 +33,7 @@ Usage:
 """
 
 # Standard library imports
+import os
 import sys
 import json
 import time
@@ -1135,9 +1136,8 @@ def api_download_report():
         path = Path(report_path)
         if not path.exists():
             return "Report not found", 404
-            
-        return send_file(path, as_attachment=True, download_name=path.name)
         
+        return send_file(path, as_attachment=True)
     except Exception as e:
         return f"Error downloading report: {e}", 500
 
@@ -4334,6 +4334,109 @@ def api_check_pdf_support():
             "message": f"PDF export not available: {str(e)}"
         })
 
+@app.route('/api/reports')
+def api_reports():
+    """Get list of available reports."""
+    try:
+        reports_dir = Path('data/reports')
+        if not reports_dir.exists():
+            return jsonify({"reports": [], "message": "No reports directory found"})
+        
+        reports = []
+        for report_file in reports_dir.glob('*.md'):
+            try:
+                stat = report_file.stat()
+                reports.append({
+                    "name": report_file.name,
+                    "path": str(report_file),
+                    "size": stat.st_size,
+                    "modified": datetime.fromtimestamp(stat.st_mtime).isoformat(),
+                    "type": "markdown"
+                })
+            except Exception as e:
+                logger.warning(f"Error reading report {report_file}: {e}")
+                continue
+        
+        # Sort by modification time (newest first)
+        reports.sort(key=lambda x: x['modified'], reverse=True)
+        
+        return jsonify({"reports": reports, "count": len(reports)})
+        
+    except Exception as e:
+        logger.error(f"Error listing reports: {e}")
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/generate_student_report', methods=['POST'])
+def api_generate_student_report():
+    """Generate student career intelligence report."""
+    try:
+        # Import and run the student report generator
+        import subprocess
+        import sys
+        
+        script_path = Path(__file__).parent / "scripts" / "generate_student_report.py"
+        
+        if not script_path.exists():
+            return jsonify({"error": "Student report generator not found"}), 404
+        
+        # Run the script
+        result = subprocess.run([sys.executable, str(script_path)], 
+                              capture_output=True, text=True, timeout=300)
+        
+        if result.returncode == 0:
+            return jsonify({
+                "success": True,
+                "message": "Student report generated successfully",
+                "output": result.stdout
+            })
+        else:
+            return jsonify({
+                "success": False,
+                "error": "Failed to generate student report",
+                "output": result.stderr or result.stdout
+            }), 500
+            
+    except subprocess.TimeoutExpired:
+        return jsonify({"error": "Report generation timed out"}), 500
+    except Exception as e:
+        logger.error(f"Error generating student report: {e}")
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/generate_web_report', methods=['POST'])
+def api_generate_web_report():
+    """Generate web-optimized report."""
+    try:
+        # Import and run the web report generator
+        import subprocess
+        import sys
+        
+        script_path = Path(__file__).parent / "scripts" / "generate_web_report.py"
+        
+        if not script_path.exists():
+            return jsonify({"error": "Web report generator not found"}), 404
+        
+        # Run the script
+        result = subprocess.run([sys.executable, str(script_path)], 
+                              capture_output=True, text=True, timeout=300)
+        
+        if result.returncode == 0:
+            return jsonify({
+                "success": True,
+                "message": "Web report generated successfully",
+                "output": result.stdout
+            })
+        else:
+            return jsonify({
+                "success": False,
+                "error": "Failed to generate web report",
+                "output": result.stderr or result.stdout
+            }), 500
+            
+    except subprocess.TimeoutExpired:
+        return jsonify({"error": "Report generation timed out"}), 500
+    except Exception as e:
+        logger.error(f"Error generating web report: {e}")
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
     import argparse
