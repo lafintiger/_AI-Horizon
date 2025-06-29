@@ -3783,8 +3783,12 @@ def delete_artifact(artifact_id):
     except Exception as e:
         return f"Error deleting artifact: {str(e)}", 500
 
-def run_server(host='127.0.0.1', port=8000, debug=False):
+def run_server(host=None, port=None, debug=False):
     """Run the status server."""
+    # Use environment variables for Heroku deployment
+    host = host or os.environ.get('HOST', '0.0.0.0')
+    port = port or int(os.environ.get('PORT', 8000))
+    
     logger.info(f"Starting AI-Horizon Status Server on http://{host}:{port}")
     
     # Connect cost tracker to status tracker

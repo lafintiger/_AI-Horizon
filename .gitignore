@@ -1,0 +1,122 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Environment Variables
+.env.local
+.env.development
+.env.test
+.env.production
+config.env
+env_config.txt
+
+# Database Files (exclude local SQLite, keep structure)
+data/aih_database.db
+data/backups/
+data/exports/
+data/uploads/
+data/costs/cost_tracking.json
+database_export.json
+postgres_schema.sql
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# IDE/Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Temporary Files
+*.tmp
+*.temp
+temp/
+tmp/
+
+# API Keys & Secrets
+cookies.txt
+*.key
+*.pem
+*.p12
+
+# Uploads & Media
+uploads/
+static/uploads/
+media/
+
+# Cache & Sessions
+.cache/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Documentation builds
+docs/_build/
+site/
+
+# Jupyter Notebooks
+.ipynb_checkpoints
+
+# Migration & Export Files
+database_dump.sql
+database_export.json
+migration_log.txt
+
+# Heroku specific
+.slugignore
+
+# BUT INCLUDE these important files for Heroku:
+# - requirements.txt
+# - Procfile
+# - runtime.txt
+# - Aptfile
+# - .buildpacks
+# - heroku.env (template)
+# - HEROKU_DEPLOYMENT_GUIDE.md
+# - All Python source code
+# - Templates and static files 
