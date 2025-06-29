@@ -71,6 +71,15 @@ app.secret_key = 'ai-horizon-status-server-secret-key-2025'  # Change in product
 app.permanent_session_lifetime = timedelta(hours=8)  # 8 hour session timeout
 CORS(app)
 
+# Force HTTPS in production
+@app.before_request
+def force_https():
+    """Redirect HTTP to HTTPS in production environment."""
+    if not request.is_secure and request.headers.get('X-Forwarded-Proto') != 'https':
+        # Only redirect if not in development mode
+        if os.environ.get('FLASK_ENV') != 'development':
+            return redirect(request.url.replace('http://', 'https://', 1), code=301)
+
 # Flask configuration for file uploads
 app.config['UPLOAD_FOLDER'] = 'data/uploads'
 app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024  # 50MB max file size
