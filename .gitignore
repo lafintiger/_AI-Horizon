@@ -32,13 +32,24 @@ ENV/
 env.bak/
 venv.bak/
 
-# Environment Variables
+# Environment Variables - NEVER COMMIT THESE!
+.env
+.env.*
 .env.local
 .env.development
 .env.test
 .env.production
 config.env
 env_config.txt
+.env.backup
+heroku.env
+
+# API Keys & Secrets - CRITICAL TO EXCLUDE
+*.key
+*.pem
+*.p12
+*_api_key*
+*secrets*
 
 # Database Files (exclude local SQLite, keep structure)
 data/aih_database.db
