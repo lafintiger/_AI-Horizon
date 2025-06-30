@@ -1,8 +1,8 @@
 # AI-Horizon Navigation Guide
 
-**Last Updated**: June 14, 2025  
+**Last Updated**: June 28, 2025  
 **Purpose**: Guide to the enhanced AI-Horizon web interface navigation structure  
-**Recent Updates**: Complete navigation reorganization with workflow-based structure
+**Recent Updates**: AI skills search and filtering improvements, enhanced navigation flow
 
 ---
 
@@ -18,6 +18,7 @@ The AI-Horizon web interface features a comprehensive, workflow-based navigation
 **Purpose**: Initial data collection and entry
 - **Dashboard** (`/`) - Main system status and collection controls
 - **Manual Entry** (`/manual-entry`) - Add documents manually to the system
+- **Search & Discovery** (`/search`) - ✨ **ENHANCED** - AI-powered skills search with seamless filtering integration
 
 ### **2. ⚙️ Processing**
 **Purpose**: Data processing and algorithm application
@@ -30,6 +31,8 @@ The AI-Horizon web interface features a comprehensive, workflow-based navigation
 ### **4. 🔍 Analysis**
 **Purpose**: Advanced analytics and intelligence generation
 - **Analysis Tools** (`/analysis`) - Access to all 6 analysis tools with interactive visualizations
+- **AI Chat** (`/chat`) - Interactive chat interface for data queries
+- **Predictive Analytics** (`/predictive_analytics`) - Machine learning predictions and forecasting
 
 ### **5. 📋 Reports**
 **Purpose**: Reporting and summary generation
@@ -52,10 +55,10 @@ The AI-Horizon web interface features a comprehensive, workflow-based navigation
 
 The navigation structure follows the natural workflow progression:
 
-1. **📊 Data Gathering**: Start with Dashboard, add content via Manual Entry
+1. **📊 Data Gathering**: Start with Dashboard, add content via Manual Entry, discover emerging skills via Search & Discovery
 2. **⚙️ Processing**: Apply algorithms via Reprocessing as needed
 3. **📂 Browse & Review**: Review data quality in Browse Entries
-4. **🔍 Analysis**: Generate insights with Analysis Tools
+4. **🔍 Analysis**: Generate insights with Analysis Tools, AI Chat, and Predictive Analytics
 5. **📋 Reports**: Create Reports and view Summaries
 6. **📖 Reference**: Consult Methodology, Workflow, and Cost Analysis
 7. **⚙️ Settings**: Configure system preferences
@@ -63,6 +66,13 @@ The navigation structure follows the natural workflow progression:
 ---
 
 ## ✨ **New Features & Enhancements**
+
+### **AI Skills Search & Filtering (Latest - June 28, 2025)** ✨ **NEW**
+- **Seamless Navigation**: Direct integration between Search & Discovery and Browse Entries
+- **Automatic Filtering**: "View Stored Skills" button automatically applies AI skills filter
+- **Enhanced Filter Logic**: Improved source type recognition for AI skills categorization
+- **Streamlined Workflow**: Eliminated manual filter application for AI skills browsing
+- **Category Recognition**: Smart filtering for all AI skills source types (ai_skills_new_tasks, ai_skills_augment, etc.)
 
 ### **Visual Workflow Documentation**
 - **New Page**: `/workflow` provides complete 7-stage process visualization

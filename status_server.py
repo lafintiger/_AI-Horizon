@@ -60,12 +60,26 @@ sys.path.append(str(Path(__file__).parent))
 from aih.utils.database import DatabaseManager
 from aih.utils.logging import get_logger
 from aih.utils.cost_tracker import cost_tracker
-from aih.utils.pdf_export import create_pdf_exporter, export_entry_to_pdf, export_analysis_to_pdf, export_prediction_to_pdf, export_summary_to_pdf, export_intelligence_to_pdf
 from aih.utils.auth import auth_manager, login_required, permission_required, admin_required, get_user_context
 from scripts.analysis.implement_quality_ranking import DocumentQualityRanker
 
-# Initialize logger
+# Initialize logger first
 logger = get_logger('status_server')
+
+# Optional PDF export functionality
+try:
+    from aih.utils.pdf_export import create_pdf_exporter, export_entry_to_pdf, export_analysis_to_pdf, export_prediction_to_pdf, export_summary_to_pdf, export_intelligence_to_pdf
+    PDF_EXPORT_AVAILABLE = True
+except ImportError as e:
+    logger.warning(f"PDF export functionality not available: {e}")
+    PDF_EXPORT_AVAILABLE = False
+    # Create dummy functions to prevent errors
+    def create_pdf_exporter(): return None
+    def export_entry_to_pdf(*args, **kwargs): raise NotImplementedError("PDF export not available")
+    def export_analysis_to_pdf(*args, **kwargs): raise NotImplementedError("PDF export not available") 
+    def export_prediction_to_pdf(*args, **kwargs): raise NotImplementedError("PDF export not available")
+    def export_summary_to_pdf(*args, **kwargs): raise NotImplementedError("PDF export not available")
+    def export_intelligence_to_pdf(*args, **kwargs): raise NotImplementedError("PDF export not available")
 
 app = Flask(__name__)
 app.secret_key = 'ai-horizon-status-server-secret-key-2025'  # Change in production
@@ -914,6 +928,13 @@ def analysis():
     """Analysis tools interface."""
     return render_template('analysis.html')
 
+@app.route('/search')
+@login_required
+@permission_required('run_analysis')
+def search():
+    """Search & Discovery interface."""
+    return render_template('search.html')
+
 @app.route('/workflow')
 @login_required
 @permission_required('view_all')
@@ -1093,9 +1114,69 @@ def api_view_report():
             
         with open(path, 'r', encoding='utf-8') as f:
             content = f.read()
+        
+        # Check if this is an AI skills search report (JSON file with specific structure)
+        if path.suffix.lower() == '.json' and 'ai_skills_search' in path.name:
+            try:
+                import json
+                from scripts.analysis.ai_skills_search import AISkillsSearchTool
+                
+                # Parse JSON content
+                report_data = json.loads(content)
+                
+                # Check if it has the expected AI skills search structure
+                if ('discovered_skills' in report_data and 
+                    'search_metadata' in report_data):
+                    
+                    # Use the formatting method from AI skills search tool
+                    search_tool = AISkillsSearchTool()
+                    formatted_content = search_tool.format_search_results_for_display(report_data)
+                    
+                    html_content = f"""
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <title>🔍 AI Skills Search Results - {path.name}</title>
+                        <style>
+                            body {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+                                   max-width: 1000px; margin: 0 auto; padding: 20px; line-height: 1.6; 
+                                   background: #f8f9fa; }}
+                            .container {{ background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }}
+                            pre {{ background: #f8f9fa; padding: 20px; border-radius: 6px; overflow-x: auto; 
+                                   border-left: 4px solid #4299e1; font-size: 13px; white-space: pre-wrap; }}
+                            h1, h2, h3 {{ color: #2d3748; }}
+                            .nav {{ margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid #e2e8f0; }}
+                            .nav a {{ color: #4299e1; text-decoration: none; margin-right: 15px; padding: 8px 16px; 
+                                     border-radius: 4px; transition: background 0.2s; }}
+                            .nav a:hover {{ background: #ebf8ff; }}
+                            .report-header {{ background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+                                           color: white; padding: 20px; border-radius: 8px; margin-bottom: 25px; }}
+                            .emoji {{ font-size: 1.2em; }}
+                        </style>
+                    </head>
+                    <body>
+                        <div class="container">
+                            <div class="nav">
+                                <a href="/search">🔍 Back to Search</a>
+                                <a href="/reports">📊 All Reports</a>
+                                <a href="/">🏠 Dashboard</a>
+                            </div>
+                            <div class="report-header">
+                                <h1 class="emoji">🔍 AI Skills Search Results</h1>
+                                <p>Human-readable analysis of discovered emerging AI skills</p>
+                            </div>
+                            <pre>{formatted_content}</pre>
+                        </div>
+                    </body>
+                    </html>
+                    """
+                    return html_content
+                    
+            except (json.JSONDecodeError, ImportError, Exception) as e:
+                # If formatting fails, fall back to raw content display
+                pass
             
-        # Convert markdown to HTML for viewing
-        # For now, return as plain text with basic formatting
+        # Default formatting for non-AI skills search reports
         html_content = f"""
         <!DOCTYPE html>
         <html>
@@ -2842,6 +2923,260 @@ def api_get_category_narrative(category):
             'message': f'Error retrieving narrative: {str(e)}'
         }), 500
 
+@app.route('/api/run_ai_skills_prediction', methods=['POST'])
+def api_run_ai_skills_prediction():
+    """Generate AI skills and tools predictions for the New Tasks category."""
+    try:
+        # Import the AI skills predictor
+        from scripts.analysis.ai_skills_tools_predictor import AISkillsToolsPredictor
+        
+        data = request.get_json() or {}
+        focus_area = data.get('focus_area', 'cybersecurity')
+        timeframe = data.get('timeframe', '6_months')
+        skill_level = data.get('skill_level', 'all_levels')
+        
+        status.add_log("INFO", f"Starting AI skills prediction analysis for {focus_area} ({timeframe})...", "ANALYSIS")
+        
+        # Generate AI skills predictions
+        predictor = AISkillsToolsPredictor()
+        report = predictor.predict_skills_and_tools(
+            focus_area=focus_area,
+            timeframe=timeframe,
+            skill_level=skill_level
+        )
+        
+        # Save report
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        report_path = f"data/reports/ai_skills_prediction_{timestamp}.json"
+        
+        os.makedirs(os.path.dirname(report_path), exist_ok=True)
+        with open(report_path, 'w', encoding='utf-8') as f:
+            json.dump(report, f, indent=2, ensure_ascii=False)
+        
+        status.add_log("INFO", f"AI skills prediction analysis completed - {report_path}", "ANALYSIS")
+        
+        return jsonify({
+            'success': True,
+            'message': 'AI skills prediction generated successfully',
+            'report_path': report_path,
+            'report': report,
+            'summary': {
+                'total_skills_analyzed': len(report.get('skills_analysis', {})),
+                'total_tools_analyzed': len(report.get('tools_analysis', {})),
+                'high_priority_skills': len([s for s in report.get('skills_analysis', {}).values() 
+                                           if s.get('priority_score', 0) >= 8]),
+                'recommended_learning_paths': len(report.get('learning_pathways', [])),
+                'focus_area': focus_area,
+                'timeframe': timeframe
+            }
+        })
+        
+    except Exception as e:
+        logger.error(f"AI skills prediction error: {e}")
+        status.add_log("ERROR", f"AI skills prediction failed: {e}", "ANALYSIS")
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@app.route('/api/run_ai_skills_search', methods=['POST'])
+def api_run_ai_skills_search():
+    """AI Skills Collection - Using the PROVEN working collection system pattern."""
+    try:
+        from scripts.analysis.ai_skills_collection import AISkillsCollector
+        import asyncio
+        
+        data = request.get_json() or {}
+        skills_per_category = data.get('skills_per_category', 10)
+        timeframe = data.get('timeframe', '6months')
+        
+        status.set_operation(f"AI Skills Collection")
+        status.add_log("INFO", f"Starting AI skills collection - {skills_per_category} per category, timeframe: {timeframe}", "COLLECTION")
+        
+        # Initialize collector with proven pattern
+        collector = AISkillsCollector(status_tracker=status)
+        
+        # Run async collection using proven system pattern
+        async def run_collection():
+            status.update_progress(0, 100, "Starting AI skills collection...")
+            
+            results = await collector.collect_ai_skills(
+                skills_per_category=skills_per_category,
+                timeframe=timeframe
+            )
+            
+            status.update_progress(100, 100, f"Collection complete! Found {results['total_collected']} AI skills")
+            return results
+        
+        # Execute collection with proper event loop handling
+        try:
+            loop = asyncio.get_event_loop()
+            if loop.is_running():
+                # If running in existing loop, create new thread
+                import concurrent.futures
+                with concurrent.futures.ThreadPoolExecutor() as executor:
+                    future = executor.submit(asyncio.run, run_collection())
+                    results = future.result(timeout=120)  # 2 minute timeout
+            else:
+                results = loop.run_until_complete(run_collection())
+        except RuntimeError:
+            # No event loop exists, create new one
+            results = asyncio.run(run_collection())
+        
+        # Save results report
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        report_path = f"data/reports/ai_skills_collection_{timestamp}.json"
+        
+        os.makedirs(os.path.dirname(report_path), exist_ok=True)
+        with open(report_path, 'w', encoding='utf-8') as f:
+            json.dump(results, f, indent=2, ensure_ascii=False)
+        
+        status.add_log("INFO", f"AI skills collection completed - Found {results['total_collected']} skills", "COLLECTION")
+        status.complete_operation(True, f"Collected {results['total_collected']} AI skills using proven system")
+        
+        return jsonify({
+            'success': True,
+            'message': f'AI skills collection completed - found {results["total_collected"]} skills',
+            'report_path': report_path,
+            'results': results,
+            'summary': {
+                'total_skills_collected': results['total_collected'],
+                'category_breakdown': results['category_stats'],
+                'collection_method': results['collection_method'],
+                'timeframe': timeframe,
+                'skills_per_category_target': skills_per_category,
+                'timestamp': results['timestamp']
+            }
+        })
+        
+    except Exception as e:
+        logger.error(f"AI skills collection error: {e}")
+        status.add_log("ERROR", f"AI skills collection failed: {e}", "COLLECTION")
+        status.complete_operation(False, f"Collection failed: {str(e)}")
+        return jsonify({
+            'success': False,
+            'error': str(e),
+            'message': f'AI skills collection failed: {str(e)}'
+        }), 500
+
+@app.route('/api/run_program_analysis', methods=['POST'])
+def api_run_program_analysis():
+    """Run AI-Horizon PROGRAM analysis to generate educational resources."""
+    try:
+        import asyncio
+        from scripts.analysis.ai_horizon_program_tool import AIHorizonProgramTool
+        
+        data = request.get_json() or {}
+        target_categories = data.get('categories', ['new_tasks', 'human_only', 'augment'])
+        include_resources = data.get('include_resources', False)
+        
+        status.set_operation("PROGRAM Analysis")
+        status.update_progress(0, 100, "Initializing PROGRAM tool...")
+        
+        async def run_program_analysis():
+            tool = AIHorizonProgramTool()
+            results = {}
+            
+            for i, category in enumerate(target_categories):
+                status.update_progress(int((i / len(target_categories)) * 100), 100, 
+                                     f"Analyzing {category} category...")
+                try:
+                    result = await tool.run_category_analysis(category)
+                    results[category] = result
+                    status.add_log("INFO", f"✅ {category}: {result.get('learning_needs_identified', 0)} needs found", "PROGRAM")
+                except Exception as e:
+                    results[category] = {'error': str(e), 'success': False}
+                    status.add_log("ERROR", f"❌ {category}: {str(e)}", "PROGRAM")
+            
+            return results
+        
+        # Execute the analysis
+        results = asyncio.run(run_program_analysis())
+        
+        # Calculate summary statistics
+        total_needs = sum(r.get('learning_needs_identified', 0) for r in results.values() if r.get('success'))
+        successful_categories = len([r for r in results.values() if r.get('success')])
+        
+        status.update_progress(100, 100, f"Completed! Found {total_needs} learning needs")
+        status.complete_operation(True, f"PROGRAM analysis completed: {total_needs} learning needs identified")
+        
+        return jsonify({
+            'success': True,
+            'results': results,
+            'summary': {
+                'total_learning_needs': total_needs,
+                'categories_processed': successful_categories,
+                'focus_categories': target_categories,
+                'timestamp': datetime.now().isoformat(),
+                'analysis_type': 'educational_resources'
+            },
+            'message': f'Successfully identified {total_needs} learning needs across {successful_categories} categories'
+        })
+        
+    except Exception as e:
+        logger.error(f"Error in PROGRAM analysis: {e}")
+        status.add_log("ERROR", f"PROGRAM analysis failed: {e}", "PROGRAM")
+        status.complete_operation(False, f"PROGRAM analysis failed: {str(e)}")
+        return jsonify({
+            'success': False,
+            'message': f'Error running PROGRAM analysis: {str(e)}'
+        }), 500
+
+@app.route('/api/export_forecast_findings/<category>')
+def api_export_forecast_findings(category):
+    """Export FORECAST findings as JSON for PROGRAM tool integration."""
+    try:
+        from scripts.analysis.comprehensive_category_narratives import ComprehensiveCategoryNarrativeAnalyzer
+        
+        analyzer = ComprehensiveCategoryNarrativeAnalyzer()
+        report = analyzer.generate_category_report(category)
+        
+        if not report:
+            return jsonify({
+                'success': False,
+                'message': f'No forecast findings available for category: {category}'
+            }), 404
+        
+        # Export in format suitable for PROGRAM tool
+        export_data = {
+            'category': category,
+            'export_timestamp': datetime.now().isoformat(),
+            'forecast_metadata': {
+                'total_articles': report['total_articles_analyzed'],
+                'avg_confidence': report['avg_confidence'],
+                'high_confidence_articles': report['high_confidence_articles']
+            },
+            'jobs_and_tasks': report['jobs_and_tasks'],
+            'mechanisms': report['mechanisms'],
+            'learning_opportunities': [
+                {
+                    'skill_area': task.replace('_', ' ').title(),
+                    'confidence': details['avg_confidence'],
+                    'evidence_count': details['evidence_count'],
+                    'priority_score': details['avg_confidence'] * 0.9 if category in ['new_tasks', 'human_only'] else details['avg_confidence'] * 0.7,
+                    'explanations': details.get('explanations', [])[:3]
+                }
+                for task, details in report['jobs_and_tasks'].items()
+                if details['avg_confidence'] >= 0.25 and details['evidence_count'] >= 1
+            ]
+        }
+        
+        # Sort learning opportunities by priority
+        export_data['learning_opportunities'].sort(key=lambda x: x['priority_score'], reverse=True)
+        
+        return jsonify({
+            'success': True,
+            'data': export_data,
+            'message': f'Successfully exported {len(export_data["learning_opportunities"])} learning opportunities for {category}'
+        })
+        
+    except Exception as e:
+        logger.error(f"Error exporting forecast findings for {category}: {e}")
+        return jsonify({
+            'success': False,
+            'message': f'Error exporting forecast findings: {str(e)}'
+        }), 500
+
 @app.route('/api/visualization_data/<analysis_type>')
 def api_visualization_data(analysis_type):
     """Get visualization data for interactive charts."""
@@ -4038,6 +4373,9 @@ def test_search():
 @app.route('/api/export_entry_pdf/<artifact_id>')
 def api_export_entry_pdf(artifact_id):
     """Export a single entry as PDF."""
+    if not PDF_EXPORT_AVAILABLE:
+        return jsonify({"error": "PDF export functionality not available"}), 503
+        
     try:
         db = DatabaseManager()
         artifact = db.get_artifact_by_id(artifact_id)
@@ -4080,6 +4418,9 @@ def api_export_entry_pdf(artifact_id):
 @app.route('/api/export_analysis_pdf/<analysis_type>')
 def api_export_analysis_pdf(analysis_type):
     """Export analysis results as PDF."""
+    if not PDF_EXPORT_AVAILABLE:
+        return jsonify({"error": "PDF export functionality not available"}), 503
+        
     try:
         # Map analysis types to report file patterns
         analysis_files = {
@@ -4142,6 +4483,9 @@ def api_export_analysis_pdf(analysis_type):
 @app.route('/api/export_predictive_pdf/<prediction_type>')
 def api_export_predictive_pdf(prediction_type):
     """Export predictive analytics as PDF."""
+    if not PDF_EXPORT_AVAILABLE:
+        return jsonify({"error": "PDF export functionality not available"}), 503
+        
     try:
         # Generate prediction data (in a real system, this would come from stored results)
         prediction_data = {
@@ -4182,6 +4526,9 @@ def api_export_predictive_pdf(prediction_type):
 @app.route('/api/export_summary_pdf/<category>')
 def api_export_summary_pdf(category):
     """Export category summary/narrative as PDF."""
+    if not PDF_EXPORT_AVAILABLE:
+        return jsonify({"error": "PDF export functionality not available"}), 503
+        
     try:
         # Check if category is valid
         valid_categories = ['replace', 'augment', 'new_tasks', 'human_only']
@@ -4250,6 +4597,9 @@ def api_export_summary_pdf(category):
 @app.route('/api/export_intelligence_pdf')
 def api_export_intelligence_pdf():
     """Export intelligence report as PDF."""
+    if not PDF_EXPORT_AVAILABLE:
+        return jsonify({"error": "PDF export functionality not available"}), 503
+        
     try:
         # Get report content from request parameters
         report_title = request.args.get('title', 'Intelligence Report')
@@ -4322,17 +4672,10 @@ validated through multiple analytical frameworks and expert review processes.
 @app.route('/api/check_pdf_support')
 def api_check_pdf_support():
     """Check if PDF export functionality is available."""
-    try:
-        exporter = create_pdf_exporter()
-        return jsonify({
-            "pdf_support": True,
-            "message": "PDF export functionality is available"
-        })
-    except Exception as e:
-        return jsonify({
-            "pdf_support": False,
-            "message": f"PDF export not available: {str(e)}"
-        })
+    return jsonify({
+        "pdf_support": PDF_EXPORT_AVAILABLE,
+        "message": "PDF export functionality is available" if PDF_EXPORT_AVAILABLE else "PDF export not available: WeasyPrint dependencies missing"
+    })
 
 @app.route('/api/reports')
 def api_reports():

@@ -220,6 +220,12 @@
         .category-augment { background: #17a2b8; }
         .category-new_tasks { background: #28a745; }
         .category-human_only { background: #ffc107; color: #333; }
+        
+        /* Fix for category filter active text visibility */
+        .category-filter-active {
+            color: #333 !important;
+            font-weight: 600;
+        }
 
         /* Multi-category indicator styles */
         .multi-category-indicators {
@@ -353,7 +359,7 @@
                 <div style="margin: 15px 0; padding: 10px; background: rgba(102, 126, 234, 0.1); border-radius: 8px; border-left: 4px solid #667eea;">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <div>
-                            <strong>🔍 Category Filter Active:</strong> 
+                            <strong style="color: #333;">🔍 Category Filter Active:</strong> 
                             <span class="category-badge category-{{ category_filter }}" style="margin-left: 8px;">
                                 {{ category_filter.replace('_', ' ').title() }}
                             </span>
@@ -496,6 +502,10 @@
                                 <option value="manual_youtube">📺 Videos</option>
                                 <option value="perplexity">🤖 Perplexity</option>
                                 <option value="demo">🎯 Demo</option>
+                                <option value="ai_skills">🤖 All AI Skills (4 entries)</option>
+                                <option value="ai_skills_new_tasks">🚀 AI Skills: New Tasks (2 entries)</option>
+                                <option value="ai_skills_augment">🔧 AI Skills: Augment (1 entry)</option>
+                                <option value="ai_skills_human_only">👤 AI Skills: Human Only (1 entry)</option>
                             </select>
                         </div>
                         <div>
@@ -1076,7 +1086,12 @@
                 // Apply type filter
                 if (filterType && shouldShow) {
                     const sourceType = row.dataset.sourceType || '';
-                    if (!sourceType.includes(filterType)) {
+                    if (filterType === 'ai_skills') {
+                        // Special handling for AI skills - check if source type starts with 'ai_skills'
+                        if (!sourceType.startsWith('ai_skills')) {
+                            shouldShow = false;
+                        }
+                    } else if (!sourceType.includes(filterType)) {
                         shouldShow = false;
                     }
                 }
@@ -1174,6 +1189,26 @@
             document.getElementById('search-title').addEventListener('change', performSearch);
             document.getElementById('search-content').addEventListener('change', performSearch);
             document.getElementById('search-url').addEventListener('change', performSearch);
+            
+            // Handle URL parameters for direct linking (e.g., from AI skills search)
+            const urlParams = new URLSearchParams(window.location.search);
+            const searchParam = urlParams.get('search');
+            const filterTypeParam = urlParams.get('filter_type');
+            
+            if (searchParam) {
+                document.getElementById('search-input').value = decodeURIComponent(searchParam);
+            }
+            if (filterTypeParam) {
+                const filterSelect = document.getElementById('filter-type');
+                if (filterSelect) {
+                    filterSelect.value = filterTypeParam;
+                }
+            }
+            
+            // Perform search if parameters were provided
+            if (searchParam || filterTypeParam) {
+                performSearch();
+            }
         });
     </script>
     </div>

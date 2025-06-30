@@ -1,6 +1,11 @@
 # 🔒 Security Setup Guide - AI-Horizon Project
 
+**Last Updated**: June 28, 2025  
+**Security Status**: ✅ **All API keys secured and rotated** - No sensitive data in version control
+
 ## ⚠️ CRITICAL: API Key Security
+
+> **Recent Security Update (June 28, 2025)**: All exposed API keys have been rotated and secured. The repository is now safe for public access with proper `.gitignore` protection and environment variable management.
 
 ### **Environment Variables Setup**
 

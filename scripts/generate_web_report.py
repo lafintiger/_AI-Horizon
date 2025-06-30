@@ -6,8 +6,13 @@ that can be opened in a web browser.
 """
 
 import json
+import sys
 from datetime import datetime
 from pathlib import Path
+
+# Add project root to path
+sys.path.append(str(Path(__file__).parent.parent))
+
 from aih.config import get_data_path
 from aih.utils.database import DatabaseManager
 

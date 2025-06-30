@@ -13,7 +13,7 @@ from datetime import datetime
 from typing import List, Dict, Any
 
 # Add project root to path
-sys.path.append(str(Path(__file__).parent))
+sys.path.append(str(Path(__file__).parent.parent))
 
 from aih.utils.database import DatabaseManager
 

@@ -68,7 +68,7 @@ python status_server.py --host 0.0.0.0 --port 5000
 
 ### **5. ✨ Enhanced Navigation System - NEW Version 2.1**
 - **Organization**: Logical workflow-based navigation structure
-- **Groupings**: 📊 Data Gathering, ⚙️ Processing, 📂 Browse & Review, 🔍 Analysis, 📋 Reports, 📖 Reference
+- **Groupings**: 📊 Data Gathering (with Search & Discovery), ⚙️ Processing, 📂 Browse & Review, 🔍 Analysis, 📋 Reports, 📖 Reference
 - **Implementation**: Consistent across all 8+ template files
 - **Benefits**: Improved user experience with logical flow progression
 

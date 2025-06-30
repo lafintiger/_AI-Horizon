@@ -242,6 +242,17 @@
             background: #feb2b2;
         }
 
+        .skills-search-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+            padding: 15px;
+            background: #e3f2fd;
+            border: 1px solid #2196f3;
+            border-radius: 8px;
+        }
+
         .expandable-section {
             margin-top: 20px;
         }
@@ -448,6 +459,98 @@ ethical decision making human values moral reasoning</textarea>
                     </div>
                 </div>
 
+                <!-- AI Skills Search Configuration -->
+                <div class="config-section">
+                    <h2>🔍 AI Skills Search Configuration</h2>
+                    <p>Configure proactive search for emerging AI skills that cybersecurity professionals need, including skills not explicitly labeled as "cybersecurity." This searches broader sources for cross-domain opportunities.</p>
+                    
+                    <div class="expandable-section">
+                        <button type="button" class="expand-toggle" onclick="toggleAISkillsPrompts()">
+                            <span id="aiSkillsToggleIcon">▶</span> Show/Edit AI Skills Search Prompts
+                        </button>
+                        <div id="aiSkillsPromptsContent" class="expandable-content">
+                            <div class="category-grid">
+                                <!-- Emerging AI Tech -->
+                                <div class="category-card">
+                                    <div class="category-header">
+                                        <span class="category-icon">🚀</span>
+                                        <span class="category-title">EMERGING AI TECH</span>
+                                    </div>
+                                    <div class="category-description">
+                                        Latest AI breakthroughs and cutting-edge technologies with cybersecurity potential
+                                    </div>
+                                    <textarea class="prompt-textarea" name="emerging_ai_prompts" id="emerging_ai_prompts">latest AI breakthroughs 2024 2025 security applications
+new machine learning techniques threat detection
+cutting edge AI tools platforms enterprise security
+AI startup technologies cybersecurity innovation
+research AI developments security implications</textarea>
+                                    <div class="prompt-count">5 search queries (one per line)</div>
+                                </div>
+
+                                <!-- Adjacent Domains -->
+                                <div class="category-card">
+                                    <div class="category-header">
+                                        <span class="category-icon">🔄</span>
+                                        <span class="category-title">ADJACENT DOMAINS</span>
+                                    </div>
+                                    <div class="category-description">
+                                        Cross-domain AI skills from other industries transferable to cybersecurity
+                                    </div>
+                                    <textarea class="prompt-textarea" name="adjacent_domain_prompts" id="adjacent_domain_prompts">DevOps AI automation tools security operations
+cloud security AI technologies monitoring detection
+financial AI fraud detection cybersecurity applications
+healthcare AI privacy security HIPAA compliance
+automotive AI security connected vehicle protection</textarea>
+                                    <div class="prompt-count">5 search queries (one per line)</div>
+                                </div>
+
+                                <!-- Skill Transfer -->
+                                <div class="category-card">
+                                    <div class="category-header">
+                                        <span class="category-icon">🎯</span>
+                                        <span class="category-title">SKILL TRANSFER</span>
+                                    </div>
+                                    <div class="category-description">
+                                        General AI skills that provide competitive advantages in cybersecurity
+                                    </div>
+                                    <textarea class="prompt-textarea" name="skill_transfer_prompts" id="skill_transfer_prompts">AI prompt engineering skills cybersecurity professionals
+LLM fine-tuning techniques security applications
+AI model deployment practices enterprise security
+AI ethics governance frameworks compliance security
+human-AI collaboration methods security operations</textarea>
+                                    <div class="prompt-count">5 search queries (one per line)</div>
+                                </div>
+
+                                <!-- Industry Transformation -->
+                                <div class="category-card">
+                                    <div class="category-header">
+                                        <span class="category-icon">📈</span>
+                                        <span class="category-title">INDUSTRY TRANSFORMATION</span>
+                                    </div>
+                                    <div class="category-description">
+                                        Industry signals about AI skill demands and workforce transformation
+                                    </div>
+                                    <textarea class="prompt-textarea" name="industry_transformation_prompts" id="industry_transformation_prompts">AI disrupting traditional cybersecurity roles 2024
+new AI security job categories skill requirements
+AI skills in demand cybersecurity employers hiring
+enterprise AI adoption security challenges
+AI consulting opportunities cybersecurity professionals</textarea>
+                                    <div class="prompt-count">5 search queries (one per line)</div>
+                                </div>
+                            </div>
+                            
+                            <div class="skills-search-actions">
+                                <button type="button" class="btn btn-secondary" onclick="testAISkillsSearch()">
+                                    🔍 Test Search Prompts
+                                </button>
+                                <button type="button" class="btn btn-primary" onclick="saveAISkillsPrompts()">
+                                    💾 Save AI Skills Configuration
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Action Buttons -->
                 <div class="action-buttons">
                     <button type="button" class="btn btn-reset" onclick="resetToDefaults()">
@@ -520,8 +623,9 @@ ethical decision making human values moral reasoning</textarea>
             }
         }
 
-        // Load last collection date on page load
+        // Load last collection date and AI skills prompts on page load
         loadLastCollectionDate();
+        loadAISkillsPrompts();
 
         // Toggle prompts visibility
         function togglePrompts() {
@@ -534,6 +638,102 @@ ethical decision making human values moral reasoning</textarea>
             } else {
                 content.classList.add('expanded');
                 icon.textContent = '▼';
+            }
+        }
+
+        // Toggle AI Skills prompts visibility
+        function toggleAISkillsPrompts() {
+            const content = document.getElementById('aiSkillsPromptsContent');
+            const icon = document.getElementById('aiSkillsToggleIcon');
+            
+            if (content.classList.contains('expanded')) {
+                content.classList.remove('expanded');
+                icon.textContent = '▶';
+            } else {
+                content.classList.add('expanded');
+                icon.textContent = '▼';
+            }
+        }
+
+        // Test AI Skills Search prompts
+        async function testAISkillsSearch() {
+            const prompts = {
+                emerging_ai: document.getElementById('emerging_ai_prompts').value.split('\n').filter(p => p.trim()),
+                adjacent_domains: document.getElementById('adjacent_domain_prompts').value.split('\n').filter(p => p.trim()),
+                skill_transfer: document.getElementById('skill_transfer_prompts').value.split('\n').filter(p => p.trim()),
+                industry_transformation: document.getElementById('industry_transformation_prompts').value.split('\n').filter(p => p.trim())
+            };
+
+            showStatus('Testing AI Skills Search prompts...', 'info');
+            
+            try {
+                const response = await fetch('/api/run_ai_skills_search', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        focus_area: 'emerging_skills',
+                        timeframe: '6months',
+                        search_scope: 'comprehensive',
+                        custom_prompts: prompts
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    showStatus(`Test successful! Discovered ${data.summary.total_skills_discovered || 0} emerging skills from ${Object.values(prompts).flat().length} prompts.`, 'success');
+                } else {
+                    showStatus(`Test failed: ${data.message || 'Unknown error'}`, 'error');
+                }
+            } catch (error) {
+                showStatus(`Test error: ${error.message}`, 'error');
+            }
+        }
+
+        // Save AI Skills prompts configuration
+        async function saveAISkillsPrompts() {
+            const prompts = {
+                emerging_ai: document.getElementById('emerging_ai_prompts').value.split('\n').filter(p => p.trim()),
+                adjacent_domains: document.getElementById('adjacent_domain_prompts').value.split('\n').filter(p => p.trim()),
+                skill_transfer: document.getElementById('skill_transfer_prompts').value.split('\n').filter(p => p.trim()),
+                industry_transformation: document.getElementById('industry_transformation_prompts').value.split('\n').filter(p => p.trim())
+            };
+
+            try {
+                // For now, store in localStorage - could be enhanced to save to server
+                localStorage.setItem('ai_skills_search_prompts', JSON.stringify(prompts));
+                showStatus('AI Skills Search prompts saved successfully!', 'success');
+                
+                console.log('AI Skills Search Configuration Saved:', prompts);
+            } catch (error) {
+                showStatus(`Save error: ${error.message}`, 'error');
+            }
+        }
+
+        // Load saved AI Skills prompts on page load
+        function loadAISkillsPrompts() {
+            try {
+                const saved = localStorage.getItem('ai_skills_search_prompts');
+                if (saved) {
+                    const prompts = JSON.parse(saved);
+                    
+                    if (prompts.emerging_ai) {
+                        document.getElementById('emerging_ai_prompts').value = prompts.emerging_ai.join('\n');
+                    }
+                    if (prompts.adjacent_domains) {
+                        document.getElementById('adjacent_domain_prompts').value = prompts.adjacent_domains.join('\n');
+                    }
+                    if (prompts.skill_transfer) {
+                        document.getElementById('skill_transfer_prompts').value = prompts.skill_transfer.join('\n');
+                    }
+                    if (prompts.industry_transformation) {
+                        document.getElementById('industry_transformation_prompts').value = prompts.industry_transformation.join('\n');
+                    }
+                }
+            } catch (error) {
+                console.log('Could not load saved AI Skills prompts:', error);
             }
         }
 

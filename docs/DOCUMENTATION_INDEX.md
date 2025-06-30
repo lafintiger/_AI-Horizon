@@ -1,7 +1,7 @@
 # AI-Horizon Documentation Index
 
 **Last Updated**: June 28, 2025  
-**Version**: 2.3 - Professional Workforce Intelligence Platform with Advanced Analytics, DCWF Integration, PDF Export & User Management  
+**Version**: 2.3.1 - Professional Workforce Intelligence Platform with Enhanced UI, Advanced Analytics, DCWF Integration, PDF Export & User Management  
 **Status**: ✅ **All Documentation Current & Complete - Latest Features Implemented**
 
 ---
@@ -14,10 +14,11 @@
 - **[SYSTEM_STATUS.md](SYSTEM_STATUS.md)** - **Current System Health** - Real-time status, performance metrics, all issues resolved
 - **[SYSTEM_STATUS_UPDATE_JUNE_2025.md](SYSTEM_STATUS_UPDATE_JUNE_2025.md)** - 🆕 **LATEST** - Comprehensive system status after June 2025 fixes
 
-### **✨ Version 2.3 Latest Features (June 28, 2025)**
+### **✨ Version 2.3.1 Latest Features (June 28, 2025)**
 - **[USER_MANAGEMENT.md](USER_MANAGEMENT.md)** - 🆕 **NEW** - Complete user management and authentication system guide
 - **[AUTHENTICATION_SYSTEM.md](AUTHENTICATION_SYSTEM.md)** - 🆕 **NEW** - Authentication system implementation and security features
-- **[RECENT_ENHANCEMENTS_2025.md](RECENT_ENHANCEMENTS_2025.md)** - ✨ **Updated** - Complete documentation of all Version 2.3 features including PDF export and user management
+- **[RECENT_ENHANCEMENTS_2025.md](RECENT_ENHANCEMENTS_2025.md)** - ✨ **Updated** - Complete documentation of all Version 2.3.1 features including UI enhancements, PDF export and user management
+- **[JUNE_28_2025_SESSION_SUMMARY.md](JUNE_28_2025_SESSION_SUMMARY.md)** - 🆕 **NEW** - Comprehensive session summary including security remediation and UI improvements
 
 ### **✨ Version 2.2 Critical Fixes (June 2025)**
 - **[ANALYSIS_PAGE_FIXES_2025.md](ANALYSIS_PAGE_FIXES_2025.md)** - ✅ **CRITICAL** - Complete analysis page restoration with Chart.js integration

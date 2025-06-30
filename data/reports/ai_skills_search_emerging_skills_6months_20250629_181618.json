@@ -1,0 +1,357 @@
+{
+  "search_metadata": {
+    "focus_area": "emerging_skills",
+    "timeframe": "6months",
+    "search_timestamp": "2025-06-29T18:11:35.869745",
+    "sources_searched": [],
+    "total_queries": 20
+  },
+  "discovered_skills": [
+    {
+      "name": "And Automation",
+      "relevance": 0.8500000000000001,
+      "description": "Emerging skill in adjacent_domains",
+      "category": "adjacent_domains",
+      "confidence": 0.7,
+      "discovery_source": "adjacent_domains",
+      "search_query": "automotive AI security emerging 2024 skills professionals need enterprise adoption technology professionals learn",
+      "discovery_timestamp": "2025-06-29T18:13:55.852169"
+    },
+    {
+      "name": "Emerging Ai",
+      "relevance": 0.7500000000000002,
+      "description": "Emerging skill in industry_transformation",
+      "category": "industry_transformation",
+      "confidence": 0.7,
+      "discovery_source": "industry_transformation",
+      "search_query": "new AI job categories 2024 emerging 2024 skills professionals need enterprise adoption technology professionals learn",
+      "discovery_timestamp": "2025-06-29T18:15:28.092323"
+    },
+    {
+      "name": "New Ai",
+      "relevance": 0.7500000000000002,
+      "description": "Emerging skill in industry_transformation",
+      "category": "industry_transformation",
+      "confidence": 0.7,
+      "discovery_source": "industry_transformation",
+      "search_query": "new AI job categories 2024 emerging 2024 skills professionals need enterprise adoption technology professionals learn",
+      "discovery_timestamp": "2025-06-29T18:15:28.092323"
+    },
+    {
+      "name": "Driving Demand For New Ai",
+      "relevance": 0.7500000000000002,
+      "description": "Emerging skill in industry_transformation",
+      "category": "industry_transformation",
+      "confidence": 0.7,
+      "discovery_source": "industry_transformation",
+      "search_query": "new AI job categories 2024 emerging 2024 skills professionals need enterprise adoption technology professionals learn",
+      "discovery_timestamp": "2025-06-29T18:15:28.092323"
+    },
+    {
+      "name": "Creating And Validating Synthetic Datasets For Ai",
+      "relevance": 0.7500000000000002,
+      "description": "Emerging skill in industry_transformation",
+      "category": "industry_transformation",
+      "confidence": 0.7,
+      "discovery_source": "industry_transformation",
+      "search_query": "new AI job categories 2024 emerging 2024 skills professionals need enterprise adoption technology professionals learn",
+      "discovery_timestamp": "2025-06-29T18:15:28.092323"
+    },
+    {
+      "name": "Remote Ai",
+      "relevance": 0.7500000000000002,
+      "description": "Emerging skill in industry_transformation",
+      "category": "industry_transformation",
+      "confidence": 0.7,
+      "discovery_source": "industry_transformation",
+      "search_query": "new AI job categories 2024 emerging 2024 skills professionals need enterprise adoption technology professionals learn",
+      "discovery_timestamp": "2025-06-29T18:15:28.092323"
+    },
+    {
+      "name": "And Remote Ai",
+      "relevance": 0.7500000000000002,
+      "description": "Emerging skill in industry_transformation",
+      "category": "industry_transformation",
+      "confidence": 0.7,
+      "discovery_source": "industry_transformation",
+      "search_query": "new AI job categories 2024 emerging 2024 skills professionals need enterprise adoption technology professionals learn",
+      "discovery_timestamp": "2025-06-29T18:15:28.092323"
+    },
+    {
+      "name": "Emerging Ai",
+      "relevance": 0.75,
+      "description": "Emerging skill in adjacent_domains",
+      "category": "adjacent_domains",
+      "confidence": 0.7,
+      "discovery_source": "adjacent_domains",
+      "search_query": "cloud security AI technologies emerging 2024 skills professionals need enterprise adoption technology professionals learn",
+      "discovery_timestamp": "2025-06-29T18:13:15.186497"
+    },
+    {
+      "name": "Report A Shortage Of Ai Security",
+      "relevance": 0.75,
+      "description": "Emerging skill in adjacent_domains",
+      "category": "adjacent_domains",
+      "confidence": 0.7,
+      "discovery_source": "adjacent_domains",
+      "search_query": "cloud security AI technologies emerging 2024 skills professionals need enterprise adoption technology professionals learn",
+      "discovery_timestamp": "2025-06-29T18:13:15.186497"
+    },
+    {
+      "name": "Driven Threat Detection And Response",
+      "relevance": 0.75,
+      "description": "Emerging skill in adjacent_domains",
+      "category": "adjacent_domains",
+      "confidence": 0.7,
+      "discovery_source": "adjacent_domains",
+      "search_query": "cloud security AI technologies emerging 2024 skills professionals need enterprise adoption technology professionals learn",
+      "discovery_timestamp": "2025-06-29T18:13:15.186497"
+    },
+    {
+      "name": "Integrating Ai Into Zero Trust",
+      "relevance": 0.75,
+      "description": "Emerging skill in adjacent_domains",
+      "category": "adjacent_domains",
+      "confidence": 0.7,
+      "discovery_source": "adjacent_domains",
+      "search_query": "cloud security AI technologies emerging 2024 skills professionals need enterprise adoption technology professionals learn",
+      "discovery_timestamp": "2025-06-29T18:13:15.186497"
+    },
+    {
+      "name": "To Address The Shortage Of Ai Security",
+      "relevance": 0.75,
+      "description": "Emerging skill in adjacent_domains",
+      "category": "adjacent_domains",
+      "confidence": 0.7,
+      "discovery_source": "adjacent_domains",
+      "search_query": "cloud security AI technologies emerging 2024 skills professionals need enterprise adoption technology professionals learn",
+      "discovery_timestamp": "2025-06-29T18:13:15.186497"
+    },
+    {
+      "name": "Ai Security",
+      "relevance": 0.75,
+      "description": "Emerging skill in adjacent_domains",
+      "category": "adjacent_domains",
+      "confidence": 0.7,
+      "discovery_source": "adjacent_domains",
+      "search_query": "cloud security AI technologies emerging 2024 skills professionals need enterprise adoption technology professionals learn",
+      "discovery_timestamp": "2025-06-29T18:13:15.186497"
+    },
+    {
+      "name": "Data Privacy And Compliance For Llm",
+      "relevance": 0.7000000000000002,
+      "description": "Emerging skill in skill_transfer_opportunities",
+      "category": "skill_transfer_opportunities",
+      "confidence": 0.7,
+      "discovery_source": "skill_transfer_opportunities",
+      "search_query": "LLM fine-tuning techniques emerging 2024 skills professionals need enterprise adoption technology professionals learn",
+      "discovery_timestamp": "2025-06-29T18:14:21.901178"
+    },
+    {
+      "name": "And Monitoring Ai Systems On",
+      "relevance": 0.7000000000000001,
+      "description": "Emerging skill in emerging_ai_tech",
+      "category": "emerging_ai_tech",
+      "confidence": 0.7,
+      "discovery_source": "emerging_ai_tech",
+      "search_query": "latest AI breakthroughs 2024 2025 emerging 2024 skills professionals need enterprise adoption technology professionals learn",
+      "discovery_timestamp": "2025-06-29T18:11:52.681374"
+    },
+    {
+      "name": "Emerging Ai",
+      "relevance": 0.7000000000000001,
+      "description": "Emerging skill in adjacent_domains",
+      "category": "adjacent_domains",
+      "confidence": 0.7,
+      "discovery_source": "adjacent_domains",
+      "search_query": "automotive AI security emerging 2024 skills professionals need enterprise adoption technology professionals learn",
+      "discovery_timestamp": "2025-06-29T18:13:55.852169"
+    },
+    {
+      "name": "Genai Security",
+      "relevance": 0.7000000000000001,
+      "description": "Emerging skill in adjacent_domains",
+      "category": "adjacent_domains",
+      "confidence": 0.7,
+      "discovery_source": "adjacent_domains",
+      "search_query": "automotive AI security emerging 2024 skills professionals need enterprise adoption technology professionals learn",
+      "discovery_timestamp": "2025-06-29T18:13:55.852169"
+    },
+    {
+      "name": "Emerging Ai",
+      "relevance": 0.6500000000000001,
+      "description": "Emerging skill in skill_transfer_opportunities",
+      "category": "skill_transfer_opportunities",
+      "confidence": 0.7,
+      "discovery_source": "skill_transfer_opportunities",
+      "search_query": "LLM fine-tuning techniques emerging 2024 skills professionals need enterprise adoption technology professionals learn",
+      "discovery_timestamp": "2025-06-29T18:14:21.901178"
+    },
+    {
+      "name": "Of All Ai",
+      "relevance": 0.6500000000000001,
+      "description": "Emerging skill in skill_transfer_opportunities",
+      "category": "skill_transfer_opportunities",
+      "confidence": 0.7,
+      "discovery_source": "skill_transfer_opportunities",
+      "search_query": "LLM fine-tuning techniques emerging 2024 skills professionals need enterprise adoption technology professionals learn",
+      "discovery_timestamp": "2025-06-29T18:14:21.901178"
+    },
+    {
+      "name": "Generative Ai",
+      "relevance": 0.6500000000000001,
+      "description": "Emerging skill in skill_transfer_opportunities",
+      "category": "skill_transfer_opportunities",
+      "confidence": 0.7,
+      "discovery_source": "skill_transfer_opportunities",
+      "search_query": "LLM fine-tuning techniques emerging 2024 skills professionals need enterprise adoption technology professionals learn",
+      "discovery_timestamp": "2025-06-29T18:14:21.901178"
+    },
+    {
+      "name": "Faster Rate Of",
+      "relevance": 0.6500000000000001,
+      "description": "Emerging skill in industry_transformation",
+      "category": "industry_transformation",
+      "confidence": 0.7,
+      "discovery_source": "industry_transformation",
+      "search_query": "new AI job categories 2024 emerging 2024 skills professionals need enterprise adoption technology professionals learn",
+      "discovery_timestamp": "2025-06-29T18:15:28.092323"
+    },
+    {
+      "name": "With Many New",
+      "relevance": 0.6500000000000001,
+      "description": "Emerging skill in industry_transformation",
+      "category": "industry_transformation",
+      "confidence": 0.7,
+      "discovery_source": "industry_transformation",
+      "search_query": "new AI job categories 2024 emerging 2024 skills professionals need enterprise adoption technology professionals learn",
+      "discovery_timestamp": "2025-06-29T18:15:28.092323"
+    },
+    {
+      "name": "The Following Are Examples Of Such Emerging",
+      "relevance": 0.6500000000000001,
+      "description": "Emerging skill in industry_transformation",
+      "category": "industry_transformation",
+      "confidence": 0.7,
+      "discovery_source": "industry_transformation",
+      "search_query": "new AI job categories 2024 emerging 2024 skills professionals need enterprise adoption technology professionals learn",
+      "discovery_timestamp": "2025-06-29T18:15:28.092323"
+    },
+    {
+      "name": "Has Created Demand For",
+      "relevance": 0.6500000000000001,
+      "description": "Emerging skill in industry_transformation",
+      "category": "industry_transformation",
+      "confidence": 0.7,
+      "discovery_source": "industry_transformation",
+      "search_query": "new AI job categories 2024 emerging 2024 skills professionals need enterprise adoption technology professionals learn",
+      "discovery_timestamp": "2025-06-29T18:15:28.092323"
+    },
+    {
+      "name": "Emerging Ai",
+      "relevance": 0.6500000000000001,
+      "description": "Emerging skill in industry_transformation",
+      "category": "industry_transformation",
+      "confidence": 0.7,
+      "discovery_source": "industry_transformation",
+      "search_query": "AI skills in demand employers emerging 2024 skills professionals need enterprise adoption technology professionals learn",
+      "discovery_timestamp": "2025-06-29T18:15:46.314415"
+    }
+  ],
+  "trending_technologies": [],
+  "cross_domain_opportunities": [
+    {
+      "name": "And Automation",
+      "relevance": 0.8500000000000001,
+      "description": "Emerging skill in adjacent_domains",
+      "category": "adjacent_domains",
+      "confidence": 0.7,
+      "discovery_source": "adjacent_domains",
+      "search_query": "automotive AI security emerging 2024 skills professionals need enterprise adoption technology professionals learn",
+      "discovery_timestamp": "2025-06-29T18:13:55.852169"
+    }
+  ],
+  "skill_gaps_identified": [],
+  "cybersecurity_relevance_scores": {
+    "Adjacent Domains": 0.56,
+    "Industry Transformation": 0.57,
+    "Skill Transfer Opportunities": 0.5,
+    "Emerging Ai Tech": 0.47
+  },
+  "learning_recommendations": [
+    {
+      "type": "priority_skill",
+      "skill_name": "And Automation",
+      "relevance_score": 0.8500000000000001,
+      "learning_path": [
+        "Online course",
+        "Hands-on tutorials",
+        "Practice projects"
+      ],
+      "estimated_time": "1-2 months (high priority)",
+      "difficulty": "beginner",
+      "business_case": "High cybersecurity relevance (85.0%) with growing industry demand"
+    },
+    {
+      "type": "priority_skill",
+      "skill_name": "Emerging Ai",
+      "relevance_score": 0.7500000000000002,
+      "learning_path": [
+        "Online course",
+        "Hands-on tutorials",
+        "Practice projects"
+      ],
+      "estimated_time": "1-2 months (high priority)",
+      "difficulty": "beginner",
+      "business_case": "High cybersecurity relevance (75.0%) with growing industry demand"
+    },
+    {
+      "type": "priority_skill",
+      "skill_name": "New Ai",
+      "relevance_score": 0.7500000000000002,
+      "learning_path": [
+        "Online course",
+        "Hands-on tutorials",
+        "Practice projects"
+      ],
+      "estimated_time": "1-2 months (high priority)",
+      "difficulty": "beginner",
+      "business_case": "High cybersecurity relevance (75.0%) with growing industry demand"
+    },
+    {
+      "type": "priority_skill",
+      "skill_name": "Driving Demand For New Ai",
+      "relevance_score": 0.7500000000000002,
+      "learning_path": [
+        "Online course",
+        "Hands-on tutorials",
+        "Practice projects"
+      ],
+      "estimated_time": "1-2 months (high priority)",
+      "difficulty": "beginner",
+      "business_case": "High cybersecurity relevance (75.0%) with growing industry demand"
+    },
+    {
+      "type": "priority_skill",
+      "skill_name": "Creating And Validating Synthetic Datasets For Ai",
+      "relevance_score": 0.7500000000000002,
+      "learning_path": [
+        "Online course",
+        "Hands-on tutorials",
+        "Practice projects"
+      ],
+      "estimated_time": "1-2 months (high priority)",
+      "difficulty": "beginner",
+      "business_case": "High cybersecurity relevance (75.0%) with growing industry demand"
+    },
+    {
+      "type": "cross_domain_opportunity",
+      "skill_name": "And Automation",
+      "relevance_score": 0.8500000000000001,
+      "opportunity_description": "Transfer skills from adjacent domains to cybersecurity",
+      "competitive_advantage": "Early adoption before widespread cybersecurity integration",
+      "estimated_time": "1-2 months (high priority)"
+    }
+  ],
+  "skills_stored_in_db": 0
+}

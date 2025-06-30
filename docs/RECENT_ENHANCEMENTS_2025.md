@@ -1,14 +1,59 @@
 # AI-Horizon: Recent Enhancements & New Features (2025)
 
 **Last Updated**: June 28, 2025  
-**Current Version**: 2.3 - Professional Workforce Intelligence Platform with Advanced Analytics, DCWF Integration, PDF Export & User Management  
+**Current Version**: 2.3.2 - Professional Workforce Intelligence Platform with Enhanced Search & Filtering  
 **Enhancement Status**: All features complete and operational
 
 ---
 
 ## 🎯 **ENHANCEMENT TIMELINE**
 
-### **Version 2.3 - User Management & PDF Export (June 28, 2025)** ✨ **LATEST**
+### **Version 2.3.2 - Search & Discovery Enhancements (June 28, 2025)** ✨ **LATEST**
+
+#### **🔍 AI Skills Search & Filtering Improvements** ✨ **NEW**
+- **Seamless Navigation**: Fixed automatic AI skills filter when navigating from Search & Discovery to Browse Entries
+- **Enhanced Filter Logic**: Improved AI skills filtering to properly handle source type categorization
+- **Direct Navigation**: "View Stored Skills" button now correctly applies AI skills filter and search parameters
+- **Category-Based Filtering**: AI skills filter now properly recognizes source types starting with 'ai_skills'
+- **User Experience**: Eliminated manual filter application requirement for AI skills browsing
+
+**Technical Improvements:**
+- **Updated Navigation Function**: `viewStoredSkills()` now uses proper URL parameters for seamless filtering
+- **Enhanced Filter Logic**: Special handling for AI skills in browse entries filtering system
+- **Improved URL Structure**: Direct navigation with `filter_type=ai_skills&search=AI%20Skill` parameters
+- **Better Source Type Recognition**: Filtering logic now checks for source types starting with 'ai_skills'
+
+**Files Modified:**
+- `templates/search.html` - Updated `viewStoredSkills()` function for proper navigation
+- `templates/browse_entries.html` - Enhanced filtering logic for AI skills source types
+
+**User Impact:**
+- **Streamlined Workflow**: Users can now seamlessly navigate from AI skills search to filtered results
+- **Reduced Friction**: No more manual filter application required when viewing stored AI skills
+- **Consistent Experience**: AI skills filtering now works consistently across the interface
+- **Improved Discoverability**: AI skills are properly categorized and easily accessible
+
+### **Version 2.3.1 - UI/UX Enhancements (June 28, 2025)**
+
+#### **🎨 Navigation Layout & Visual Improvements** ✨ **NEW**
+- **Reorganized Header Layout**: Two-row structure with improved spacing and visual hierarchy
+- **User Information Repositioning**: Moved user info to top-right corner for cleaner layout
+- **Enhanced Menu Readability**: Increased menu item font sizes by 28% (0.7rem → 0.9rem)
+- **Group Label Enhancement**: Increased group label font sizes by 17% (0.6rem → 0.7rem)
+- **Responsive Design**: Proportional font scaling across all screen sizes
+- **Professional Styling**: Enhanced navigation with better spacing and modern design
+- **Improved User Experience**: Eliminated cramped layout issues for better accessibility
+
+**Visual Changes:**
+- Navigation header now uses flexbox column layout with clear separation
+- User information styled with rounded logout button and proper spacing
+- Menu items now easier to read with larger, more accessible fonts
+- Consistent responsive behavior across desktop and mobile devices
+
+**Files Modified:**
+- `templates/base.html` - Complete navigation layout restructuring and font size improvements
+
+### **Version 2.3 - User Management & PDF Export (June 28, 2025)**
 
 #### **👥 User Management & Authentication System** ✨ **NEW**
 - **Role-Based Access Control**: Three user roles (Admin, Viewer, Manual Entry)
