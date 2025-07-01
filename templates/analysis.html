@@ -1656,7 +1656,7 @@
                             <span class="result-value">${data.source_health}</span>
                         </div>
                         <div class="result-item">
-                            <span class="result-label">Quality Score:</span>
+                            <span class="result-label">Intelligence Quality Score:</span>
                             <span class="result-value">${data.quality_score}</span>
                         </div>
                         <div class="result-item">
@@ -2164,7 +2164,7 @@
                                 html += `
                                     <li>
                                         <strong>${citation.title}</strong><br>
-                                        <small>Confidence: ${citation.confidence.toFixed(3)} | Quality: ${citation.quality.toFixed(3)}</small><br>
+                                        <small>Confidence: ${citation.confidence.toFixed(3)} | Intelligence Quality: ${citation.quality.toFixed(3)}</small><br>
                                         <small>Evidence: ${citation.evidence.slice(0, 3).join(', ')}</small>
                                     </li>
                                 `;
@@ -2191,7 +2191,7 @@
                             <div class="article-item">
                                 <div class="article-title">${index + 1}. ${article.title}</div>
                                 <div class="article-metrics">
-                                    Confidence: ${article.confidence.toFixed(3)} | Quality: ${article.quality_score.toFixed(3)}
+                                    Confidence: ${article.confidence.toFixed(3)} | Intelligence Quality: ${article.quality_score.toFixed(3)}
                                 </div>
                                 <div class="article-evidence">Evidence: ${article.evidence.slice(0, 3).join(', ')}</div>
                                 ${article.key_insights.length > 0 ? `<div class="article-insight">Key Insight: ${article.key_insights[0].substring(0, 150)}...</div>` : ''}

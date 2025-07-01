@@ -141,60 +141,356 @@
             <a href="/summaries" class="nav-button">📋 Reports</a>
         </div>
 
-        <!-- Quality Analysis Methodology -->
-        <div class="methodology-section" id="quality-analysis">
-            <h2>📈 Quality Distribution Analysis</h2>
+        <!-- Data Collection Methodology -->
+        <div class="methodology-section" id="data-collection">
+            <h2>🌐 Data Collection & Processing</h2>
             
-            <h3>Overview</h3>
-            <p>Our quality analysis system evaluates collected articles using a multi-factor scoring algorithm that considers content depth, source reliability, recency, and relevance to cybersecurity AI topics.</p>
+            <h3>Automated Collection System</h3>
+            <p>Our system uses the Perplexity API for real-time data collection with sophisticated query generation and duplicate detection.</p>
             
-            <h3>Quality Score Calculation</h3>
             <div class="formula-box">
-                <div class="formula-title">Quality Score Formula:</div>
+                <div class="formula-title">Collection Query Generation:</div>
                 <code>
-                Quality Score = (Content_Score × 0.4) + (Source_Score × 0.3) + (Recency_Score × 0.2) + (Relevance_Score × 0.1)
+                base_query = "cybersecurity workforce artificial intelligence impact"
+                <br>
+                For each category (replace, augment, new_tasks, human_only):
+                <br>• category_keywords = get_category_keywords(category)
+                <br>• enhanced_query = base_query + " " + category_keywords.join(" ")
+                <br>• temporal_filter = enhanced_query + " 2024-2025"
                 <br><br>
-                Where:
-                <br>• Content_Score = Length_Factor × Structure_Factor × Depth_Factor
-                <br>• Source_Score = Domain_Reputation × Author_Credibility
-                <br>• Recency_Score = 1.0 - (Days_Since_Publication / 365)
-                <br>• Relevance_Score = AI_Keywords_Count × Cybersecurity_Keywords_Count
+                Query Examples:
+                <br>• REPLACE: "...AI deployment reducing headcount layoffs automation 2024"
+                <br>• AUGMENT: "...AI-human collaboration workforce enhancement tools 2024"
+                <br>• NEW_TASKS: "...emerging cybersecurity roles AI specialist skills 2024"
                 </code>
             </div>
             
-            <h3>Quality Categories</h3>
+            <h3>Duplicate Detection Algorithm</h3>
+            <div class="formula-box">
+                <div class="formula-title">URL-Based Deduplication:</div>
+                <code>
+                For each collected article:
+                <br>1. normalize_url = clean_tracking_params(article_url)
+                <br>2. url_hash = sha256(normalize_url)
+                <br>3. if url_hash in database: SKIP (duplicate)
+                <br>4. else: process_and_store(article)
+                <br><br>
+                URL Normalization Rules:
+                <br>• Remove tracking parameters (utm_*, ref=, etc.)
+                <br>• Convert to lowercase
+                <br>• Remove trailing slashes
+                <br>• Standardize protocol (https://)
+                </code>
+            </div>
+            
+            <h3>Collection Rate Management</h3>
+            <div class="formula-box">
+                <div class="formula-title">Rate Limiting & Throttling:</div>
+                <code>
+                Perplexity API Limits:
+                <br>• queries_per_minute = 60 (enforced by API)
+                <br>• requests_per_hour = 3600 (enforced by API)
+                <br><br>
+                Collection Schedule:
+                <br>• base_queries = 4 categories × 5 queries_per_category = 20 queries/run
+                <br>• run_frequency = daily (configurable)
+                <br>• articles_per_query = ~3 (varies by API response)
+                <br>• expected_new_articles = 20-60 per day (after deduplication)
+                </code>
+            </div>
+            
+            <h3>Content Processing Pipeline</h3>
+            <div class="formula-box">
+                <div class="formula-title">Processing Workflow:</div>
+                <code>
+                For each collected article:
+                <br>1. raw_content = extract_text_from_url(article_url)
+                <br>2. metadata = extract_metadata(title, url, date, source)
+                <br>3. quality_score = calculate_quality_score(content, metadata)
+                <br>4. ai_categories = classify_ai_impact(content) [LLM call]
+                <br>5. wisdom_extraction = extract_wisdom(content) [LLM call]
+                <br>6. store_in_database(processed_article)
+                <br><br>
+                Error Handling:
+                <br>• URL access failures: retry 3x with exponential backoff
+                <br>• LLM API failures: queue for later processing
+                <br>• Invalid content: log and skip with error flag
+                </code>
+            </div>
+            
+            <h3>Source Diversity Analysis</h3>
+            <div class="formula-box">
+                <div class="formula-title">Source Distribution Metrics:</div>
+                <code>
+                source_counts = count_articles_per_domain(all_articles)
+                <br>
+                Shannon_Diversity = -Σ(p[i] × log(p[i])) where p[i] = source_count[i]/total
+                <br>Simpson_Diversity = 1 - Σ(p[i]²)
+                <br><br>
+                Source Health Score = (Shannon_Diversity × 0.6) + (Simpson_Diversity × 0.4)
+                <br><br>
+                Interpretation:
+                <br>• High diversity (>0.8): Good variety of sources
+                <br>• Medium diversity (0.5-0.8): Moderate source spread  
+                <br>• Low diversity (<0.5): Dominated by few sources
+                </code>
+            </div>
+            
+            <div class="data-sources">
+                <h4>📊 Primary Data Sources</h4>
+                <p>Data is collected from:</p>
+                <ul>
+                    <li><strong>Perplexity API:</strong> Real-time web search with citation tracking</li>
+                    <li><strong>Source Types:</strong> News articles, industry reports, academic papers, blogs</li>
+                    <li><strong>Temporal Focus:</strong> 2024-2025 publications (configurable lookback period)</li>
+                    <li><strong>Geographic Scope:</strong> Global English-language sources</li>
+                    <li><strong>Domain Coverage:</strong> Cybersecurity, technology, workforce development</li>
+                </ul>
+            </div>
+            
+            <div class="warning-box">
+                <h4>⚠️ Collection Limitations</h4>
+                <ul>
+                    <li><strong>Language Bias:</strong> English-only sources may miss regional perspectives</li>
+                    <li><strong>Search Algorithm:</strong> Results depend on Perplexity's proprietary ranking</li>
+                    <li><strong>Temporal Lag:</strong> New publications may take time to appear in search results</li>
+                    <li><strong>Paywall Content:</strong> Premium/subscription content may be inaccessible</li>
+                    <li><strong>Source Bias:</strong> Algorithm may favor certain domains or publication types</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Quality Analysis Methodology -->
+        <div class="methodology-section" id="quality-analysis">
+            <h2>📈 Quality Assessment Systems</h2>
+            
+            <div class="important-note">
+                <strong>Note:</strong> AI-Horizon uses two distinct quality scoring systems for different purposes:
+                <ul>
+                    <li><strong>Content Quality Score:</strong> Basic validation during content ingestion</li>
+                    <li><strong>Intelligence Quality Score:</strong> Strategic analysis using NATO Intelligence Doctrine</li>
+                </ul>
+            </div>
+            
+            <h3>🔵 Content Quality Score (Processing Pipeline)</h3>
+            <p>Used during initial content processing to validate basic content quality and structure.</p>
+            
+            <h4>Content Quality Algorithm</h4>
+            <div class="formula-box">
+                <div class="formula-title">Content Quality Score Formula:</div>
+                <code>
+                Content Quality = (Length_Score × 0.4) + (Tech_Density × 0.3) + (Source_Bonus × 0.3)
+                <br><br>
+                Where:
+                <br>• Length_Score = Optimal range 300-3000 words (1.0 = perfect, scaled down for outliers)
+                <br>• Tech_Density = Cybersecurity keyword density × 2 (capped at 1.0)
+                <br>• Source_Bonus = 0.3 for academic/government sources, 0.1 for news, 0.0 for others
+                </code>
+            </div>
+
+            <h3>🔴 Intelligence Quality Score (NATO Intelligence Doctrine)</h3>
+            <p>Strategic-grade assessment using NATO Intelligence Doctrine (NID) for analysis and reporting.</p>
+            
+            <h4>Overview</h4>
+            <p>Our quality assessment system uses <strong>NATO Intelligence Doctrine (NID)</strong> standards for evaluating source reliability and information credibility. This military-grade methodology provides rigorous, standardized assessment criteria for intelligence evaluation.</p>
+            
+            <h4>Source Reliability Scale (A-F)</h4>
             <table class="confidence-table">
                 <tr>
-                    <th>Score Range</th>
+                    <th>Grade</th>
                     <th>Classification</th>
-                    <th>Criteria</th>
+                    <th>Description</th>
+                    <th>Numeric Value</th>
                 </tr>
                 <tr>
-                    <td>0.8 - 1.0</td>
-                    <td>Excellent</td>
-                    <td>Comprehensive analysis, authoritative source, recent publication</td>
+                    <td><strong>A</strong></td>
+                    <td>Reliable</td>
+                    <td>No doubt about authenticity, trustworthiness, competency</td>
+                    <td>1.0</td>
                 </tr>
                 <tr>
-                    <td>0.6 - 0.79</td>
-                    <td>Good</td>
-                    <td>Solid content with good insights, reliable source</td>
+                    <td><strong>B</strong></td>
+                    <td>Usually reliable</td>
+                    <td>Minor doubts, mostly valid information history</td>
+                    <td>0.8</td>
                 </tr>
                 <tr>
-                    <td>0.4 - 0.59</td>
-                    <td>Average</td>
-                    <td>Basic information, standard sources</td>
+                    <td><strong>C</strong></td>
+                    <td>Fairly reliable</td>
+                    <td>Some doubts, provided valid information in past</td>
+                    <td>0.6</td>
                 </tr>
                 <tr>
-                    <td>0.2 - 0.39</td>
-                    <td>Below Average</td>
-                    <td>Limited insights, questionable sources</td>
+                    <td><strong>D</strong></td>
+                    <td>Not usually reliable</td>
+                    <td>Significant doubts about reliability</td>
+                    <td>0.4</td>
                 </tr>
                 <tr>
-                    <td>0.0 - 0.19</td>
-                    <td>Poor</td>
-                    <td>Minimal value, unreliable sources</td>
+                    <td><strong>E</strong></td>
+                    <td>Unreliable</td>
+                    <td>Lacks authenticity, history of invalid information</td>
+                    <td>0.2</td>
+                </tr>
+                <tr>
+                    <td><strong>F</strong></td>
+                    <td>Cannot be judged</td>
+                    <td>Insufficient information to evaluate reliability</td>
+                    <td>0.0</td>
                 </tr>
             </table>
+            
+            <h4>Information Credibility Scale (1-6)</h4>
+            <table class="confidence-table">
+                <tr>
+                    <th>Grade</th>
+                    <th>Classification</th>
+                    <th>Description</th>
+                    <th>Numeric Value</th>
+                </tr>
+                <tr>
+                    <td><strong>1</strong></td>
+                    <td>Confirmed</td>
+                    <td>Logical, consistent, confirmed by independent sources</td>
+                    <td>1.0</td>
+                </tr>
+                <tr>
+                    <td><strong>2</strong></td>
+                    <td>Probably true</td>
+                    <td>Logical, consistent, not confirmed</td>
+                    <td>0.8</td>
+                </tr>
+                <tr>
+                    <td><strong>3</strong></td>
+                    <td>Possibly true</td>
+                    <td>Reasonably logical, agrees with some information</td>
+                    <td>0.6</td>
+                </tr>
+                <tr>
+                    <td><strong>4</strong></td>
+                    <td>Doubtfully true</td>
+                    <td>Not logical but possible, not confirmed</td>
+                    <td>0.4</td>
+                </tr>
+                <tr>
+                    <td><strong>5</strong></td>
+                    <td>Improbable</td>
+                    <td>Not logical, contradicted by other information</td>
+                    <td>0.2</td>
+                </tr>
+                <tr>
+                    <td><strong>6</strong></td>
+                    <td>Cannot be judged</td>
+                    <td>Validity cannot be determined</td>
+                    <td>0.0</td>
+                </tr>
+            </table>
+            
+            <h4>Additional Quality Factors (0.0-1.0 Scale)</h4>
+            <div class="formula-box">
+                <div class="formula-title">Supplementary Assessment Criteria:</div>
+                <code>
+                • <strong>Specificity Score:</strong> How specific and detailed are the claims?
+                <br>• <strong>Recency Score:</strong> How current is the information? 
+                <br>• <strong>Evidence Score:</strong> Are claims supported by data, studies, or examples?
+                <br>• <strong>Expert Score:</strong> Does the author/source have relevant credentials?
+                <br><br>
+                Each factor scored 0.0-1.0 based on LLM analysis with specific criteria:
+                <br>• 0.9-1.0: Exceptional quality
+                <br>• 0.7-0.89: High quality
+                <br>• 0.5-0.69: Moderate quality  
+                <br>• 0.3-0.49: Low quality
+                <br>• 0.0-0.29: Very poor quality
+                </code>
+            </div>
+            
+            <h4>Overall Quality Score Algorithm</h4>
+            <div class="formula-box">
+                <div class="formula-title">Composite Score Calculation:</div>
+                <code>
+                Overall_Score = (Reliability_Numeric × 0.3) + (Credibility_Numeric × 0.3) + 
+                               (Evidence_Score × 0.2) + (Expert_Score × 0.1) + 
+                               (Specificity_Score × 0.05) + (Recency_Score × 0.05)
+                <br><br>
+                Where:
+                <br>• Reliability_Numeric = {A: 1.0, B: 0.8, C: 0.6, D: 0.4, E: 0.2, F: 0.0}
+                <br>• Credibility_Numeric = {1: 1.0, 2: 0.8, 3: 0.6, 4: 0.4, 5: 0.2, 6: 0.0}
+                <br>• Final score rounded to 3 decimal places
+                <br><br>
+                <strong>Example:</strong> Source rated B2 with high evidence (0.8), moderate expert (0.6), 
+                <br>good specificity (0.7), recent (0.9) = 
+                <br>(0.8×0.3) + (0.8×0.3) + (0.8×0.2) + (0.6×0.1) + (0.7×0.05) + (0.9×0.05) = 0.755
+                </code>
+            </div>
+            
+            <h4>Quality Grade Distribution</h4>
+            <table class="confidence-table">
+                <tr>
+                    <th>Overall Score Range</th>
+                    <th>Quality Grade</th>
+                    <th>Typical NID Rating</th>
+                    <th>Description</th>
+                </tr>
+                <tr>
+                    <td>0.85 - 1.0</td>
+                    <td>Excellent</td>
+                    <td>A1, A2, B1</td>
+                    <td>Highest quality: Reliable sources with confirmed information</td>
+                </tr>
+                <tr>
+                    <td>0.65 - 0.84</td>
+                    <td>Good</td>
+                    <td>B2, B3, C1, C2</td>
+                    <td>High quality: Generally reliable with good credibility</td>
+                </tr>
+                <tr>
+                    <td>0.45 - 0.64</td>
+                    <td>Average</td>
+                    <td>C3, C4, D1, D2</td>
+                    <td>Moderate quality: Some reliability concerns</td>
+                </tr>
+                <tr>
+                    <td>0.25 - 0.44</td>
+                    <td>Below Average</td>
+                    <td>D3, D4, E1, E2</td>
+                    <td>Low quality: Significant reliability or credibility issues</td>
+                </tr>
+                <tr>
+                    <td>0.0 - 0.24</td>
+                    <td>Poor</td>
+                    <td>E3-E6, F1-F6</td>
+                    <td>Very poor quality: Unreliable or unverifiable</td>
+                </tr>
+            </table>
+            
+            <h4>LLM Assessment Process</h4>
+            <div class="formula-box">
+                <div class="formula-title">Automated Quality Evaluation Workflow:</div>
+                <code>
+                For each collected artifact:
+                <br>1. content_analysis = LLM_evaluate(url, title, content, source_metadata)
+                <br>2. source_reliability = parse_reliability_grade(analysis) # A-F
+                <br>3. info_credibility = parse_credibility_grade(analysis) # 1-6  
+                <br>4. additional_factors = parse_supplementary_scores(analysis) # 0.0-1.0
+                <br>5. overall_score = calculate_composite_score(all_factors)
+                <br>6. rationale = extract_detailed_reasoning(analysis)
+                <br><br>
+                LLM Model: Claude-3.5-Sonnet (primary), GPT-4 (fallback)
+                <br>Temperature: 0.3 (balanced consistency and analysis quality)
+                <br>Max Tokens: 1000 (sufficient for detailed assessment)
+                </code>
+            </div>
+            
+            <div class="warning-box">
+                <h4>⚠️ NID Assessment Limitations</h4>
+                <ul>
+                    <li><strong>Context Dependency:</strong> Same source may receive different ratings based on specific content</li>
+                    <li><strong>LLM Subjectivity:</strong> AI assessment may not capture all nuances human analysts would identify</li>
+                    <li><strong>Temporal Relevance:</strong> Source reliability can change over time</li>
+                    <li><strong>Domain Expertise:</strong> LLM may lack specialized cybersecurity domain knowledge</li>
+                    <li><strong>Cultural Bias:</strong> NATO doctrine may not account for all cultural perspectives on credibility</li>
+                </ul>
+            </div>
         </div>
 
         <!-- Trend Analysis Methodology -->
@@ -303,42 +599,14 @@
             </div>
             
             <h3>Skill Demand Analysis</h3>
-            <div class="formula-box">
-                <div class="formula-title">Skill Ranking Algorithm:</div>
-                <code>
-                Skill_Sentiment = (Positive_Context - Negative_Context) / Total_Context_Signals
-                <br>
-                Overall_Rating = (Skill_Sentiment + 1) × Mention_Count
-                <br><br>
-                Where context is analyzed within ±200 characters of skill mention
-                </code>
-            </div>
-            
-            <h3>Employer vs. Employee Perspective</h3>
-            <div class="formula-box">
-                <div class="formula-title">Perspective Detection:</div>
-                <code>
-                Employer_Signals = Count of employer-related terms
-                <br>Employee_Signals = Count of employee-related terms
-                <br><br>
-                Classification:
-                <br>• "employer" if Employer_Signals > Employee_Signals × 1.5
-                <br>• "employee" if Employee_Signals > Employer_Signals × 1.5
-                <br>• "mixed" if both present
-                </code>
-            </div>
-            
-            <div class="data-sources">
-                <h4>📊 Data Sources</h4>
-                <p>Job market sentiment is derived from:</p>
-                <ul>
-                    <li>Industry reports and whitepapers</li>
-                    <li>News articles and press releases</li>
-                    <li>Academic research publications</li>
-                    <li>Government and regulatory documents</li>
-                    <li>Professional association publications</li>
-                </ul>
-            </div>
+            <div class="formula-title">Skill Ranking Algorithm:</div>
+            <code>
+            Skill_Sentiment = (Positive_Context - Negative_Context) / Total_Context_Signals
+            <br>
+            Overall_Rating = (Skill_Sentiment + 1) × Mention_Count
+            <br><br>
+            Where context is analyzed within ±200 characters of skill mention
+            </code>
         </div>
 
         <!-- AI Adoption Predictions Methodology -->
@@ -346,64 +614,121 @@
             <h2>🚀 AI Adoption Rate Predictions</h2>
             
             <h3>Predictive Model Overview</h3>
-            <p>Our AI adoption prediction system uses machine learning algorithms to analyze temporal patterns in collected data and forecast future adoption trends in cybersecurity workforce transformation.</p>
+            <p>Our AI adoption prediction system uses statistical analysis and pattern matching on existing processed article data to forecast cybersecurity workforce transformation trends. <strong>Note: This system does NOT use external AI models but leverages classical ML techniques on pre-processed content.</strong></p>
             
-            <h3>Feature Engineering</h3>
+            <h3>Job Role Pattern Matching Algorithm</h3>
             <div class="formula-box">
-                <div class="formula-title">Time Series Features:</div>
+                <div class="formula-title">Job Role Detection Formula:</div>
                 <code>
-                Features = [
-                    monthly_article_count,
-                    avg_quality_score,
-                    sentiment_distribution,
-                    category_distribution,
-                    keyword_frequency_trends,
-                    source_diversity_index
-                ]
+                Job_Mentions = Σ(regex_matches(pattern_i, article_text))
+                <br><br>
+                For each job category j:
+                <br>• job_articles[j] = {articles where Job_Mentions > 0}
+                <br>• Pattern sets defined for: security_analyst, penetration_tester, 
+                <br>  security_engineer, compliance_officer, ciso_manager, ai_security_specialist
                 </code>
             </div>
             
-            <h3>Adoption Phase Classification</h3>
+            <h3>Automation Risk Prediction</h3>
+            <div class="formula-box">
+                <div class="formula-title">Automation Likelihood Calculation:</div>
+                <code>
+                avg_replace_score = mean(replace_confidence_scores)
+                <br>
+                timeframe_multiplier = {6months: 1.1, 1year: 1.3, 2years: 1.8, 3years: 2.2, 5years: 3.0}
+                <br>
+                base_prediction = min(avg_replace_score × multiplier, 0.95)
+                <br>
+                automation_likelihood = base_prediction × 100
+                <br><br>
+                Confidence_Interval = [max(0, (base_prediction - 0.15) × 100), 
+                <br>                     min(100, (base_prediction + 0.15) × 100)]
+                </code>
+            </div>
+            
+            <h3>Skills Demand Forecasting</h3>
+            <div class="formula-box">
+                <div class="formula-title">Skills Demand Score Calculation:</div>
+                <code>
+                For each skill category:
+                <br>• mention_count = Σ(skill_term_occurrences in article_text)
+                <br>• new_tasks_confidence = mean(new_tasks_scores from articles)
+                <br>• augment_confidence = mean(augment_scores from articles)
+                <br>• demand_score = (new_tasks_confidence + augment_confidence) / 2
+                <br>• growth_projection = demand_score × timeframe_multiplier
+                </code>
+            </div>
+            
+            <h3>Industry Adoption Velocity</h3>
+            <div class="formula-box">
+                <div class="formula-title">Adoption Rate Calculation:</div>
+                <code>
+                sector_articles = articles_mentioning(sector_keywords)
+                <br>
+                early_period_confidence = mean(confidence_scores[first_3_months])
+                <br>recent_period_confidence = mean(confidence_scores[last_3_months])
+                <br>
+                adoption_velocity = (recent_period_confidence - early_period_confidence) / time_span
+                <br>projected_adoption = current_confidence + (adoption_velocity × timeframe_months)
+                </code>
+            </div>
+            
+            <h3>Statistical Confidence Metrics</h3>
             <table class="confidence-table">
                 <tr>
-                    <th>Phase</th>
-                    <th>Characteristics</th>
-                    <th>Indicators</th>
+                    <th>Metric</th>
+                    <th>Calculation Method</th>
+                    <th>Reliability Threshold</th>
                 </tr>
                 <tr>
-                    <td>Early Exploration</td>
-                    <td>Initial awareness and experimentation</td>
-                    <td>Low volume, high uncertainty</td>
+                    <td>Evidence Articles</td>
+                    <td>Count of articles containing job/skill patterns</td>
+                    <td>Minimum 10 articles for reliable prediction</td>
                 </tr>
                 <tr>
-                    <td>Early Majority</td>
-                    <td>Broader adoption beginning</td>
-                    <td>Increasing volume, positive sentiment</td>
+                    <td>Model Confidence</td>
+                    <td>Fixed at 0.85 based on validation testing</td>
+                    <td>Predictions with &lt;0.7 confidence flagged</td>
                 </tr>
                 <tr>
-                    <td>Late Majority</td>
-                    <td>Mainstream adoption</td>
-                    <td>High volume, practical focus</td>
-                </tr>
-                <tr>
-                    <td>Maturity</td>
-                    <td>Established practices</td>
-                    <td>Stable patterns, optimization focus</td>
+                    <td>Confidence Interval</td>
+                    <td>±15% around base prediction</td>
+                    <td>Wider intervals for sparse data</td>
                 </tr>
             </table>
             
-            <h3>Transformation Speed Metrics</h3>
+            <h3>Technology Impact Analysis</h3>
             <div class="formula-box">
-                <div class="formula-title">Speed Classification:</div>
+                <div class="formula-title">Technology Disruption Score:</div>
                 <code>
-                Speed = Change_Rate / Time_Period
-                <br><br>
-                Classifications:
-                <br>• "rapid" if Speed > 0.1 per month
-                <br>• "moderate" if 0.05 < Speed ≤ 0.1 per month
-                <br>• "gradual" if Speed ≤ 0.05 per month
+                tech_mentions = Σ(technology_pattern_matches)
+                <br>replace_impact = mean(replace_confidence × tech_mention_density)
+                <br>augment_potential = mean(augment_confidence × tech_mention_density)
+                <br>
+                disruption_score = (replace_impact × 0.7) + (augment_potential × 0.3)
+                <br>projected_impact = disruption_score × timeframe_multiplier
                 </code>
             </div>
+            
+            <div class="warning-box">
+                <h4>⚠️ Predictive Model Limitations</h4>
+                <ul>
+                    <li><strong>Pattern-Based:</strong> Uses regex pattern matching, not semantic understanding</li>
+                    <li><strong>Historical Bias:</strong> Predictions based solely on existing article content</li>
+                    <li><strong>Fixed Multipliers:</strong> Timeframe multipliers are empirically derived, not dynamically calculated</li>
+                    <li><strong>Confidence Intervals:</strong> Fixed ±15% range may not reflect true uncertainty</li>
+                    <li><strong>Sample Dependency:</strong> Quality depends on diversity and volume of input articles</li>
+                </ul>
+            </div>
+            
+            <h3>Validation Methodology</h3>
+            <p>Prediction accuracy is validated through:</p>
+            <ul>
+                <li>Cross-validation with external industry reports</li>
+                <li>Historical back-testing on previous data periods</li>
+                <li>Comparison with expert assessments</li>
+                <li>Regular recalibration of timeframe multipliers</li>
+            </ul>
         </div>
 
         <!-- Collection Monitoring Methodology -->
@@ -450,34 +775,130 @@
 
         <!-- Category Distribution Methodology -->
         <div class="methodology-section" id="category-distribution">
-            <h2>📊 Category Distribution Insights</h2>
+            <h2>📊 AI Impact Category Classification</h2>
             
-            <h3>AI Impact Category Classification</h3>
-            <p>Articles are classified into four primary AI impact categories using advanced natural language processing:</p>
+            <h3>LLM-Based Classification System</h3>
+            <p>Articles are classified into four primary AI impact categories using Large Language Model (LLM) analysis with confidence scoring. <strong>This is the core intelligence layer that powers all downstream analysis.</strong></p>
             
             <div class="formula-box">
-                <div class="formula-title">Category Classification Logic:</div>
+                <div class="formula-title">Classification Categories & Definitions:</div>
                 <code>
-                Categories:
-                <br>• AI_REPLACE: Articles discussing AI replacing human tasks
-                <br>• AI_AUGMENT: Articles about AI enhancing human capabilities
-                <br>• NEW_TASKS: Articles describing new roles created by AI
-                <br>• HUMAN_ONLY: Articles emphasizing tasks requiring human skills
-                </code>
-            </div>
-            
-            <h3>Balance Score Calculation</h3>
-            <div class="formula-box">
-                <div class="formula-title">Distribution Balance:</div>
-                <code>
-                Balance_Score = 1 - Gini_Coefficient(category_distribution)
+                AI_REPLACE: Articles discussing AI replacing human tasks entirely
+                <br>• Indicators: "automate", "replace", "eliminate jobs", "reduce headcount"
                 <br><br>
-                Where:
-                <br>• Perfect balance (0.25 each) = Score of 1.0
-                <br>• Complete imbalance (100% one category) = Score of 0.0
-                <br>• Higher scores indicate more balanced coverage
+                AI_AUGMENT: Articles about AI enhancing human capabilities  
+                <br>• Indicators: "assist", "enhance", "support", "collaboration"
+                <br><br>
+                NEW_TASKS: Articles describing new roles/tasks created by AI
+                <br>• Indicators: "new role", "emerging skill", "AI specialist", "prompt engineer"
+                <br><br>
+                HUMAN_ONLY: Articles emphasizing tasks requiring uniquely human skills
+                <br>• Indicators: "human judgment", "creativity", "empathy", "strategic thinking"
                 </code>
             </div>
+            
+            <h3>LLM Analysis Process</h3>
+            <div class="formula-box">
+                <div class="formula-title">Multi-Category Classification Algorithm:</div>
+                <code>
+                For each article:
+                <br>1. content_analysis = LLM_analyze(article_text, category_definitions)
+                <br>2. confidence_scores = extract_confidence(content_analysis)
+                <br>3. reasoning = extract_reasoning(content_analysis)
+                <br><br>
+                Output Format:
+                <br>{
+                <br>  "replace": {"confidence": 0.0-1.0, "reasoning": "..."},
+                <br>  "augment": {"confidence": 0.0-1.0, "reasoning": "..."},
+                <br>  "new_tasks": {"confidence": 0.0-1.0, "reasoning": "..."},
+                <br>  "human_only": {"confidence": 0.0-1.0, "reasoning": "..."}
+                <br>}
+                </code>
+            </div>
+            
+            <h3>Confidence Score Calibration</h3>
+            <div class="formula-box">
+                <div class="formula-title">Confidence Thresholds & Validation:</div>
+                <code>
+                High Confidence: score ≥ 0.7 (Strong evidence in article)
+                <br>Medium Confidence: 0.4 ≤ score < 0.7 (Some evidence present)
+                <br>Low Confidence: score < 0.4 (Minimal or unclear evidence)
+                <br><br>
+                Validation Rules:
+                <br>• Total confidence across categories can exceed 1.0 (articles may fit multiple categories)
+                <br>• Minimum 0.1 confidence required for category assignment
+                <br>• Manual spot-checking performed on 5% of classifications
+                </code>
+            </div>
+            
+            <h3>Model Configuration</h3>
+            <table class="confidence-table">
+                <tr>
+                    <th>Parameter</th>
+                    <th>Value</th>
+                    <th>Purpose</th>
+                </tr>
+                <tr>
+                    <td>Primary Model</td>
+                    <td>Claude-3.5-Sonnet-20241022</td>
+                    <td>Main classification engine</td>
+                </tr>
+                <tr>
+                    <td>Fallback Model</td>
+                    <td>GPT-4</td>
+                    <td>Backup for API failures</td>
+                </tr>
+                <tr>
+                    <td>Temperature</td>
+                    <td>0.1</td>
+                    <td>Low randomness for consistent results</td>
+                </tr>
+                <tr>
+                    <td>Max Tokens</td>
+                    <td>1500</td>
+                    <td>Sufficient for detailed reasoning</td>
+                </tr>
+                <tr>
+                    <td>Retry Logic</td>
+                    <td>3 attempts with exponential backoff</td>
+                    <td>Handle API rate limits</td>
+                </tr>
+            </table>
+            
+            <h3>Category Distribution Analysis</h3>
+            <div class="formula-box">
+                <div class="formula-title">Distribution Balance Score:</div>
+                <code>
+                For each category i, calculate proportion:
+                <br>p[i] = count(articles_with_category[i]) / total_articles
+                <br><br>
+                Gini_Coefficient = 1 - Σ(p[i]²)
+                <br>Balance_Score = Gini_Coefficient / max_possible_gini
+                <br><br>
+                Perfect balance (0.25 each) = Score of 1.0
+                <br>Complete imbalance (100% one category) = Score of 0.0
+                </code>
+            </div>
+            
+            <div class="warning-box">
+                <h4>⚠️ Classification Limitations</h4>
+                <ul>
+                    <li><strong>Model Bias:</strong> LLM training data may introduce systematic biases</li>
+                    <li><strong>Context Sensitivity:</strong> Same content may be interpreted differently based on surrounding text</li>
+                    <li><strong>Confidence Calibration:</strong> LLM confidence may not reflect true uncertainty</li>
+                    <li><strong>Cost Constraints:</strong> API costs limit real-time re-classification</li>
+                    <li><strong>Version Dependency:</strong> Model updates may change classification behavior</li>
+                </ul>
+            </div>
+            
+            <h3>Quality Assurance Process</h3>
+            <ul>
+                <li><strong>Consistency Checks:</strong> Same article re-classified should yield similar results</li>
+                <li><strong>Cross-Model Validation:</strong> Occasional validation using multiple LLM providers</li>
+                <li><strong>Human Review:</strong> Expert review of edge cases and high-impact classifications</li>
+                <li><strong>Confidence Monitoring:</strong> Track confidence distributions for anomaly detection</li>
+                <li><strong>Error Analysis:</strong> Regular analysis of classification failures and edge cases</li>
+            </ul>
         </div>
 
         <!-- Confidence and Limitations -->

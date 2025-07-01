@@ -557,7 +557,7 @@
                                 <th class="sortable" onclick="sortTable('manual-entries-table', 1)">Title</th>
                                 <th class="sortable" onclick="sortTable('manual-entries-table', 2)">Type</th>
                                 <th class="sortable" onclick="sortTable('manual-entries-table', 3)">Category</th>
-                                <th class="sortable" onclick="sortTable('manual-entries-table', 4)">Quality Score</th>
+                                <th class="sortable" onclick="sortTable('manual-entries-table', 4)">Content Quality Score</th>
                                 <th class="sortable" onclick="sortTable('manual-entries-table', 5)">Added</th>
                                 <th>Actions</th>
                             </tr>
@@ -686,7 +686,7 @@
                                 <th class="sortable" onclick="sortTable('automated-entries-table', 1)">Title</th>
                                 <th class="sortable" onclick="sortTable('automated-entries-table', 2)">Type</th>
                                 <th class="sortable" onclick="sortTable('automated-entries-table', 3)">Category</th>
-                                <th class="sortable" onclick="sortTable('automated-entries-table', 4)">Quality Score</th>
+                                <th class="sortable" onclick="sortTable('automated-entries-table', 4)">Content Quality Score</th>
                                 <th class="sortable" onclick="sortTable('automated-entries-table', 5)">Collected</th>
                                 <th>Actions</th>
                             </tr>
@@ -928,7 +928,7 @@
                 if (columnIndex === 0) { // ID column - numeric sort
                     aValue = parseInt(aValue) || 0;
                     bValue = parseInt(bValue) || 0;
-                } else if (columnIndex === 4) { // Quality Score column (was 3, now 4)
+                } else if (columnIndex === 4) { // Content Quality Score column (was 3, now 4)
                     aValue = parseQualityScore(aValue);
                     bValue = parseQualityScore(bValue);
                 } else if (columnIndex === 5) { // Date column (was 4, now 5)
@@ -960,8 +960,8 @@
                 return strongElement ? strongElement.textContent.trim() : '0000';
             }
             
-            // Get text content, but for quality scores, look for the numeric value
-            if (columnIndex === 4) { // Quality Score column (was 3, now 4)
+            // Get text content, but for content quality scores, look for the numeric value
+            if (columnIndex === 4) { // Content Quality Score column (was 3, now 4)
                 const scoreElement = cell.querySelector('small');
                 return scoreElement ? scoreElement.textContent.trim() : '0';
             }
@@ -974,7 +974,7 @@
         }
         
         function parseQualityScore(scoreText) {
-            // Extract numeric value from quality score text
+            // Extract numeric value from content quality score text
             const match = scoreText.match(/[\d.]+/);
             return match ? parseFloat(match[0]) : 0;
         }

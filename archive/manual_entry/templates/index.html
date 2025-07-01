@@ -1,0 +1,287 @@
+{% extends "base.html" %}
+
+{% block title %}AI-Horizon Manual Entry - Dashboard{% endblock %}
+
+{% block content %}
+<!-- Header Section -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="text-center">
+            <h1 class="display-4 mb-3">
+                <i class="bi bi-robot text-primary"></i> Manual Entry Dashboard
+            </h1>
+            <p class="lead text-muted">
+                Add articles, documents, and media sources to the AI-Horizon database
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row mb-4">
+    <div class="col-md-3 mb-3">
+        <div class="card stats-card h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-collection feature-icon"></i>
+                <h3 class="card-title">{{ total_count }}</h3>
+                <p class="card-text">Total Articles</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card stats-card h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-link-45deg feature-icon"></i>
+                <h3 class="card-title">{{ source_counts.get('manual_url', 0) + source_counts.get('perplexity', 0) }}</h3>
+                <p class="card-text">URL Sources</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card stats-card h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-file-earmark-text feature-icon"></i>
+                <h3 class="card-title">{{ source_counts.get('manual_file', 0) }}</h3>
+                <p class="card-text">Uploaded Files</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card stats-card h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-youtube feature-icon"></i>
+                <h3 class="card-title">{{ source_counts.get('manual_youtube', 0) }}</h3>
+                <p class="card-text">YouTube Videos</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row mb-4">
+    <div class="col-12">
+        <h2 class="mb-3">
+            <i class="bi bi-lightning-charge"></i> Quick Actions
+        </h2>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-link-45deg feature-icon"></i>
+                <h5 class="card-title">Add Article URL</h5>
+                <p class="card-text">Manually add a link to an article or webpage</p>
+                <a href="{{ url_for('add_url') }}" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> Add URL
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-file-earmark-arrow-up feature-icon"></i>
+                <h5 class="card-title">Upload Document</h5>
+                <p class="card-text">Upload PDF, TXT, or DOCX files for processing</p>
+                <a href="{{ url_for('add_file') }}" class="btn btn-primary">
+                    <i class="bi bi-upload"></i> Upload File
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-youtube feature-icon"></i>
+                <h5 class="card-title">YouTube Video</h5>
+                <p class="card-text">Extract transcripts from YouTube videos</p>
+                <a href="{{ url_for('add_youtube') }}" class="btn btn-primary">
+                    <i class="bi bi-camera-video"></i> Add Video
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-graph-up feature-icon"></i>
+                <h5 class="card-title">View Reports</h5>
+                <p class="card-text">Analyze collected data and generate insights</p>
+                <a href="{{ url_for('reports_dashboard') }}" target="_blank" class="btn btn-primary">
+                    <i class="bi bi-bar-chart"></i> Open Reports
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- AI Processing Actions -->
+<div class="row mb-4">
+    <div class="col-12">
+        <h2 class="mb-3">
+            <i class="bi bi-cpu"></i> AI Processing & Management
+        </h2>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card h-100 border-warning">
+            <div class="card-body text-center">
+                <i class="bi bi-gear-wide-connected feature-icon text-warning"></i>
+                <h5 class="card-title">Process with AI Pipeline</h5>
+                <p class="card-text">Run collected articles through the AI categorization workflow</p>
+                <a href="{{ url_for('process_pipeline') }}" class="btn btn-warning">
+                    <i class="bi bi-lightning-charge"></i> Process Articles
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card h-100 border-info">
+            <div class="card-body text-center">
+                <i class="bi bi-chat-quote feature-icon text-info"></i>
+                <h5 class="card-title">Manage Search Prompts</h5>
+                <p class="card-text">Edit and test AI search prompts for cybersecurity tasks</p>
+                <a href="{{ url_for('manage_prompts') }}" class="btn btn-info">
+                    <i class="fas fa-edit"></i> Manage Search Prompts
+                </a>
+                <a href="{{ url_for('chat_interface') }}" class="btn btn-success">
+                    <i class="fas fa-comments"></i> Chat with Articles
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card h-100 border-success">
+            <div class="card-body text-center">
+                <i class="bi bi-journal-text feature-icon text-success"></i>
+                <h5 class="card-title">DCWF Task Framework</h5>
+                <p class="card-text">View DoD Cybersecurity Workforce Framework tasks</p>
+                <a href="https://public.cyber.mil/wid/dcwf/" target="_blank" class="btn btn-success">
+                    <i class="bi bi-box-arrow-up-right"></i> View DCWF
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Entries -->
+<div class="row">
+    <div class="col-12">
+        <h2 class="mb-3">
+            <i class="bi bi-clock-history"></i> Recent Entries
+        </h2>
+        
+        {% if recent_artifacts %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Title</th>
+                            <th>Source Type</th>
+                            <th>Added</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for artifact in recent_artifacts %}
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    {% if artifact.source_type == 'manual_url' %}
+                                        <i class="bi bi-link-45deg text-primary me-2"></i>
+                                    {% elif artifact.source_type == 'manual_file' %}
+                                        <i class="bi bi-file-earmark-text text-success me-2"></i>
+                                    {% elif artifact.source_type == 'manual_youtube' %}
+                                        <i class="bi bi-youtube text-danger me-2"></i>
+                                    {% else %}
+                                        <i class="bi bi-collection text-info me-2"></i>
+                                    {% endif %}
+                                    <div>
+                                        <strong>{{ artifact.title[:60] }}{% if artifact.title|length > 60 %}...{% endif %}</strong>
+                                        {% if artifact.url and not artifact.url.startswith('file://') %}
+                                            <br><small class="text-muted">{{ artifact.url[:80] }}{% if artifact.url|length > 80 %}...{% endif %}</small>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="badge bg-{{ 'primary' if artifact.source_type == 'manual_url' else 'success' if artifact.source_type == 'manual_file' else 'danger' if artifact.source_type == 'manual_youtube' else 'secondary' }}">
+                                    {{ artifact.source_type.replace('_', ' ').title() }}
+                                </span>
+                            </td>
+                            <td>
+                                <small class="text-muted">
+                                    {% if artifact.collected_at %}
+                                        {% if artifact.collected_at.strftime is defined %}
+                                            {{ artifact.collected_at.strftime('%Y-%m-%d %H:%M') }}
+                                        {% else %}
+                                            {{ artifact.collected_at }}
+                                        {% endif %}
+                                    {% else %}
+                                        Unknown
+                                    {% endif %}
+                                </small>
+                            </td>
+                            <td>
+                                <div class="btn-group btn-group-sm">
+                                    <a href="{{ url_for('view_artifact', artifact_id=artifact.id) }}" class="btn btn-outline-primary btn-sm" title="View Details">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    {% if artifact.url and not artifact.url.startswith('file://') %}
+                                        <a href="{{ artifact.url }}" target="_blank" class="btn btn-outline-secondary btn-sm" title="Open Source">
+                                            <i class="bi bi-box-arrow-up-right"></i>
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="text-center py-5">
+                <i class="bi bi-inbox display-1 text-muted"></i>
+                <h3 class="text-muted mt-3">No entries yet</h3>
+                <p class="text-muted">Start by adding your first article, document, or video using the actions above.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Source Type Breakdown -->
+{% if source_counts %}
+<div class="row mt-4">
+    <div class="col-12">
+        <h3 class="mb-3">
+            <i class="bi bi-pie-chart"></i> Source Breakdown
+        </h3>
+        <div class="row">
+            {% for source_type, count in source_counts.items() %}
+            <div class="col-md-4 mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="card-title">{{ source_type.replace('_', ' ').title() }}</h6>
+                                <h4 class="text-primary">{{ count }}</h4>
+                            </div>
+                            <div>
+                                {% if 'url' in source_type %}
+                                    <i class="bi bi-link-45deg text-primary" style="font-size: 2em;"></i>
+                                {% elif 'file' in source_type %}
+                                    <i class="bi bi-file-earmark-text text-success" style="font-size: 2em;"></i>
+                                {% elif 'youtube' in source_type %}
+                                    <i class="bi bi-youtube text-danger" style="font-size: 2em;"></i>
+                                {% else %}
+                                    <i class="bi bi-collection text-info" style="font-size: 2em;"></i>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %} 

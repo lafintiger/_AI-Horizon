@@ -91,8 +91,11 @@ CORS(app)
 def force_https():
     """Redirect HTTP to HTTPS in production environment."""
     if not request.is_secure and request.headers.get('X-Forwarded-Proto') != 'https':
-        # Only redirect if not in development mode
-        if os.environ.get('FLASK_ENV') != 'development':
+        # Only redirect if not in development mode and not running on localhost
+        is_dev = (os.environ.get('FLASK_ENV') == 'development' or 
+                 'localhost' in request.host or 
+                 '127.0.0.1' in request.host)
+        if not is_dev:
             return redirect(request.url.replace('http://', 'https://', 1), code=301)
 
 # Flask configuration for file uploads
@@ -4128,36 +4131,50 @@ def delete_artifact(artifact_id):
         return f"Error deleting artifact: {str(e)}", 500
 
 def run_server(host=None, port=None, debug=False):
-    """Run the status server."""
-    # Use environment variables for Heroku deployment
-    host = host or os.environ.get('HOST', '0.0.0.0')
-    port = port or int(os.environ.get('PORT', 8000))
+    """
+    Run the AI-Horizon Status Server with comprehensive error handling and graceful shutdown.
     
+    This server provides real-time monitoring, collection management, manual entry processing,
+    and comprehensive analysis capabilities for the AI-Horizon cybersecurity workforce intelligence system.
+    
+    Args:
+        host: Host address to bind to (default: 127.0.0.1)
+        port: Port to bind to (default: 8000)
+        debug: Enable debug mode (default: False)
+    
+    Features:
+    - Real-time progress tracking via Server-Sent Events
+    - Manual entry processing with file upload support
+    - Collection automation with progress monitoring
+    - Comprehensive analysis tools with visualization
+    - User management and authentication system
+    - Cost tracking and API usage monitoring
+    - Export capabilities (PDF, CSV, JSON)
+    
+    Usage:
+        python status_server.py --host 0.0.0.0 --port 8000 [--debug]
+    """
+    if host is None:
+        host = '127.0.0.1'
+    if port is None:
+        port = 8000  # Changed default port to 8000
+    
+    logger = get_logger('status_server')
     logger.info(f"Starting AI-Horizon Status Server on http://{host}:{port}")
     
-    # Connect cost tracker to status tracker
-    cost_tracker.set_status_tracker(status)
-    
-    # Load historical costs into status tracker
     try:
-        status.api_costs.update({
-            "total_cost": cost_tracker.costs.get("total_cost", 0.0),
-            "perplexity_cost": cost_tracker.costs.get("api_usage", {}).get("perplexity", {}).get("cost", 0.0),
-            "perplexity_calls": cost_tracker.costs.get("api_usage", {}).get("perplexity", {}).get("calls", 0)
-        })
-    except Exception as e:
-        logger.error(f"Error loading historical costs: {e}")
-    
-    # Initial database stats
-    try:
+        # Initialize database on startup
         db = DatabaseManager()
-        artifacts = db.get_artifacts()
-        status.update_stats({"total_artifacts": len(artifacts)})
-        status.add_log("INFO", f"Server started with {len(artifacts)} artifacts in database", "SERVER")
+        logger.info("Database connection established successfully")
+        
+        # Run the Flask application
+        app.run(host=host, port=port, debug=debug, threaded=True)
+        
+    except KeyboardInterrupt:
+        logger.info("Server stopped by user")
     except Exception as e:
-        status.add_log("ERROR", f"Database initialization error: {e}", "SERVER")
-    
-    app.run(host=host, port=port, debug=debug, threaded=True)
+        logger.error(f"Server error: {e}")
+        raise
 
 @app.route('/api/last_collection_date')
 def api_last_collection_date():
@@ -4781,13 +4798,35 @@ def api_generate_web_report():
         logger.error(f"Error generating web report: {e}")
         return jsonify({"error": str(e)}), 500
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     import argparse
     
     parser = argparse.ArgumentParser(description='AI-Horizon Status Server')
     parser.add_argument('--host', default='127.0.0.1', help='Host to bind to')
-    parser.add_argument('--port', type=int, default=8000, help='Port to bind to')
+    parser.add_argument('--port', type=int, default=8000, help='Port to bind to')  # Changed default port
     parser.add_argument('--debug', action='store_true', help='Enable debug mode')
     
     args = parser.parse_args()
+    
+    print(f"""
+🤖 AI-Horizon Status Server
+===========================
+
+📊 Real-time monitoring and collection management
+📝 Manual entry processing with file uploads  
+🔬 Comprehensive analysis and visualization tools
+👥 User management and authentication system
+💰 Cost tracking and API usage monitoring
+📄 Export capabilities (PDF, CSV, JSON)
+
+Starting server...
+🌐 URL: http://{args.host}:{args.port}
+🔧 Debug: {args.debug}
+
+Usage:
+    python status_server.py --host 0.0.0.0 --port 8000 [--debug]
+    
+Press Ctrl+C to stop the server.
+    """)
+    
     run_server(args.host, args.port, args.debug) 

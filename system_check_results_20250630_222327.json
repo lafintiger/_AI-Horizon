@@ -1,0 +1,106 @@
+{
+  "timestamp": "2025-06-30T22:23:27.436646",
+  "overall_status": "CRITICAL",
+  "checks": {
+    "connectivity": {
+      "server_running": {
+        "status": "PASS",
+        "message": "Server responding (HTTP 302)",
+        "details": {},
+        "timestamp": "2025-06-30T22:23:27.444463"
+      }
+    },
+    "database": {
+      "file_exists": {
+        "status": "PASS",
+        "message": "Database file exists: data/content.db",
+        "details": {},
+        "timestamp": "2025-06-30T22:23:27.444496"
+      },
+      "connectivity": {
+        "status": "FAIL",
+        "message": "Database error: no such table: articles",
+        "details": {},
+        "timestamp": "2025-06-30T22:23:27.444840"
+      }
+    },
+    "api_keys": {
+      "anthropic_env": {
+        "status": "PASS",
+        "message": "ANTHROPIC_API_KEY found in environment",
+        "details": {},
+        "timestamp": "2025-06-30T22:23:27.444854"
+      },
+      "openai_env": {
+        "status": "PASS",
+        "message": "OPENAI_API_KEY found in environment",
+        "details": {},
+        "timestamp": "2025-06-30T22:23:27.444856"
+      },
+      "perplexity_env": {
+        "status": "WARN",
+        "message": "PERPLEXITY_API_KEY not set (optional for some features)",
+        "details": {},
+        "timestamp": "2025-06-30T22:23:27.444857"
+      }
+    },
+    "authentication": {
+      "login_page": {
+        "status": "PASS",
+        "message": "Login page accessible",
+        "details": {},
+        "timestamp": "2025-06-30T22:23:27.446291"
+      },
+      "login_success": {
+        "status": "WARN",
+        "message": "Login failed with test credentials (HTTP 200)",
+        "details": {},
+        "timestamp": "2025-06-30T22:23:27.450200"
+      }
+    },
+    "filesystem": {
+      "data_directory": {
+        "status": "PASS",
+        "message": "Path exists: data/",
+        "details": {},
+        "timestamp": "2025-06-30T22:23:27.450235"
+      },
+      "templates_directory": {
+        "status": "PASS",
+        "message": "Path exists: templates/",
+        "details": {},
+        "timestamp": "2025-06-30T22:23:27.450242"
+      },
+      "logs_directory": {
+        "status": "PASS",
+        "message": "Path exists: logs/",
+        "details": {},
+        "timestamp": "2025-06-30T22:23:27.450247"
+      },
+      "config_file": {
+        "status": "PASS",
+        "message": "Path exists: config.env",
+        "details": {},
+        "timestamp": "2025-06-30T22:23:27.450251"
+      },
+      "requirements_file": {
+        "status": "PASS",
+        "message": "Path exists: requirements.txt",
+        "details": {},
+        "timestamp": "2025-06-30T22:23:27.450255"
+      },
+      "main_server": {
+        "status": "PASS",
+        "message": "Path exists: status_server.py",
+        "details": {},
+        "timestamp": "2025-06-30T22:23:27.450263"
+      }
+    }
+  },
+  "summary": {
+    "total_checks": 15,
+    "passed": 12,
+    "failed": 1,
+    "warnings": 2
+  }
+}

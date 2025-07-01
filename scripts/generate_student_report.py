@@ -31,16 +31,21 @@ def get_student_intelligence_data() -> Dict[str, List[Dict]]:
     
     for artifact in artifacts:
         metadata = json.loads(artifact.get('raw_metadata', '{}'))
-        category = metadata.get('ai_impact_category')
-        collection_method = metadata.get('collection_method')
         
-        # Focus on student intelligence data
-        if collection_method == 'student_intelligence' and category in categorized_data:
+        # Get category from ai_impact_category or primary_category
+        category = metadata.get('ai_impact_category')
+        if not category:
+            category = metadata.get('primary_category')
+        
+        # Include all articles with valid categories
+        if category and category in categorized_data:
             categorized_data[category].append({
                 'title': artifact.get('title', 'No title'),
                 'url': artifact.get('url', 'No URL'),
                 'content': artifact.get('content', 'No content'),
                 'collected_at': artifact.get('collected_at', 'Unknown'),
+                'collection_method': metadata.get('collection_method', 'Unknown'),
+                'category': category,
                 'metadata': metadata
             })
     
@@ -52,72 +57,112 @@ def extract_actionable_insights(articles: List[Dict], category: str) -> List[str
     
     # Category-specific insight extraction
     if category == 'replace':
-        keywords = ['eliminated', 'automated', 'replaced', 'redundant', 'outsourced', 'deprecated']
+        # Look for specific jobs/tasks being eliminated
+        replace_keywords = [
+            ('soc tier 1', '❌ SOC Tier 1 Analyst positions being automated by AI'),
+            ('manual vulnerability scan', '❌ Manual vulnerability scanning being replaced by automated tools'),
+            ('basic compliance', '❌ Basic compliance checking being automated'),
+            ('log analysis', '❌ Manual log analysis being replaced by AI correlation'),
+            ('password reset', '❌ Basic helpdesk tasks being automated'),
+            ('patch management', '❌ Routine patch management being automated'),
+            ('signature-based detection', '❌ Traditional signature-based detection declining'),
+            ('basic incident triage', '❌ Level 1 incident triage being automated'),
+            ('report generation', '❌ Manual security report generation being automated'),
+            ('basic risk assessment', '❌ Basic risk assessments being automated')
+        ]
+        
         for article in articles:
             content = article['content'].lower()
             title = article['title'].lower()
+            text = f"{title} {content}"
             
-            # Look for specific job titles or tasks being eliminated
-            if any(keyword in content or keyword in title for keyword in keywords):
-                # Extract specific mentions
-                if 'soc analyst' in content or 'soc tier 1' in content:
-                    insights.append("❌ SOC Tier 1 Analyst positions being automated")
-                if 'vulnerability scan' in content:
-                    insights.append("❌ Manual vulnerability scanning roles declining")
-                if 'compliance audit' in content:
-                    insights.append("❌ Basic compliance auditing being automated")
-                if 'threat intelligence' in content and 'junior' in content:
-                    insights.append("❌ Junior threat intelligence analyst roles at risk")
+            for keyword, insight in replace_keywords:
+                if keyword in text and any(word in text for word in ['automat', 'ai ', 'replace', 'eliminat']):
+                    insights.append(insight)
     
     elif category == 'augment':
-        tools = ['splunk', 'crowdstrike', 'sentinel', 'cortex', 'rapid7', 'ai copilot']
-        for article in articles:
-            content = article['content'].lower()
-            
-            # Look for specific tools and skills to learn
-            if 'splunk' in content and ('ai' in content or 'machine learning' in content):
-                insights.append("✅ Learn Splunk AI/ML capabilities")
-            if 'crowdstrike' in content and 'ai' in content:
-                insights.append("✅ Master CrowdStrike Falcon AI features")
-            if 'microsoft sentinel' in content or 'azure sentinel' in content:
-                insights.append("✅ Get Microsoft Sentinel AI certification")
-            if 'ai copilot' in content and 'cybersecurity' in content:
-                insights.append("✅ Practice with AI copilot tools for security")
-            if 'prompt engineering' in content:
-                insights.append("✅ Develop prompt engineering skills for security")
-    
-    elif category == 'new_tasks':
-        new_roles = ['ai security', 'prompt security', 'ai governance', 'ai ethics', 'mlsecops']
+        # Look for tools and skills to enhance with AI
+        augment_keywords = [
+            ('splunk ai', '✅ Master Splunk AI/ML capabilities for threat detection'),
+            ('crowdstrike falcon', '✅ Learn CrowdStrike Falcon AI features'),
+            ('microsoft sentinel', '✅ Get certified in Microsoft Sentinel AI'),
+            ('cortex xsoar', '✅ Practice with Cortex XSOAR automation'),
+            ('phantom', '✅ Learn Splunk Phantom SOAR capabilities'),
+            ('rapid7', '✅ Master Rapid7 AI-enhanced security tools'),
+            ('prompt engineering', '✅ Develop prompt engineering skills for security'),
+            ('ai copilot', '✅ Practice with security AI copilot tools'),
+            ('machine learning', '✅ Learn ML for cybersecurity applications'),
+            ('threat hunting ai', '✅ Augment threat hunting with AI tools'),
+            ('siem ai', '✅ Master AI-enhanced SIEM capabilities'),
+            ('security orchestration', '✅ Learn security orchestration and automation'),
+            ('behavioral analytics', '✅ Master AI-driven behavioral analytics'),
+            ('anomaly detection', '✅ Enhance skills with AI anomaly detection')
+        ]
+        
         for article in articles:
             content = article['content'].lower()
             title = article['title'].lower()
+            text = f"{title} {content}"
             
-            # Look for emerging role opportunities
-            if 'ai security specialist' in content or 'ai security engineer' in content:
-                insights.append("🆕 AI Security Specialist - high demand emerging role")
-            if 'prompt security' in content or 'prompt injection' in content:
-                insights.append("🆕 Prompt Security Engineer - new specialization")
-            if 'ai governance' in content and 'compliance' in content:
-                insights.append("🆕 AI Governance Officer - regulatory compliance focus")
-            if 'mlsecops' in content or 'ml security' in content:
-                insights.append("🆕 MLSecOps Engineer - machine learning security")
-            if 'ai red team' in content:
-                insights.append("🆕 AI Red Team Specialist - adversarial testing")
+            for keyword, insight in augment_keywords:
+                if keyword in text:
+                    insights.append(insight)
     
-    elif category == 'human_only':
-        human_skills = ['leadership', 'communication', 'creativity', 'judgment', 'relationship']
+    elif category == 'new_tasks':
+        # Look for emerging roles and opportunities
+        new_roles = [
+            ('ai security engineer', '🆕 AI Security Engineer - high-demand emerging role'),
+            ('prompt security', '🆕 Prompt Security Specialist - new AI security focus'),
+            ('ai governance', '🆕 AI Governance Officer - regulatory compliance role'),
+            ('mlsecops', '🆕 MLSecOps Engineer - ML pipeline security'),
+            ('ai red team', '🆕 AI Red Team Specialist - adversarial AI testing'),
+            ('ai risk', '🆕 AI Risk Analyst - emerging compliance role'),
+            ('llm security', '🆕 LLM Security Specialist - large language model security'),
+            ('ai auditor', '🆕 AI Auditor - emerging compliance role'),
+            ('prompt injection', '🆕 Prompt Injection Tester - new attack vector specialist'),
+            ('ai ethics', '🆕 AI Ethics Officer - responsible AI implementation'),
+            ('model security', '🆕 Model Security Engineer - AI/ML model protection'),
+            ('ai compliance', '🆕 AI Compliance Manager - regulatory oversight'),
+            ('generative ai security', '🆕 Generative AI Security Specialist'),
+            ('ai supply chain', '🆕 AI Supply Chain Security - model provenance tracking')
+        ]
+        
         for article in articles:
             content = article['content'].lower()
+            title = article['title'].lower()
+            text = f"{title} {content}"
             
-            # Look for human-centric skills to emphasize
-            if 'leadership' in content and 'cybersecurity' in content:
-                insights.append("💪 Develop cybersecurity leadership skills")
-            if 'communication' in content and ('client' in content or 'stakeholder' in content):
-                insights.append("💪 Master stakeholder communication")
-            if 'crisis management' in content:
-                insights.append("💪 Build crisis management expertise")
-            if 'risk assessment' in content and 'human judgment' in content:
-                insights.append("💪 Emphasize human risk assessment capabilities")
+            for keyword, insight in new_roles:
+                if keyword in text and any(word in text for word in ['new', 'emerging', 'growing', 'demand', 'opportunit']):
+                    insights.append(insight)
+    
+    elif category == 'human_only':
+        # Look for human-centric skills to emphasize
+        human_skills = [
+            ('leadership', '💪 Develop cybersecurity leadership and team management'),
+            ('communication', '💪 Master stakeholder and executive communication'),
+            ('crisis management', '💪 Build crisis management and incident response leadership'),
+            ('strategic thinking', '💪 Emphasize strategic security planning capabilities'),
+            ('risk judgment', '💪 Highlight human risk assessment and judgment'),
+            ('relationship building', '💪 Focus on relationship building and trust'),
+            ('creativity', '💪 Emphasize creative problem-solving abilities'),
+            ('business acumen', '💪 Develop business-focused security understanding'),
+            ('regulatory knowledge', '💪 Master complex regulatory and compliance frameworks'),
+            ('vendor management', '💪 Build vendor relationship and negotiation skills'),
+            ('board communication', '💪 Learn executive and board-level security communication'),
+            ('cultural awareness', '💪 Develop cultural and organizational awareness'),
+            ('mentoring', '💪 Build mentoring and knowledge transfer skills'),
+            ('innovation', '💪 Emphasize security innovation and strategy')
+        ]
+        
+        for article in articles:
+            content = article['content'].lower()
+            title = article['title'].lower()
+            text = f"{title} {content}"
+            
+            for keyword, insight in human_skills:
+                if keyword in text and any(word in text for word in ['human', 'soft skill', 'irreplaceable', 'critical']):
+                    insights.append(insight)
     
     return list(set(insights))  # Remove duplicates
 

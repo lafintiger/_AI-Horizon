@@ -1,0 +1,177 @@
+{% extends "base.html" %}
+
+{% block title %}Add Article URL - AI-Horizon Manual Entry{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="mb-0">
+                    <i class="bi bi-link-45deg text-primary"></i> Add Article URL
+                </h2>
+                <p class="mb-0 text-muted">Manually add a link to an article or webpage</p>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('add_url') }}">
+                    <div class="mb-3">
+                        <label for="url" class="form-label">
+                            <i class="bi bi-globe"></i> Article URL <span class="text-danger">*</span>
+                        </label>
+                        <input type="url" class="form-control" id="url" name="url" required 
+                               placeholder="https://example.com/article"
+                               value="{{ request.form.get('url', '') }}">
+                        <div class="form-text">
+                            Enter the full URL of the article or webpage. YouTube URLs will be automatically redirected to the video processor.
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="title" class="form-label">
+                            <i class="bi bi-card-heading"></i> Article Title
+                        </label>
+                        <input type="text" class="form-control" id="title" name="title" 
+                               placeholder="Enter a descriptive title (optional)"
+                               value="{{ request.form.get('title', '') }}">
+                        <div class="form-text">
+                            If left empty, a title will be generated automatically from the URL.
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="category" class="form-label">
+                            <i class="bi bi-tags"></i> AI Impact Category
+                        </label>
+                        <select class="form-select" id="category" name="category">
+                            <option value="general" {% if request.form.get('category') == 'general' %}selected{% endif %}>General</option>
+                            <option value="replace" {% if request.form.get('category') == 'replace' %}selected{% endif %}>Replace - AI replacing jobs</option>
+                            <option value="augment" {% if request.form.get('category') == 'augment' %}selected{% endif %}>Augment - AI assisting humans</option>
+                            <option value="new_tasks" {% if request.form.get('category') == 'new_tasks' %}selected{% endif %}>New Tasks - Jobs created by AI</option>
+                            <option value="human_only" {% if request.form.get('category') == 'human_only' %}selected{% endif %}>Human-Only - Tasks requiring human expertise</option>
+                        </select>
+                        <div class="form-text">
+                            Select the category that best matches the article's focus on AI's impact on cybersecurity workforce.
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="notes" class="form-label">
+                            <i class="bi bi-journal-text"></i> Notes
+                        </label>
+                        <textarea class="form-control" id="notes" name="notes" rows="3" 
+                                  placeholder="Add any notes about why this article is relevant (optional)">{{ request.form.get('notes', '') }}</textarea>
+                        <div class="form-text">
+                            Optional notes about the article's relevance or key insights.
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left"></i> Back to Dashboard
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-plus-circle"></i> Add Article URL
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Help Section -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="bi bi-question-circle"></i> Help & Tips
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6><i class="bi bi-lightbulb text-warning"></i> Supported URLs</h6>
+                        <ul class="list-unstyled">
+                            <li>• News articles and blog posts</li>
+                            <li>• Research papers and reports</li>
+                            <li>• Government and industry publications</li>
+                            <li>• Academic articles and whitepapers</li>
+                            <li>• YouTube videos (auto-redirected)</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6><i class="bi bi-shield-check text-success"></i> Quality Sources</h6>
+                        <ul class="list-unstyled">
+                            <li>• Gartner, Forrester, McKinsey reports</li>
+                            <li>• SANS, NIST, IEEE publications</li>
+                            <li>• Cybersecurity industry leaders</li>
+                            <li>• Academic institutions</li>
+                            <li>• Government agencies (DHS, CISA)</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="alert alert-info mt-3">
+                    <i class="bi bi-info-circle"></i>
+                    <strong>Duplicate Detection:</strong> The system will automatically check if this URL already exists in the database and prevent duplicates.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // URL validation and preview
+    document.getElementById('url').addEventListener('blur', function() {
+        const url = this.value;
+        const titleField = document.getElementById('title');
+        
+        if (url && !titleField.value) {
+            // Simple title extraction from URL
+            try {
+                const urlObj = new URL(url);
+                const path = urlObj.pathname;
+                const segments = path.split('/').filter(s => s);
+                
+                if (segments.length > 0) {
+                    let suggestedTitle = segments[segments.length - 1]
+                        .replace(/[-_]/g, ' ')
+                        .replace(/\.[^/.]+$/, '') // Remove file extension
+                        .replace(/\b\w/g, l => l.toUpperCase()); // Title case
+                    
+                    if (suggestedTitle.length > 5) {
+                        titleField.placeholder = `Suggested: ${suggestedTitle}`;
+                    }
+                }
+            } catch (e) {
+                // Invalid URL, ignore
+            }
+        }
+    });
+    
+    // YouTube URL detection
+    document.getElementById('url').addEventListener('input', function() {
+        const url = this.value;
+        const youtubeRegex = /(youtube\.com|youtu\.be)/i;
+        
+        if (youtubeRegex.test(url)) {
+            const alert = document.createElement('div');
+            alert.className = 'alert alert-info mt-2';
+            alert.innerHTML = '<i class="bi bi-youtube"></i> YouTube URL detected! This will be redirected to the video processor for transcript extraction.';
+            
+            // Remove existing alert if any
+            const existingAlert = this.parentNode.querySelector('.alert');
+            if (existingAlert) {
+                existingAlert.remove();
+            }
+            
+            this.parentNode.appendChild(alert);
+        } else {
+            // Remove YouTube alert if URL is changed
+            const existingAlert = this.parentNode.querySelector('.alert');
+            if (existingAlert && existingAlert.textContent.includes('YouTube')) {
+                existingAlert.remove();
+            }
+        }
+    });
+</script>
+{% endblock %} 

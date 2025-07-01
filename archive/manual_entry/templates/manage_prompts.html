@@ -1,0 +1,447 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Search Prompts - AI-Horizon Manual Entry{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h1>🔍 Search Prompts Management</h1>
+                <p class="text-muted">View and customize the prompts used for automated content collection</p>
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-outline-primary" onclick="resetToDefaults()">
+                    <i class="bi bi-arrow-clockwise"></i> Reset to Defaults
+                </button>
+                <button class="btn btn-primary" onclick="saveAllPrompts()">
+                    <i class="bi bi-save"></i> Save Changes
+                </button>
+            </div>
+        </div>
+        
+        <!-- Prompt Categories -->
+        <div class="row">
+            <!-- Replace Category -->
+            <div class="col-xl-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-header bg-danger text-white">
+                        <h5 class="mb-0">
+                            <i class="bi bi-robot"></i> AI REPLACING Jobs
+                        </h5>
+                        <small>Tasks completely automated by AI</small>
+                    </div>
+                    <div class="card-body">
+                        <form>
+                            <div class="mb-3">
+                                <label for="replace-title" class="form-label">Prompt Title</label>
+                                <input type="text" class="form-control" id="replace-title" 
+                                       value="Cybersecurity Workforce Automation 2024-2025">
+                            </div>
+                            <div class="mb-3">
+                                <label for="replace-prompt" class="form-label">Search Prompt</label>
+                                <textarea class="form-control prompt-editor" id="replace-prompt" rows="10">CYBERSECURITY WORKFORCE AUTOMATION 2024-2025:
+
+Find authoritative sources on AI COMPLETELY REPLACING cybersecurity professionals:
+
+KEY INDICATORS:
+• SIEM/log analysis fully automated (no human analysts)
+• AI threat detection replacing SOC analysts entirely
+• Autonomous incident response eliminating human responders
+• Job displacement studies showing workforce reduction
+• "Lights-out" security operations centers
+• AI taking over vulnerability management completely
+
+PRIORITY SOURCES: Gartner, Forrester, SANS, academic studies, government workforce reports</textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="replace-keywords" class="form-label">Keywords</label>
+                                <input type="text" class="form-control" id="replace-keywords" 
+                                       value="replacing, automation, autonomous, job displacement, workforce reduction, eliminating, lights-out">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Augment Category -->
+            <div class="col-xl-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">
+                            <i class="bi bi-people"></i> AI AUGMENTING Work
+                        </h5>
+                        <small>AI assisting human professionals</small>
+                    </div>
+                    <div class="card-body">
+                        <form>
+                            <div class="mb-3">
+                                <label for="augment-title" class="form-label">Prompt Title</label>
+                                <input type="text" class="form-control" id="augment-title" 
+                                       value="Cybersecurity AI-Human Collaboration 2024-2025">
+                            </div>
+                            <div class="mb-3">
+                                <label for="augment-prompt" class="form-label">Search Prompt</label>
+                                <textarea class="form-control prompt-editor" id="augment-prompt" rows="10">CYBERSECURITY AI-HUMAN COLLABORATION 2024-2025:
+
+Find sources on AI ASSISTING and ENHANCING cybersecurity professionals:
+
+KEY INDICATORS:
+• AI copilots for security analysts
+• ML-enhanced threat analysis requiring human oversight
+• AI-assisted incident response with human decision-making
+• Analyst productivity improvements through AI tools
+• Human-AI collaboration in security operations
+• AI augmentation improving analyst capabilities
+
+PRIORITY SOURCES: SANS surveys, vendor case studies, practitioner reports, industry analysis</textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="augment-keywords" class="form-label">Keywords</label>
+                                <input type="text" class="form-control" id="augment-keywords" 
+                                       value="augmenting, assisting, collaboration, copilot, enhanced, productivity, human-ai">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- New Tasks Category -->
+            <div class="col-xl-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0">
+                            <i class="bi bi-plus-circle"></i> NEW TASKS Created
+                        </h5>
+                        <small>Jobs emerging due to AI technology</small>
+                    </div>
+                    <div class="card-body">
+                        <form>
+                            <div class="mb-3">
+                                <label for="new-title" class="form-label">Prompt Title</label>
+                                <input type="text" class="form-control" id="new-title" 
+                                       value="Emerging Cybersecurity Roles 2024-2025">
+                            </div>
+                            <div class="mb-3">
+                                <label for="new-prompt" class="form-label">Search Prompt</label>
+                                <textarea class="form-control prompt-editor" id="new-prompt" rows="10">EMERGING CYBERSECURITY ROLES 2024-2025:
+
+Find sources on NEW cybersecurity jobs created by AI technology:
+
+KEY INDICATORS:
+• AI security engineers and ML security specialists
+• AI model security and bias testing roles
+• AI governance and ethics positions in cybersecurity
+• Prompt engineering for security applications
+• AI red team and adversarial testing specialists
+• New skill requirements for AI-integrated security
+
+PRIORITY SOURCES: Job market reports, LinkedIn workforce insights, recruitment studies, career surveys</textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="new-keywords" class="form-label">Keywords</label>
+                                <input type="text" class="form-control" id="new-keywords" 
+                                       value="new roles, emerging, ai security engineer, ml specialist, governance, skill requirements, created by ai">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Human-Only Category -->
+            <div class="col-xl-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-header bg-warning text-dark">
+                        <h5 class="mb-0">
+                            <i class="bi bi-person-check"></i> HUMAN-ONLY Tasks
+                        </h5>
+                        <small>Tasks requiring human expertise</small>
+                    </div>
+                    <div class="card-body">
+                        <form>
+                            <div class="mb-3">
+                                <label for="human-title" class="form-label">Prompt Title</label>
+                                <input type="text" class="form-control" id="human-title" 
+                                       value="Human-Essential Cybersecurity 2024-2025">
+                            </div>
+                            <div class="mb-3">
+                                <label for="human-prompt" class="form-label">Search Prompt</label>
+                                <textarea class="form-control prompt-editor" id="human-prompt" rows="10">HUMAN-ESSENTIAL CYBERSECURITY 2024-2025:
+
+Find sources on cybersecurity tasks that REMAIN human-driven:
+
+KEY INDICATORS:
+• Strategic security planning requiring human judgment
+• Crisis communication and stakeholder management
+• Legal/compliance decisions in security incidents
+• Ethical considerations in security policies
+• Creative threat modeling and red team planning
+• Complex investigations requiring human intuition
+
+PRIORITY SOURCES: CISO perspectives, security leadership studies, policy research, ethics papers</textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="human-keywords" class="form-label">Keywords</label>
+                                <input type="text" class="form-control" id="human-keywords" 
+                                       value="human judgment, strategic, ethics, compliance, creative, intuition, human-driven, human-only">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- General Settings -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="bi bi-gear"></i> General Search Settings
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="max-results" class="form-label">Maximum Results per Query</label>
+                            <input type="number" class="form-control" id="max-results" value="20" min="5" max="50">
+                            <div class="form-text">Number of articles to collect for each search query</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="search-frequency" class="form-label">Search Frequency</label>
+                            <select class="form-select" id="search-frequency">
+                                <option value="manual">Manual Only</option>
+                                <option value="daily">Daily</option>
+                                <option value="weekly" selected>Weekly</option>
+                                <option value="monthly">Monthly</option>
+                            </select>
+                            <div class="form-text">How often to run automated searches</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="enable-multi-query" checked>
+                            <label class="form-check-label" for="enable-multi-query">
+                                Enable Multi-Query Collection
+                            </label>
+                            <div class="form-text">Run multiple focused queries per category</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="skip-duplicates" checked>
+                            <label class="form-check-label" for="skip-duplicates">
+                                Skip Duplicate URLs
+                            </label>
+                            <div class="form-text">Automatically filter out duplicate articles</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Prompt Testing -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="bi bi-play-circle"></i> Test Search Prompts
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="mb-3">
+                            <label for="test-category" class="form-label">Category to Test</label>
+                            <select class="form-select" id="test-category">
+                                <option value="replace">AI Replacing Jobs</option>
+                                <option value="augment">AI Augmenting Work</option>
+                                <option value="new_tasks">New Tasks Created</option>
+                                <option value="human_only">Human-Only Tasks</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">&nbsp;</label>
+                        <button class="btn btn-success w-100" onclick="testSearchPrompt()">
+                            <i class="bi bi-search"></i> Test Search
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="test-results" class="mt-3" style="display: none;">
+                    <div class="alert alert-info">
+                        <i class="bi bi-hourglass-split"></i> Testing search prompt... This may take a few moments.
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Usage Statistics -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="bi bi-bar-chart"></i> Prompt Usage Statistics
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 text-center">
+                        <h4 class="text-danger">12</h4>
+                        <small class="text-muted">Replace searches</small>
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <h4 class="text-primary">18</h4>
+                        <small class="text-muted">Augment searches</small>
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <h4 class="text-success">8</h4>
+                        <small class="text-muted">New tasks searches</small>
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <h4 class="text-warning">15</h4>
+                        <small class="text-muted">Human-only searches</small>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-md-6">
+                        <strong>Last Search:</strong> 2024-05-31 09:15:32
+                    </div>
+                    <div class="col-md-6">
+                        <strong>Total Articles Found:</strong> 156 (42 unique)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Auto-resize textareas
+    function autoResizeTextarea(textarea) {
+        textarea.style.height = 'auto';
+        textarea.style.height = textarea.scrollHeight + 'px';
+    }
+    
+    // Initialize auto-resize for all prompt editors
+    document.querySelectorAll('.prompt-editor').forEach(textarea => {
+        autoResizeTextarea(textarea);
+        textarea.addEventListener('input', () => autoResizeTextarea(textarea));
+    });
+    
+    // Save all prompts
+    function saveAllPrompts() {
+        const prompts = {
+            replace: {
+                title: document.getElementById('replace-title').value,
+                prompt: document.getElementById('replace-prompt').value,
+                keywords: document.getElementById('replace-keywords').value
+            },
+            augment: {
+                title: document.getElementById('augment-title').value,
+                prompt: document.getElementById('augment-prompt').value,
+                keywords: document.getElementById('augment-keywords').value
+            },
+            new_tasks: {
+                title: document.getElementById('new-title').value,
+                prompt: document.getElementById('new-prompt').value,
+                keywords: document.getElementById('new-keywords').value
+            },
+            human_only: {
+                title: document.getElementById('human-title').value,
+                prompt: document.getElementById('human-prompt').value,
+                keywords: document.getElementById('human-keywords').value
+            },
+            settings: {
+                max_results: parseInt(document.getElementById('max-results').value),
+                search_frequency: document.getElementById('search-frequency').value,
+                enable_multi_query: document.getElementById('enable-multi-query').checked,
+                skip_duplicates: document.getElementById('skip-duplicates').checked
+            }
+        };
+        
+        // TODO: Save to backend
+        console.log('Saving prompts:', prompts);
+        
+        // Show success message
+        showAlert('Prompts saved successfully!', 'success');
+    }
+    
+    // Reset to defaults
+    function resetToDefaults() {
+        if (confirm('Are you sure you want to reset all prompts to their default values? This will overwrite any customizations.')) {
+            // Reset all fields to defaults (current values are defaults)
+            location.reload();
+        }
+    }
+    
+    // Test search prompt
+    function testSearchPrompt() {
+        const category = document.getElementById('test-category').value;
+        const resultsDiv = document.getElementById('test-results');
+        
+        resultsDiv.style.display = 'block';
+        resultsDiv.innerHTML = `
+            <div class="alert alert-info">
+                <i class="bi bi-hourglass-split"></i> Testing search prompt for ${category}... This may take a few moments.
+            </div>
+        `;
+        
+        // TODO: Implement actual search test
+        setTimeout(() => {
+            resultsDiv.innerHTML = `
+                <div class="alert alert-success">
+                    <h6><i class="bi bi-check-circle"></i> Test Results for ${category.replace('_', ' ')}</h6>
+                    <ul class="mb-0">
+                        <li>Found 8 potential articles</li>
+                        <li>3 unique URLs (5 duplicates filtered)</li>
+                        <li>Average relevance score: 0.82</li>
+                        <li>Search completed in 3.2 seconds</li>
+                    </ul>
+                </div>
+            `;
+        }, 3000);
+    }
+    
+    // Show alert message
+    function showAlert(message, type) {
+        const alert = document.createElement('div');
+        alert.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+        alert.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+        alert.innerHTML = `
+            <i class="bi bi-${type === 'success' ? 'check-circle' : 'exclamation-triangle'}"></i>
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+        
+        document.body.appendChild(alert);
+        
+        setTimeout(() => {
+            if (alert.parentNode) {
+                alert.parentNode.removeChild(alert);
+            }
+        }, 5000);
+    }
+    
+    // Character count for textareas
+    document.querySelectorAll('.prompt-editor').forEach(textarea => {
+        const countSpan = document.createElement('small');
+        countSpan.className = 'text-muted float-end';
+        textarea.parentNode.appendChild(countSpan);
+        
+        function updateCount() {
+            countSpan.textContent = `${textarea.value.length} characters`;
+        }
+        
+        updateCount();
+        textarea.addEventListener('input', updateCount);
+    });
+</script>
+{% endblock %} 

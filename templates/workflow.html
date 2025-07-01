@@ -110,6 +110,32 @@
             font-weight: 500;
         }
 
+        .methodology-link {
+            display: inline-block;
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+        }
+
+        .methodology-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4);
+            text-decoration: none;
+            color: white;
+        }
+
+        .methodology-link:before {
+            content: "📖 ";
+            margin-right: 5px;
+        }
+
         /* Flow Arrows */
         .workflow-stage:not(:last-child)::after {
             content: '↓';
@@ -193,6 +219,14 @@
         <div class="workflow-header">
             <h1>🔄 AI-Horizon System Workflow</h1>
             <p>Comprehensive block diagram showing the complete data processing pipeline from collection to intelligence reporting</p>
+            
+            <div style="background: rgba(255, 255, 255, 0.2); border-radius: 15px; padding: 20px; margin: 30px auto; max-width: 800px; border-left: 4px solid #28a745;">
+                <h3 style="color: #000000; margin-bottom: 10px;">🔗 Methodology Integration</h3>
+                <p style="color: #000000; margin-bottom: 15px; font-size: 1rem;">
+                    Each workflow stage includes a <strong>"View Methodology"</strong> link that takes you directly to the detailed technical explanation in our comprehensive methodology documentation. This ensures complete transparency and reproducibility for NSF research compliance.
+                </p>
+                <a href="/methodology" class="methodology-link" style="margin-top: 0;">View Complete Methodology</a>
+            </div>
         </div>
 
         <!-- Current System Stats -->
@@ -225,16 +259,19 @@
                         📊 Data Collection & Ingestion
                     </div>
                     <div class="stage-description">
-                        Multi-source data collection system gathering cybersecurity workforce intelligence from various channels including automated web scraping, manual curation, and document uploads. Features configurable timeframe filtering to prevent duplicate collection and focus on fresh content.
+                        <strong>🌐 Perplexity API Collection:</strong> Automated search queries using configurable prompts to gather fresh cybersecurity workforce intelligence from diverse online sources.<br>
+                        <strong>📝 Manual Entry System:</strong> Authorized users can manually add URLs, documents, and YouTube transcripts through secure web interface.<br>
+                        <strong>📅 Duplicate Prevention:</strong> URL normalization and content similarity checking to ensure data quality and prevent redundant collection.
                     </div>
                     <div class="stage-components">
-                        <span class="component-tag">🌐 Web Scraping</span>
+                        <span class="component-tag">🌐 Perplexity API Search</span>
                         <span class="component-tag">📝 Manual Entry</span>
                         <span class="component-tag">📄 Document Upload</span>
                         <span class="component-tag">🎥 YouTube Transcripts</span>
                         <span class="component-tag">🔗 URL Processing</span>
-                        <span class="component-tag">📅 Timeframe Filtering</span>
+                        <span class="component-tag">📅 Duplicate Detection</span>
                     </div>
+                    <a href="/methodology#data-collection" class="methodology-link">View Collection Methodology</a>
                 </div>
             </div>
 
@@ -254,6 +291,7 @@
                         <span class="component-tag">🎯 Relevance (25%)</span>
                         <span class="component-tag">✅ Completeness (20%)</span>
                     </div>
+                    <a href="/methodology#quality-analysis" class="methodology-link">View Quality Scoring Method</a>
                 </div>
             </div>
 
@@ -274,6 +312,7 @@
                         <span class="component-tag">👤 HUMAN-ONLY</span>
                         <span class="component-tag">🧠 Wisdom Extraction</span>
                     </div>
+                    <a href="/methodology#category-distribution" class="methodology-link">View AI Classification Method</a>
                 </div>
             </div>
 
@@ -294,6 +333,7 @@
                         <span class="component-tag">⭐ Quality Scores</span>
                         <span class="component-tag">🧠 Extracted Wisdom</span>
                     </div>
+                    <a href="/methodology#technical-implementation" class="methodology-link">View Technical Implementation</a>
                 </div>
             </div>
 
@@ -315,6 +355,7 @@
                         <span class="component-tag">📂 Category Distribution</span>
                         <span class="component-tag">🖥️ Collection Monitoring</span>
                     </div>
+                    <a href="/methodology#ai-adoption-predictions" class="methodology-link">View Predictive Analytics Method</a>
                 </div>
             </div>
 
@@ -335,6 +376,7 @@
                         <span class="component-tag">📱 Responsive Design</span>
                         <span class="component-tag">🔄 Real-time Updates</span>
                     </div>
+                    <a href="/methodology#trend-analysis" class="methodology-link">View Trend Analysis Methods</a>
                 </div>
             </div>
 
@@ -355,6 +397,7 @@
                         <span class="component-tag">📊 Executive Summaries</span>
                         <span class="component-tag">🔗 Citation Links</span>
                     </div>
+                    <a href="/methodology#confidence-limitations" class="methodology-link">View Reporting Methodology</a>
                 </div>
             </div>
         </div>
