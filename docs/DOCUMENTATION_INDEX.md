@@ -171,6 +171,7 @@ Navigation System:                 ✅ ENHANCED WORKFLOW-BASED STRUCTURE
 - **[COMPREHENSIVE_PROJECT_SPECIFICATION.md](COMPREHENSIVE_PROJECT_SPECIFICATION.md)** - Complete technical architecture
 - **[ANALYSIS_PAGE_FIXES_2025.md](ANALYSIS_PAGE_FIXES_2025.md)** - 🆕 **Critical frontend fixes and Chart.js integration**
 - **[REPROCESSING_SYSTEM_FIXES_2025.md](REPROCESSING_SYSTEM_FIXES_2025.md)** - 🆕 **Critical backend restoration**
+- **[CHAT_SYSTEM_MAINTENANCE_GUIDE.md](CHAT_SYSTEM_MAINTENANCE_GUIDE.md)** - 🚨 **CRITICAL** - **Chat system failure prevention** and health monitoring
 
 ### **For Researchers**
 - **[README.md](README.md)** - Academic context and research capabilities
@@ -181,6 +182,7 @@ Navigation System:                 ✅ ENHANCED WORKFLOW-BASED STRUCTURE
 ### **For System Administrators**
 - **[SYSTEM_STATUS.md](SYSTEM_STATUS.md)** - Real-time system health monitoring
 - **[SYSTEM_STATUS_UPDATE_JUNE_2025.md](SYSTEM_STATUS_UPDATE_JUNE_2025.md)** - 🆕 **Comprehensive status after fixes**
+- **[CHAT_SYSTEM_MAINTENANCE_GUIDE.md](CHAT_SYSTEM_MAINTENANCE_GUIDE.md)** - 🚨 **CRITICAL** - **Chat system failure prevention** and automated health checks
 - **[REPROCESSING_GUIDE.md](REPROCESSING_GUIDE.md)** - System maintenance and data processing
 - **[REPROCESSING_SYSTEM_FIXES_2025.md](REPROCESSING_SYSTEM_FIXES_2025.md)** - 🆕 **Critical reprocessing fixes**
 - **[COST_TRACKING_GUIDE.md](COST_TRACKING_GUIDE.md)** - Budget management and API usage
