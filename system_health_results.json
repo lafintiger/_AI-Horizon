@@ -1,0 +1,64 @@
+{
+  "timestamp": "2025-07-02T17:20:15.314463",
+  "status": "UNHEALTHY",
+  "checks_passed": 15,
+  "checks_total": 6,
+  "issues": [
+    {
+      "category": "LIBRARIES",
+      "message": "anthropic version 0.37.1 is below minimum 0.40.0",
+      "severity": "ERROR",
+      "timestamp": "2025-07-02T17:20:14.655600"
+    },
+    {
+      "category": "LIBRARIES",
+      "message": "Library versions - Check returned False",
+      "severity": "ERROR",
+      "timestamp": "2025-07-02T17:20:14.808938"
+    },
+    {
+      "category": "API_KEYS",
+      "message": "Required API keys missing: ANTHROPIC_API_KEY, OPENAI_API_KEY",
+      "severity": "ERROR",
+      "timestamp": "2025-07-02T17:20:14.808964"
+    },
+    {
+      "category": "API_KEYS",
+      "message": "API key configuration - Check returned False",
+      "severity": "ERROR",
+      "timestamp": "2025-07-02T17:20:14.808975"
+    },
+    {
+      "category": "DATABASE",
+      "message": "Database connection failed: No module named 'aih'",
+      "severity": "ERROR",
+      "timestamp": "2025-07-02T17:20:14.809128"
+    },
+    {
+      "category": "DATABASE",
+      "message": "Database connection - Check returned False",
+      "severity": "ERROR",
+      "timestamp": "2025-07-02T17:20:14.809135"
+    },
+    {
+      "category": "CHAT_SYSTEM",
+      "message": "No API keys available for chat system",
+      "severity": "ERROR",
+      "timestamp": "2025-07-02T17:20:15.314400"
+    },
+    {
+      "category": "CHAT_SYSTEM",
+      "message": "Chat system initialization - Check returned False",
+      "severity": "ERROR",
+      "timestamp": "2025-07-02T17:20:15.314427"
+    }
+  ],
+  "warnings": [
+    {
+      "category": "API_KEYS",
+      "message": "Optional API keys missing: PERPLEXITY_API_KEY",
+      "severity": "WARNING",
+      "timestamp": "2025-07-02T17:20:14.808970"
+    }
+  ]
+}
