@@ -9,7 +9,8 @@ import hashlib
 import secrets
 import json
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
+from collections import defaultdict
 
 # User roles and their permissions
 USER_ROLES = {
@@ -68,6 +69,11 @@ class AuthManager:
         self.users_file = users_file
         self.session_key = 'ai_horizon_user'
         self.users = self._load_users()
+        
+        # Rate limiting for authentication attempts
+        self.failed_attempts = defaultdict(list)
+        self.max_attempts = 5
+        self.lockout_duration = timedelta(minutes=15)
     
     def _load_users(self) -> Dict:
         """Load users from file or create default users."""
@@ -98,14 +104,23 @@ class AuthManager:
             return False
     
     def authenticate_user(self, username: str, password: str) -> Optional[Dict]:
-        """Authenticate user credentials."""
+        """Authenticate user credentials with rate limiting."""
         if username not in self.users:
+            return None
+        
+        # Check for rate limiting
+        now = datetime.now()
+        if self.is_user_locked_out(username):
             return None
         
         password_hash = hashlib.sha256(password.encode()).hexdigest()
         user_data = self.users[username]
         
         if user_data['password_hash'] == password_hash:
+            # Successful login - clear failed attempts
+            if username in self.failed_attempts:
+                del self.failed_attempts[username]
+            
             # Update last login
             self.users[username]['last_login'] = datetime.now().isoformat()
             self._save_users()
@@ -116,7 +131,25 @@ class AuthManager:
                 'name': user_data['name'],
                 'permissions': USER_ROLES[user_data['role']]['permissions']
             }
-        return None
+        else:
+            # Failed login - record attempt
+            self.failed_attempts[username].append(now)
+            return None
+    
+    def is_user_locked_out(self, username: str) -> bool:
+        """Check if user is locked out due to failed login attempts."""
+        if username not in self.failed_attempts:
+            return False
+        
+        now = datetime.now()
+        # Remove old attempts outside lockout duration
+        self.failed_attempts[username] = [
+            attempt for attempt in self.failed_attempts[username]
+            if now - attempt < self.lockout_duration
+        ]
+        
+        # Check if user has exceeded max attempts
+        return len(self.failed_attempts[username]) >= self.max_attempts
     
     def get_current_user(self) -> Optional[Dict]:
         """Get current authenticated user from session."""
@@ -167,8 +200,18 @@ class AuthManager:
         if len(username) < 3:
             return {'success': False, 'error': 'Username must be at least 3 characters'}
         
-        if len(password) < 6:
-            return {'success': False, 'error': 'Password must be at least 6 characters'}
+        if len(password) < 8:
+            return {'success': False, 'error': 'Password must be at least 8 characters'}
+        
+        # Enhanced password validation
+        if not any(c.isupper() for c in password):
+            return {'success': False, 'error': 'Password must contain at least one uppercase letter'}
+        if not any(c.islower() for c in password):
+            return {'success': False, 'error': 'Password must contain at least one lowercase letter'}
+        if not any(c.isdigit() for c in password):
+            return {'success': False, 'error': 'Password must contain at least one number'}
+        if not any(c in '!@#$%^&*()_+-=[]{}|;:,.<>?' for c in password):
+            return {'success': False, 'error': 'Password must contain at least one special character'}
         
         password_hash = hashlib.sha256(password.encode()).hexdigest()
         
@@ -192,8 +235,18 @@ class AuthManager:
         if username not in self.users:
             return {'success': False, 'error': 'User not found'}
         
-        if len(new_password) < 6:
-            return {'success': False, 'error': 'New password must be at least 6 characters'}
+        if len(new_password) < 8:
+            return {'success': False, 'error': 'New password must be at least 8 characters'}
+        
+        # Enhanced password validation
+        if not any(c.isupper() for c in new_password):
+            return {'success': False, 'error': 'New password must contain at least one uppercase letter'}
+        if not any(c.islower() for c in new_password):
+            return {'success': False, 'error': 'New password must contain at least one lowercase letter'}
+        if not any(c.isdigit() for c in new_password):
+            return {'success': False, 'error': 'New password must contain at least one number'}
+        if not any(c in '!@#$%^&*()_+-=[]{}|;:,.<>?' for c in new_password):
+            return {'success': False, 'error': 'New password must contain at least one special character'}
         
         # Verify old password
         old_password_hash = hashlib.sha256(old_password.encode()).hexdigest()
@@ -216,8 +269,18 @@ class AuthManager:
         if username not in self.users:
             return {'success': False, 'error': 'User not found'}
         
-        if len(new_password) < 6:
-            return {'success': False, 'error': 'New password must be at least 6 characters'}
+        if len(new_password) < 8:
+            return {'success': False, 'error': 'New password must be at least 8 characters'}
+        
+        # Enhanced password validation
+        if not any(c.isupper() for c in new_password):
+            return {'success': False, 'error': 'New password must contain at least one uppercase letter'}
+        if not any(c.islower() for c in new_password):
+            return {'success': False, 'error': 'New password must contain at least one lowercase letter'}
+        if not any(c.isdigit() for c in new_password):
+            return {'success': False, 'error': 'New password must contain at least one number'}
+        if not any(c in '!@#$%^&*()_+-=[]{}|;:,.<>?' for c in new_password):
+            return {'success': False, 'error': 'New password must contain at least one special character'}
         
         new_password_hash = hashlib.sha256(new_password.encode()).hexdigest()
         old_hash = self.users[username]['password_hash']

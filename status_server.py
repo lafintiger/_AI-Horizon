@@ -51,6 +51,7 @@ from werkzeug.utils import secure_filename
 from urllib.parse import urlparse, parse_qs
 from flask import Flask, render_template, jsonify, Response, request, send_file, stream_template, send_from_directory, redirect, url_for, flash
 from flask_cors import CORS
+from flask_wtf.csrf import CSRFProtect
 import glob
 
 # Add project root to path
@@ -82,9 +83,29 @@ except ImportError as e:
     def export_intelligence_to_pdf(*args, **kwargs): raise NotImplementedError("PDF export not available")
 
 app = Flask(__name__)
-app.secret_key = 'ai-horizon-status-server-secret-key-2025'  # Change in production
+
+# Security: Use environment-based secret key with secure fallback
+app.secret_key = os.environ.get('FLASK_SECRET_KEY', 'ai-horizon-status-server-secret-key-2025')
+if app.secret_key == 'ai-horizon-status-server-secret-key-2025':
+    logger.warning("Using default secret key - set FLASK_SECRET_KEY environment variable for production")
+
 app.permanent_session_lifetime = timedelta(hours=8)  # 8 hour session timeout
+
+# Security: Enable CSRF protection (temporarily disabled for login issues)
+# csrf = CSRFProtect(app)
+
 CORS(app)
+
+# Security headers
+@app.after_request
+def add_security_headers(response):
+    """Add security headers to all responses."""
+    response.headers['X-Content-Type-Options'] = 'nosniff'
+    response.headers['X-Frame-Options'] = 'DENY'
+    response.headers['X-XSS-Protection'] = '1; mode=block'
+    response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'
+    response.headers['Content-Security-Policy'] = "default-src 'self'; script-src 'self' 'unsafe-inline' cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'"
+    return response
 
 # Force HTTPS in production
 @app.before_request
@@ -478,6 +499,11 @@ def login():
         if not username or not password:
             flash('Please enter both username and password.', 'error')
             return render_template('login.html', error='Please enter both username and password.')
+        
+        # Check for rate limiting
+        if auth_manager.is_user_locked_out(username):
+            flash('Account temporarily locked due to multiple failed login attempts. Please try again in 15 minutes.', 'error')
+            return render_template('login.html', error='Account temporarily locked due to multiple failed login attempts.')
         
         user = auth_manager.authenticate_user(username, password)
         if user:
@@ -4130,6 +4156,131 @@ def delete_artifact(artifact_id):
     except Exception as e:
         return f"Error deleting artifact: {str(e)}", 500
 
+def _extract_skills_from_narrative(report):
+    """Extract skills needed from narrative report for educational use."""
+    skills = []
+    
+    # Extract from key insights
+    if 'key_insights' in report:
+        for insight in report['key_insights']:
+            if any(keyword in insight.lower() for keyword in ['skill', 'training', 'knowledge', 'competency', 'ability']):
+                skills.append(insight)
+    
+    # Extract from jobs and tasks
+    if 'jobs_and_tasks' in report:
+        for job, data in report['jobs_and_tasks'].items():
+            if isinstance(data, dict) and 'skills' in data:
+                skills.extend(data['skills'])
+    
+    # Add common AI/cybersecurity skills based on category
+    category = report.get('category', '')
+    if category == 'replace':
+        skills.extend([
+            "Understanding of AI automation capabilities",
+            "Risk assessment for AI replacement",
+            "Transition planning and change management"
+        ])
+    elif category == 'augment':
+        skills.extend([
+            "Human-AI collaboration techniques",
+            "AI tool proficiency",
+            "Enhanced analytical thinking"
+        ])
+    elif category == 'new_tasks':
+        skills.extend([
+            "AI system development and management",
+            "AI ethics and governance",
+            "Emerging technology assessment"
+        ])
+    elif category == 'human_only':
+        skills.extend([
+            "Critical thinking and creativity",
+            "Emotional intelligence",
+            "Complex problem-solving"
+        ])
+    
+    return list(set(skills))  # Remove duplicates
+
+def _extract_learning_resources(report):
+    """Extract learning resource recommendations from narrative report."""
+    resources = []
+    
+    # Extract from citations as source materials
+    if 'citations' in report:
+        for citation in report['citations'][:5]:  # Top 5 sources
+            if 'url' in citation and 'title' in citation:
+                resources.append({
+                    "type": "article",
+                    "title": citation['title'],
+                    "url": citation['url'],
+                    "description": f"Source material with {citation.get('confidence', 0):.2f} relevance score"
+                })
+    
+    # Add recommended learning paths based on category
+    category = report.get('category', '')
+    if category == 'replace':
+        resources.extend([
+            {
+                "type": "course",
+                "title": "AI and Automation in Cybersecurity",
+                "description": "Understanding when and how AI replaces human tasks",
+                "provider": "Educational curriculum recommendation"
+            },
+            {
+                "type": "certification",
+                "title": "AI Risk Assessment Certification",
+                "description": "Learn to assess AI replacement risks and opportunities",
+                "provider": "Professional development"
+            }
+        ])
+    elif category == 'augment':
+        resources.extend([
+            {
+                "type": "course",
+                "title": "Human-AI Collaboration in Security",
+                "description": "Effective techniques for working with AI systems",
+                "provider": "Educational curriculum recommendation"
+            },
+            {
+                "type": "hands-on",
+                "title": "AI-Powered Security Tools Lab",
+                "description": "Practical experience with AI-augmented security tools",
+                "provider": "Lab exercises"
+            }
+        ])
+    elif category == 'new_tasks':
+        resources.extend([
+            {
+                "type": "course",
+                "title": "AI Systems Development for Security",
+                "description": "Building and managing AI security systems",
+                "provider": "Educational curriculum recommendation"
+            },
+            {
+                "type": "project",
+                "title": "AI Ethics in Cybersecurity Project",
+                "description": "Develop governance frameworks for AI security systems",
+                "provider": "Capstone project"
+            }
+        ])
+    elif category == 'human_only':
+        resources.extend([
+            {
+                "type": "course",
+                "title": "Advanced Critical Thinking for Security",
+                "description": "Developing uniquely human analytical capabilities",
+                "provider": "Educational curriculum recommendation"
+            },
+            {
+                "type": "workshop",
+                "title": "Leadership in AI-Enabled Security Teams",
+                "description": "Managing teams in an AI-augmented environment",
+                "provider": "Professional development"
+            }
+        ])
+    
+    return resources
+
 def run_server(host=None, port=None, debug=False):
     """
     Run the AI-Horizon Status Server with comprehensive error handling and graceful shutdown.
@@ -4610,6 +4761,175 @@ def api_export_summary_pdf(category):
         logger.error(f"Error exporting {category} summary to PDF: {e}")
         return jsonify({"error": f"Failed to export PDF: {str(e)}"}), 500
 
+
+@app.route('/api/export_summary_json/<category>')
+def api_export_summary_json(category):
+    """Export category summary as JSON for educational apps."""
+    try:
+        from scripts.analysis.comprehensive_category_narratives import ComprehensiveCategoryNarrativeAnalyzer
+        
+        generator = ComprehensiveCategoryNarrativeAnalyzer()
+        report = generator.generate_category_report(category)
+        
+        if not report:
+            return jsonify({"error": f"No summary found for category {category}"}), 404
+        
+        # Structure the data for educational use
+        educational_data = {
+            "category": category,
+            "title": report.get('title', f'{category.replace("_", " ").title()} Category'),
+            "description": report.get('executive_summary', ''),
+            "total_articles": report.get('total_articles', 0),
+            "confidence_score": report.get('average_confidence', 0.0),
+            "key_insights": report.get('key_insights', []),
+            "jobs_and_tasks": report.get('jobs_and_tasks', {}),
+            "skills_needed": _extract_skills_from_narrative(report),
+            "learning_resources": _extract_learning_resources(report),
+            "citations": report.get('citations', []),
+            "generated_at": datetime.now().isoformat(),
+            "metadata": {
+                "source": "AI-Horizon Category Analysis",
+                "version": "2.3",
+                "intended_use": "Educational curriculum development"
+            }
+        }
+        
+        response = app.response_class(
+            response=json.dumps(educational_data, indent=2),
+            status=200,
+            mimetype='application/json'
+        )
+        
+        filename = f"ai_horizon_{category}_educational_data.json"
+        response.headers["Content-Disposition"] = f"attachment; filename={filename}"
+        
+        return response
+        
+    except Exception as e:
+        logger.error(f"Error exporting {category} summary to JSON: {e}")
+        return jsonify({"error": f"Failed to export JSON: {str(e)}"}), 500
+
+@app.route('/api/export_all_summaries_json')
+def api_export_all_summaries_json():
+    """Export all category summaries as JSON for educational apps."""
+    try:
+        from scripts.analysis.comprehensive_category_narratives import ComprehensiveCategoryNarrativeAnalyzer
+        
+        categories = ['replace', 'augment', 'new_tasks', 'human_only']
+        generator = ComprehensiveCategoryNarrativeAnalyzer()
+        all_data = {
+            "title": "AI-Horizon Complete Category Analysis",
+            "description": "Comprehensive analysis of AI impact on cybersecurity workforce across all categories",
+            "categories": {},
+            "summary_statistics": {
+                "total_categories": len(categories),
+                "total_articles": 0,
+                "average_confidence": 0.0
+            },
+            "generated_at": datetime.now().isoformat(),
+            "metadata": {
+                "source": "AI-Horizon Analysis System",
+                "version": "2.3",
+                "intended_use": "Educational curriculum development",
+                "funding": "NSF Award #2528858"
+            }
+        }
+        
+        total_articles = 0
+        total_confidence = 0
+        
+        for category in categories:
+            report = generator.generate_category_report(category)
+            if report:
+                category_data = {
+                    "title": report.get('title', f'{category.replace("_", " ").title()} Category'),
+                    "description": report.get('executive_summary', ''),
+                    "total_articles": report.get('total_articles', 0),
+                    "confidence_score": report.get('average_confidence', 0.0),
+                    "key_insights": report.get('key_insights', []),
+                    "jobs_and_tasks": report.get('jobs_and_tasks', {}),
+                    "skills_needed": _extract_skills_from_narrative(report),
+                    "learning_resources": _extract_learning_resources(report),
+                    "citations": report.get('citations', [])
+                }
+                all_data["categories"][category] = category_data
+                total_articles += category_data["total_articles"]
+                total_confidence += category_data["confidence_score"]
+        
+        # Update summary statistics
+        all_data["summary_statistics"]["total_articles"] = total_articles
+        all_data["summary_statistics"]["average_confidence"] = total_confidence / len(categories) if categories else 0
+        
+        response = app.response_class(
+            response=json.dumps(all_data, indent=2),
+            status=200,
+            mimetype='application/json'
+        )
+        
+        filename = f"ai_horizon_complete_educational_data_{datetime.now().strftime('%Y%m%d')}.json"
+        response.headers["Content-Disposition"] = f"attachment; filename={filename}"
+        
+        return response
+        
+    except Exception as e:
+        logger.error(f"Error exporting all summaries to JSON: {e}")
+        return jsonify({"error": f"Failed to export JSON: {str(e)}"}), 500
+
+@app.route('/api/export_all_summaries_pdf')
+def api_export_all_summaries_pdf():
+    """Export all category summaries as a combined PDF."""
+    if not PDF_EXPORT_AVAILABLE:
+        return jsonify({"error": "PDF export functionality not available"}), 503
+    
+    try:
+        from scripts.analysis.comprehensive_category_narratives import ComprehensiveCategoryNarrativeAnalyzer
+        
+        categories = ['replace', 'augment', 'new_tasks', 'human_only']
+        generator = ComprehensiveCategoryNarrativeAnalyzer()
+        
+        # Collect all summaries
+        all_summaries = {}
+        for category in categories:
+            report = generator.generate_category_report(category)
+            if report:
+                all_summaries[category] = report
+        
+        if not all_summaries:
+            return jsonify({"error": "No summaries available for export"}), 404
+        
+        # Create combined summary data
+        combined_data = {
+            "title": "AI-Horizon Complete Category Analysis",
+            "description": "Comprehensive analysis of AI impact on cybersecurity workforce across all categories",
+            "categories": all_summaries,
+            "generated_at": datetime.now().isoformat(),
+            "metadata": {
+                "source": "AI-Horizon Analysis System",
+                "version": "2.3",
+                "funding": "NSF Award #2528858"
+            }
+        }
+        
+        # Generate PDF
+        pdf_bytes = export_summary_to_pdf(combined_data, "all_categories")
+        
+        if not pdf_bytes:
+            return jsonify({"error": "Failed to generate PDF"}), 500
+        
+        response = app.response_class(
+            response=pdf_bytes,
+            status=200,
+            mimetype='application/pdf'
+        )
+        
+        filename = f"ai_horizon_complete_analysis_{datetime.now().strftime('%Y%m%d')}.pdf"
+        response.headers["Content-Disposition"] = f"attachment; filename={filename}"
+        
+        return response
+        
+    except Exception as e:
+        logger.error(f"Error exporting all summaries to PDF: {e}")
+        return jsonify({"error": f"Failed to export PDF: {str(e)}"}), 500
 
 @app.route('/api/export_intelligence_pdf')
 def api_export_intelligence_pdf():

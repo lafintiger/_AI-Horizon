@@ -28,6 +28,8 @@ class Settings(BaseSettings):
     # Application Settings
     log_level: str = Field("INFO", env="LOG_LEVEL")
     debug: bool = Field(False, env="DEBUG")
+    flask_env: Optional[str] = Field(None, env="FLASK_ENV")
+    flask_secret_key: Optional[str] = Field(None, env="FLASK_SECRET_KEY")
     
     # Data Collection
     default_max_artifacts_per_run: int = Field(50, env="DEFAULT_MAX_ARTIFACTS_PER_RUN")
@@ -49,6 +51,7 @@ class Settings(BaseSettings):
     class Config:
         env_file = "config.env"
         case_sensitive = False
+        extra = "ignore"  # Ignore unknown environment variables
 
 # Global settings instance
 settings = Settings()

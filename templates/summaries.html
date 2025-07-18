@@ -415,6 +415,28 @@
                     🚀 Generate All Category Summaries
                 </button>
                 <span class="status-indicator status-ready" id="overallStatus">Ready to Generate</span>
+                
+                <!-- Export All Categories Section -->
+                <div style="margin-top: 20px; padding-top: 20px; border-top: 2px solid rgba(102, 126, 234, 0.2);">
+                    <h4 style="color: #667eea; margin-bottom: 15px;">📤 Export All Categories</h4>
+                    <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                        <a href="/api/export_all_summaries_pdf" 
+                           class="generate-all-btn" 
+                           style="background: linear-gradient(135deg, #dc3545 0%, #c82333 100%); font-size: 14px; padding: 10px 20px;"
+                           title="Export all category summaries as a combined PDF report">
+                            📄 Export All PDF
+                        </a>
+                        <a href="/api/export_all_summaries_json" 
+                           class="generate-all-btn" 
+                           style="background: linear-gradient(135deg, #17a2b8 0%, #138496 100%); font-size: 14px; padding: 10px 20px;"
+                           title="Export all category summaries as JSON for educational app integration">
+                            📊 Export All JSON
+                        </a>
+                    </div>
+                    <p style="font-size: 0.8rem; color: #666; margin-top: 10px; max-width: 600px; margin-left: auto; margin-right: auto;">
+                        PDF export creates a comprehensive report with all categories. JSON export provides structured data for educational applications and curriculum development.
+                    </p>
+                </div>
             </div>
 
             <div class="category-grid">
@@ -699,9 +721,15 @@
                     <div class="meta-item">
                         <a href="/api/export_summary_pdf/${category}" 
                            class="generate-all-btn" 
-                           style="font-size: 14px; padding: 8px 16px; margin: 0;"
+                           style="font-size: 14px; padding: 8px 16px; margin: 0 5px 0 0;"
                            title="Export ${category.replace('_', ' ').toUpperCase()} summary as PDF with disclaimer and NSF attribution">
                             📄 Export PDF
+                        </a>
+                        <a href="/api/export_summary_json/${category}" 
+                           class="generate-all-btn" 
+                           style="font-size: 14px; padding: 8px 16px; margin: 0; background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);"
+                           title="Export ${category.replace('_', ' ').toUpperCase()} summary as JSON for educational app integration">
+                            📊 Export JSON
                         </a>
                     </div>
                 </div>
